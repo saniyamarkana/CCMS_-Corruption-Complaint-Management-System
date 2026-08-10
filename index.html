@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCMS - Corruption Complaint Management System</title>
+    <meta name="description" content="A secure, transparent, and efficient platform for managing and tracking corruption complaints with real-time analytics and secure whistleblower protection.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --light: #f8fafc;
+            --light-2: #e2e8f0;
+            --text-1: #0f172a;
+            --text-2: #475569;
+            --text-3: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #f43f5e;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-1);
+            background: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* ════════════════════ HEADER/NAVBAR ════════════════════ */
+        header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+        }
+
+        .navbar {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-2);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-1);
+        }
+
+        /* ════════════════════ HERO SECTION ════════════════════ */
+        .hero {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            padding: 100px 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-2);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .cta-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .cta-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.4);
+        }
+
+        .cta-secondary {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateY(-3px);
+        }
+
+        /* ════════════════════ FEATURES SECTION ════════════════════ */
+        .features {
+            padding: 80px 2rem;
+            background: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-1);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--light-2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-1);
+        }
+
+        .feature-card p {
+            color: var(--text-2);
+            line-height: 1.7;
+        }
+
+        /* ════════════════════ HOW IT WORKS ════════════════════ */
+        .how-it-works {
+            padding: 80px 2rem;
+            background: linear-gradient(135deg, #f0f2f9 0%, #e0e7ff 100%);
+        }
+
+        .steps-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .step {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-1);
+        }
+
+        .step p {
+            color: var(--text-2);
+            line-height: 1.7;
+        }
+
+        /* ════════════════════ STATS SECTION ════════════════════ */
+        .stats {
+            padding: 80px 2rem;
+            background: #fff;
+        }
+
+        .stats-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stat-label {
+            color: var(--text-2);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ════════════════════ TESTIMONIALS ════════════════════ */
+        .testimonials {
+            padding: 80px 2rem;
+            background: linear-gradient(135deg, #eef2ff 0%, #f0f2f9 100%);
+        }
+
+        .testimonials-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stars {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-text {
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .author-info h4 {
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.85rem;
+            color: var(--text-3);
+        }
+
+        /* ════════════════════ FAQ SECTION ════════════════════ */
+        .faq {
+            padding: 80px 2rem;
+            background: #fff;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--light-2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-header {
+            background: #f8fafc;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .faq-header:hover {
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .faq-icon {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #fff;
+        }
+
+        .faq-item.active .faq-content {
+            max-height: 500px;
+        }
+
+        .faq-text {
+            padding: 1.5rem;
+            color: var(--text-2);
+            line-height: 1.8;
+        }
+
+        /* ════════════════════ CTA SECTION ════════════════════ */
+        .final-cta {
+            padding: 80px 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta .cta-button {
+            background: #fff;
+            color: var(--primary);
+        }
+
+        .final-cta .cta-button:hover {
+            background: #f8fafc;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ════════════════════ FOOTER ════════════════════ */
+        footer {
+            background: var(--dark);
+            color: #fff;
+            padding: 3rem 2rem 1.5rem;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* ════════════════════ ANIMATIONS ════════════════════ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .feature-card:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .feature-card:nth-child(6) {
+            animation-delay: 0.5s;
+        }
+
+        /* ════════════════════ RESPONSIVE ════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-button {
+                justify-content: center;
+            }
+
+            .section-title h2 {
+                font-size: 1.75rem;
+            }
+
+            .final-cta h2 {
+                font-size: 1.75rem;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+
+        /* ════════════════════ SCROLL ANIMATIONS ════════════════════ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- ════════════════════ HEADER ════════════════════ -->
+    <header id="header">
+        <div class="navbar">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-shield-halved"></i>
+                CCMS
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="auth-buttons">
+                <a href="admin/" class="btn btn-secondary">Admin Panel</a>
+                <a href="#contact" class="btn btn-primary">Get Started</a>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ════════════════════ HERO SECTION ════════════════════ -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fa-solid fa-sparkles"></i> Welcome to CCMS
+            </div>
+            <h1>Corruption Complaint Management System</h1>
+            <p>A secure, transparent, and efficient platform for managing corruption complaints with real-time tracking, whistleblower protection, and data-driven analytics.</p>
+            
+            <div class="hero-buttons">
+                <button class="cta-button cta-primary" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fa-solid fa-paper-plane"></i> Lodge Complaint
+                </button>
+                <button class="cta-button cta-secondary" onclick="alert('Video demo coming soon!')">
+                    <i class="fa-solid fa-play"></i> Watch Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ FEATURES SECTION ════════════════════ -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Powerful Features for Effective Complaint Management</h2>
+            <p>Everything you need to manage corruption complaints securely and efficiently</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3>Secure & Anonymous</h3>
+                <p>End-to-end encryption and anonymous whistleblower protection with encrypted communication channels.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3>Real-Time Analytics</h3>
+                <p>Comprehensive dashboards with live statistics, trend analysis, and performance metrics.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <h3>SLA Tracking</h3>
+                <p>Automated Service Level Agreement tracking ensuring timely complaint resolution.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3>Officer Management</h3>
+                <p>Efficient assignment and tracking of investigation officers with workload balancing.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <h3>Report Generation</h3>
+                <p>Automated PDF and Excel report generation for audits, statistics, and compliance.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <h3>Smart Notifications</h3>
+                <p>Real-time alerts and email notifications for all stakeholders on complaint updates.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ HOW IT WORKS ════════════════════ -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-title">
+            <h2>Simple 4-Step Process</h2>
+            <p>Filing a complaint is easy, secure, and confidential</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step fade-in">
+                <div class="step-number">1</div>
+                <h3>Submit Complaint</h3>
+                <p>Submit your complaint securely through our encrypted online portal with complete anonymity.</p>
+            </div>
+
+            <div class="step fade-in">
+                <div class="step-number">2</div>
+                <h3>Review & Categorize</h3>
+                <p>Our team reviews and categorizes your complaint for proper department assignment.</p>
+            </div>
+
+            <div class="step fade-in">
+                <div class="step-number">3</div>
+                <h3>Investigation</h3>
+                <p>Assigned officers conduct thorough investigation with regular status updates to you.</p>
+            </div>
+
+            <div class="step fade-in">
+                <div class="step-number">4</div>
+                <h3>Resolution</h3>
+                <p>Case is resolved with detailed findings and actions taken, ensuring accountability.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ STATS SECTION ════════════════════ -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <div class="stat-number" data-target="1482">0</div>
+                <div class="stat-label">Complaints Managed</div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-number" data-target="89">0</div>
+                <div class="stat-label">Active Investigations</div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-number" data-target="84">0</div>
+                <div class="stat-label">% Resolution Rate</div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-number" data-target="18">0</div>
+                <div class="stat-label">Departments Covered</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ TESTIMONIALS ════════════════════ -->
+    <section class="testimonials">
+        <div class="section-title">
+            <h2>What Our Users Say</h2>
+            <p>Trusted by officers, administrators, and citizens across the nation</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"CCMS has revolutionized how we handle corruption complaints. The transparency and security features are exceptional. Highly recommended!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SR</div>
+                    <div class="author-info">
+                        <h4>Inspector S. Rahman</h4>
+                        <p>Anti-Corruption Division</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"As a citizen, I appreciate the anonymity and security features. I feel confident filing complaints knowing my identity is protected."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">TM</div>
+                    <div class="author-info">
+                        <h4>Tariq Mahmood</h4>
+                        <p>Citizen Whistleblower</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The analytics dashboard gives us invaluable insights into corruption patterns. The reporting features have improved our strategic decision-making."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DM</div>
+                    <div class="author-info">
+                        <h4>Dr. M. Hassan</h4>
+                        <p>Department Director</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ FAQ SECTION ════════════════════ -->
+    <section class="faq" id="faq">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Find answers to common questions about CCMS</p>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item active">
+                <div class="faq-header">
+                    <span>How do I file a complaint?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Simply click "Lodge Complaint" and fill out the secure form with details about the alleged corruption. You can provide evidence files and remain completely anonymous throughout the process.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span>Is my complaint completely confidential?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Yes, our system uses end-to-end encryption and anonymous ID generation. Your personal information is never shared with the public and only authorized personnel can access complaint details.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span>How long does it take to resolve a complaint?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Resolution time varies based on complexity. We track Service Level Agreements (SLA) for different complaint types. You can monitor progress through your dashboard anytime.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span>Can I track my complaint status?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Absolutely! You can track your complaint status in real-time using your unique complaint ID. Updates are sent via email and are available on your personal dashboard.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span>What if I need to add more evidence?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        You can upload additional evidence at any time before the investigation concludes. Contact support with your complaint ID and we'll assist you in attaching the files securely.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span>Is there whistleblower protection?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Yes, we provide comprehensive whistleblower protection including legal safeguards, identity protection, and confidential communication channels to ensure your safety.
+                    </div>
+                </div>
+            </section>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════ FINAL CTA ════════════════════ -->
+    <section class="final-cta" id="contact">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join thousands of citizens and officers making our communities more transparent and accountable. File a complaint today.</p>
+        <button class="cta-button" onclick="alert('Complaint form coming soon!')">
+            <i class="fa-solid fa-arrow-right"></i> Start Now
+        </button>
+    </section>
+
+    <!-- ════════════════════ FOOTER ════════════════════ -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>CCMS</h4>
+                <p style="color: #cbd5e1; line-height: 1.8;">Building transparency and accountability through secure complaint management.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="admin/">Admin Panel</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Whistleblower Protection</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Report Security Issue</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Corruption Complaint Management System. All rights reserved. | Built for transparency and accountability</p>
+        </div>
+    </footer>
+
+    <!-- ════════════════════ SCRIPTS ════════════════════ -->
+    <script>
+        // ── Header Scroll Effect ──
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // ── FAQ Accordion ──
+        document.querySelectorAll('.faq-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // ── Counter Animation ──
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    const target = parseInt(entry.target.dataset.target);
+                    const element = entry.target.querySelector('.stat-number');
+                    let current = 0;
+                    const increment = target / 50;
+                    
+                    const interval = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            element.textContent = target;
+                            clearInterval(interval);
+                        } else {
+                            element.textContent = Math.floor(current);
+                        }
+                    }, 20);
+                    
+                    entry.target.dataset.animated = true;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // ── Fade In Animation on Scroll ──
+        const fadeInObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            fadeInObserver.observe(element);
+        });
+
+        // ── Mobile Menu Toggle ──
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // ── Smooth Scroll ──
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
