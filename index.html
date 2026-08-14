@@ -1,1197 +1,2822 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCMS - Corruption Complaint Management System</title>
-    <meta name="description" content="A secure, transparent, and efficient platform for managing and tracking corruption complaints with real-time analytics and secure whistleblower protection.">
-    
+    <title>CCMS - Corruption Complaint Management System | Secure, Anonymous & Transparent</title>
+    <meta name="description" content="Next-Generation National Anti-Corruption & Whistleblower Complaint Platform with 256-bit encryption, real-time case tracking, and automated forensic oversight.">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
+        /* ══════════════════════ DESIGN SYSTEM & THEME TOKENS ══════════════════════ */
+        :root {
+            /* Midnight Cyber (Default Dark) */
+            --bg-base: #060913;
+            --bg-surface: #0c1222;
+            --bg-card: rgba(16, 24, 45, 0.75);
+            --bg-card-hover: rgba(24, 36, 68, 0.9);
+            --bg-glass: rgba(13, 20, 38, 0.65);
+            --border-color: rgba(99, 102, 241, 0.18);
+            --border-glow: rgba(99, 102, 241, 0.45);
+            
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4338ca;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            
+            --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.35);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-subtle: #64748b;
+            
+            --header-bg: rgba(6, 9, 19, 0.82);
+            --modal-overlay: rgba(3, 7, 18, 0.85);
+            --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+            --card-glow-shadow: 0 0 35px -5px rgba(99, 102, 241, 0.25);
+            
+            --grid-line: rgba(255, 255, 255, 0.03);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-hover: rgba(255, 255, 255, 0.98);
+            --bg-glass: rgba(255, 255, 255, 0.75);
+            --border-color: rgba(99, 102, 241, 0.15);
+            --border-glow: rgba(99, 102, 241, 0.35);
+            
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #3730a3;
+            --primary-glow: rgba(79, 70, 229, 0.2);
+            
+            --cyan: #0891b2;
+            --cyan-glow: rgba(8, 145, 178, 0.2);
+            --emerald: #059669;
+            --emerald-glow: rgba(5, 150, 105, 0.2);
+            
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-subtle: #94a3b8;
+            
+            --header-bg: rgba(248, 250, 252, 0.85);
+            --modal-overlay: rgba(15, 23, 42, 0.6);
+            --card-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.08);
+            --card-glow-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.15);
+            --grid-line: rgba(0, 0, 0, 0.03);
+        }
+
+        [data-theme="emerald"] {
+            --bg-base: #051410;
+            --bg-surface: #0a241d;
+            --bg-card: rgba(10, 36, 29, 0.8);
+            --bg-card-hover: rgba(15, 52, 42, 0.95);
+            --bg-glass: rgba(10, 36, 29, 0.7);
+            --border-color: rgba(16, 185, 129, 0.25);
+            --border-glow: rgba(16, 185, 129, 0.5);
+            
+            --primary: #10b981;
+            --primary-light: #34d399;
+            --primary-dark: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.35);
+            
+            --cyan: #14b8a6;
+            --cyan-glow: rgba(20, 184, 166, 0.35);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            
+            --text-main: #ecfdf5;
+            --text-muted: #a7f3d0;
+            --text-subtle: #6ee7b7;
+            
+            --header-bg: rgba(5, 20, 16, 0.85);
+            --modal-overlay: rgba(2, 10, 8, 0.85);
+            --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            --card-glow-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.3);
+            --grid-line: rgba(16, 185, 129, 0.04);
+        }
+
+        /* ══════════════════════ GLOBAL RESETS & STYLES ══════════════════════ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --secondary: #06b6d4;
-            --accent: #f43f5e;
-            --dark: #0f172a;
-            --dark-2: #1e293b;
-            --light: #f8fafc;
-            --light-2: #e2e8f0;
-            --text-1: #0f172a;
-            --text-2: #475569;
-            --text-3: #94a3b8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #f43f5e;
-        }
-
         html {
             scroll-behavior: smooth;
+            color-scheme: dark;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-1);
-            background: #ffffff;
-            line-height: 1.6;
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.65;
+            overflow-x: hidden;
+            position: relative;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* ════════════════════ HEADER/NAVBAR ════════════════════ */
-        header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            position: sticky;
+        /* Ambient Glow Blobs */
+        .ambient-glow-1, .ambient-glow-2, .ambient-glow-3 {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.45;
+            animation: pulseGlow 14s ease-in-out infinite alternate;
+        }
+        .ambient-glow-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+            top: -100px;
+            left: -100px;
+        }
+        .ambient-glow-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--cyan), transparent 70%);
+            bottom: 10%;
+            right: -150px;
+            animation-delay: -5s;
+        }
+        .ambient-glow-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, var(--emerald), transparent 70%);
+            top: 45%;
+            left: 20%;
+            animation-delay: -9s;
+            opacity: 0.25;
+        }
+
+        /* Grid Background Pattern */
+        .grid-overlay {
+            position: fixed;
             top: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+            pointer-events: none;
+            z-index: 1;
         }
 
-        header.scrolled {
-            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .navbar {
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
+        /* ══════════════════════ TYPOGRAPHY & UTILITIES ══════════════════════ */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        [data-theme="light"] .gradient-text {
+            background: linear-gradient(135deg, #0f172a 0%, var(--primary) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        [data-theme="emerald"] .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, var(--emerald) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
             max-width: 1280px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .logo i {
-            font-size: 2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-2);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
+            padding: 0 1.5rem;
             position: relative;
+            z-index: 2;
         }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
+        .badge-pill {
+            display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--border-color);
+            color: var(--primary-light);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
         }
 
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald);
+            box-shadow: 0 0 10px var(--emerald);
+            animation: liveBlink 1.8s infinite;
+        }
+
+        /* ══════════════════════ BUTTONS ══════════════════════ */
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            padding: 0.85rem 1.75rem;
             font-size: 0.95rem;
             font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 12px;
             text-decoration: none;
-            display: inline-block;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
         .btn-primary {
-            background: var(--primary);
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
         }
-
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: 0.6s;
+            z-index: -1;
+        }
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px -5px var(--primary-glow);
+            color: #ffffff;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            background: var(--bg-glass);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-glow);
+            color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: var(--card-glow-shadow);
         }
 
-        .btn-secondary:hover {
-            background: var(--primary);
+        .btn-cyan {
+            background: linear-gradient(135deg, var(--cyan) 0%, #0891b2 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px var(--cyan-glow);
+        }
+        .btn-cyan:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px -5px var(--cyan-glow);
             color: #fff;
         }
 
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-1);
+        /* ══════════════════════ NAVBAR ══════════════════════ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition-smooth);
         }
 
-        /* ════════════════════ HERO SECTION ════════════════════ */
-        .hero {
-            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-            padding: 100px 2rem;
-            text-align: center;
+        header.scrolled {
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            border-bottom-color: var(--border-glow);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.35rem;
+            box-shadow: 0 0 20px var(--primary-glow);
+            position: relative;
+        }
+        .logo-icon-box::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            z-index: -1;
+            filter: blur(4px);
+            opacity: 0.7;
+        }
+
+        .brand-text h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        .brand-text span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--cyan);
+            display: block;
+            margin-top: -3px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-main);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--cyan));
+            transition: var(--transition-smooth);
+            border-radius: 2px;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Theme Selector Dropdown / Buttons */
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: 3px;
+        }
+        .theme-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+        .theme-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* ══════════════════════ HERO SECTION ══════════════════════ */
+        .hero-section {
+            padding: 6.5rem 0 5rem;
             position: relative;
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: rgba(79, 70, 229, 0.1);
-            border-radius: 50%;
-            top: -100px;
-            right: -100px;
-            z-index: 0;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: rgba(6, 182, 212, 0.1);
-            border-radius: 50%;
-            bottom: -50px;
-            left: -50px;
-            z-index: 0;
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 3.5rem;
+            align-items: center;
         }
 
         .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
             position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease;
+            z-index: 2;
         }
 
-        .hero-badge {
-            display: inline-block;
-            background: rgba(79, 70, 229, 0.1);
-            color: var(--primary);
-            padding: 0.5rem 1.25rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(79, 70, 229, 0.2);
-        }
-
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3.5rem;
+        .hero-title {
+            font-size: clamp(2.6rem, 5vw, 4.2rem);
             font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            line-height: 1.1;
+            margin: 1.25rem 0 1.5rem;
+            letter-spacing: -0.04em;
         }
 
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-2);
-            margin-bottom: 2.5rem;
+        .typewriter-word {
+            color: var(--cyan);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 2px;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 580px;
             line-height: 1.8;
+            margin-bottom: 2.25rem;
         }
 
-        .hero-buttons {
+        .hero-cta-group {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-button {
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            margin-bottom: 3rem;
         }
 
-        .cta-primary {
+        .hero-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .hero-stat-item h3 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+        }
+        .hero-stat-item p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.2rem;
+        }
+
+        /* ── Hero Interactive Terminal Card ── */
+        .hero-interactive-box {
+            position: relative;
+            z-index: 2;
+        }
+
+        .terminal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.75rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: var(--card-shadow), var(--card-glow-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        .terminal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--cyan), var(--emerald));
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .mac-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .mac-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Live Tracker Widget in Hero */
+        .tracker-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tracker-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+        [data-theme="light"] .tracker-input {
+            background: rgba(240, 245, 255, 0.8);
+        }
+        .tracker-input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .tracker-quick-tags {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+            margin-bottom: 1.5rem;
+        }
+        .quick-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed var(--border-color);
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            color: var(--primary-light);
+            transition: var(--transition-smooth);
+        }
+        .quick-tag:hover {
             background: var(--primary);
             color: #fff;
-        }
-
-        .cta-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.4);
-        }
-
-        .cta-secondary {
-            background: #fff;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .cta-secondary:hover {
-            background: rgba(79, 70, 229, 0.05);
-            transform: translateY(-3px);
-        }
-
-        /* ════════════════════ FEATURES SECTION ════════════════════ */
-        .features {
-            padding: 80px 2rem;
-            background: #fff;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text-1);
-            margin-bottom: 1rem;
-        }
-
-        .section-title p {
-            font-size: 1.1rem;
-            color: var(--text-2);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: #f8fafc;
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid var(--light-2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(79, 70, 229, 0.1);
             border-color: var(--primary);
         }
 
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(79, 70, 229, 0.1);
-            border-radius: 12px;
+        /* Case Live Timeline Result */
+        .case-result-display {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+        }
+        [data-theme="light"] .case-result-display {
+            background: rgba(245, 247, 250, 0.9);
+        }
+
+        .case-meta-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed var(--border-color);
         }
 
-        .feature-card h3 {
-            font-size: 1.25rem;
+        .case-id-badge {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text-1);
+            color: var(--cyan);
         }
 
-        .feature-card p {
-            color: var(--text-2);
+        .case-status-badge {
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-investigating {
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+        }
+        .status-resolved {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--emerald);
+            border: 1px solid var(--emerald);
+        }
+
+        .mini-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            position: relative;
+            padding-left: 1.25rem;
+        }
+        .mini-timeline::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-node {
+            position: relative;
+            font-size: 0.82rem;
+        }
+        .timeline-node::before {
+            content: '';
+            position: absolute;
+            left: -1.25rem;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--primary-light);
+        }
+        .timeline-node.done::before {
+            background: var(--emerald);
+            border-color: var(--emerald);
+            box-shadow: 0 0 8px var(--emerald);
+        }
+        .timeline-node.active::before {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+            animation: pulseNode 1.5s infinite;
+        }
+
+        .timeline-node strong {
+            display: block;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .timeline-node span {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* ══════════════════════ TICKER MARQUEE ══════════════════════ */
+        .marquee-section {
+            padding: 1.25rem 0;
+            background: rgba(99, 102, 241, 0.05);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-track {
+            display: inline-flex;
+            gap: 3rem;
+            animation: scrollMarquee 25s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .marquee-item i {
+            color: var(--cyan);
+        }
+
+        /* ══════════════════════ SECTION HEADERS ══════════════════════ */
+        .section-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header .badge-pill {
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 3.5vw, 2.85rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
             line-height: 1.7;
         }
 
-        /* ════════════════════ HOW IT WORKS ════════════════════ */
-        .how-it-works {
-            padding: 80px 2rem;
-            background: linear-gradient(135deg, #f0f2f9 0%, #e0e7ff 100%);
+        /* ══════════════════════ PILLARS / MATRIX SECTION ══════════════════════ */
+        .security-section {
+            padding: 6rem 0;
+            position: relative;
         }
 
-        .steps-container {
-            max-width: 1280px;
-            margin: 0 auto;
+        .security-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 2rem;
-            position: relative;
         }
 
-        .step {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
+        .security-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.25rem;
             position: relative;
-            z-index: 1;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 50%;
+        .security-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, var(--primary-glow), transparent 60%);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .security-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: var(--card-glow-shadow);
+        }
+        .security-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-icon-bubble {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            font-weight: 800;
-            margin: 0 auto 1.5rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+        .security-card:hover .card-icon-bubble {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px var(--primary-glow);
         }
 
-        .step h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
+        .security-card h3 {
+            font-size: 1.35rem;
             margin-bottom: 0.75rem;
-            color: var(--text-1);
+            color: var(--text-main);
         }
 
-        .step p {
-            color: var(--text-2);
+        .security-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
             line-height: 1.7;
+            margin-bottom: 1.5rem;
         }
 
-        /* ════════════════════ STATS SECTION ════════════════════ */
-        .stats {
-            padding: 80px 2rem;
-            background: #fff;
+        .feature-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+            margin-top: auto;
         }
 
-        .stats-grid {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .stat-label {
-            color: var(--text-2);
-            font-size: 1rem;
+        .feature-tag-list li {
+            font-size: 0.75rem;
             font-weight: 600;
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
         }
 
-        /* ════════════════════ TESTIMONIALS ════════════════════ */
-        .testimonials {
-            padding: 80px 2rem;
-            background: linear-gradient(135deg, #eef2ff 0%, #f0f2f9 100%);
+        /* ══════════════════════ INTERACTIVE HOW IT WORKS ══════════════════════ */
+        .process-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.03) 50%, transparent 100%);
+            position: relative;
         }
 
-        .testimonials-grid {
-            max-width: 1280px;
-            margin: 0 auto;
+        .process-timeline-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .process-timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 45px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--cyan), var(--emerald));
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .process-step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            transition: var(--transition-smooth);
+        }
+
+        .process-step-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--cyan);
+            box-shadow: 0 15px 30px -10px var(--cyan-glow);
+        }
+
+        .step-index-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transition: var(--transition-smooth);
+        }
+        .process-step-card:hover .step-index-circle {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .process-step-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .process-step-card p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ══════════════════════ LIVE ANALYTICS RADAR ══════════════════════ */
+        .analytics-preview-section {
+            padding: 6rem 0;
+        }
+
+        .dashboard-glass-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--card-shadow), var(--card-glow-shadow);
+        }
+
+        .radar-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .radar-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .radar-mini-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+        [data-theme="light"] .radar-mini-card {
+            background: rgba(255, 255, 255, 0.7);
+        }
+        .radar-mini-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+        }
+
+        .radar-icon-val {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .radar-val {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--text-main);
+        }
+
+        .radar-growth {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+        .growth-up { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+        .growth-cyan { background: rgba(6, 182, 212, 0.15); color: var(--cyan); }
+
+        .radar-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Live Activity Stream in Dashboard */
+        .live-stream-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        [data-theme="light"] .live-stream-box {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .stream-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        .stream-header h4 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stream-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .stream-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+        .stream-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-glow);
+        }
+
+        .stream-left {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .stream-badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        .stream-time {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+        }
+
+        /* ══════════════════════ TESTIMONIALS / VERIFIED TRUST ══════════════════════ */
+        .testimonials-section {
+            padding: 6rem 0;
+        }
+
+        .testimonial-slider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 2rem;
         }
 
         .testimonial-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
-            border-left: 4px solid var(--primary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
         }
 
-        .stars {
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: var(--card-glow-shadow);
+        }
+
+        .rating-stars {
             color: #fbbf24;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 3px;
         }
 
-        .testimonial-text {
-            color: var(--text-2);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
+        .testimonial-quote {
+            font-size: 0.98rem;
+            color: var(--text-main);
+            line-height: 1.75;
+            margin-bottom: 1.75rem;
             font-style: italic;
         }
 
-        .testimonial-author {
+        .author-box {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
         .author-avatar {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1.25rem;
+            color: #ffffff;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
         .author-info h4 {
+            font-size: 0.95rem;
             font-weight: 700;
-            color: var(--text-1);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
-
         .author-info p {
-            font-size: 0.85rem;
-            color: var(--text-3);
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
-        /* ════════════════════ FAQ SECTION ════════════════════ */
-        .faq {
-            padding: 80px 2rem;
-            background: #fff;
+        /* ══════════════════════ FAQ ACCORDION ══════════════════════ */
+        .faq-section {
+            padding: 6rem 0;
         }
 
-        .faq-container {
-            max-width: 800px;
+        .faq-accordion-box {
+            max-width: 840px;
             margin: 0 auto;
-        }
-
-        .faq-item {
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--light-2);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .faq-header {
-            background: #f8fafc;
-            padding: 1.5rem;
-            cursor: pointer;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .faq-card.active {
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
+        }
+
+        .faq-btn {
+            width: 100%;
+            padding: 1.35rem 1.75rem;
+            background: transparent;
+            border: none;
+            display: flex;
             align-items: center;
-            transition: all 0.3s ease;
+            justify-content: space-between;
+            font-size: 1.05rem;
             font-weight: 600;
-            color: var(--text-1);
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition-smooth);
+        }
+        .faq-btn:hover {
+            color: var(--primary-light);
         }
 
-        .faq-header:hover {
-            background: rgba(79, 70, 229, 0.05);
+        .faq-chevron {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            transition: transform 0.35s ease;
         }
-
-        .faq-icon {
-            font-size: 1.25rem;
-            transition: transform 0.3s ease;
-            color: var(--primary);
-        }
-
-        .faq-item.active .faq-icon {
+        .faq-card.active .faq-chevron {
             transform: rotate(180deg);
+            background: var(--primary);
+            color: #ffffff;
         }
 
-        .faq-content {
+        .faq-answer {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: #fff;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0 1.75rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+        .faq-card.active .faq-answer {
+            max-height: 300px;
+            padding-bottom: 1.5rem;
         }
 
-        .faq-item.active .faq-content {
-            max-height: 500px;
+        /* ══════════════════════ CTA CALLOUT ══════════════════════ */
+        .cta-callout-section {
+            padding: 5rem 0 6rem;
         }
 
-        .faq-text {
-            padding: 1.5rem;
-            color: var(--text-2);
-            line-height: 1.8;
-        }
-
-        /* ════════════════════ CTA SECTION ════════════════════ */
-        .final-cta {
-            padding: 80px 2rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #fff;
+        .cta-banner-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+            border: 1px solid var(--border-glow);
+            border-radius: 32px;
+            padding: 4.5rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px -20px var(--primary-glow);
         }
 
-        .final-cta h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
+        .cta-banner-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 60%);
+            animation: rotateBg 20s linear infinite;
+            pointer-events: none;
         }
 
-        .final-cta p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .final-cta .cta-button {
-            background: #fff;
-            color: var(--primary);
-        }
-
-        .final-cta .cta-button:hover {
-            background: #f8fafc;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ════════════════════ FOOTER ════════════════════ */
-        footer {
-            background: var(--dark);
-            color: #fff;
-            padding: 3rem 2rem 1.5rem;
-        }
-
-        .footer-content {
-            max-width: 1280px;
+        .cta-banner-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
         }
 
-        .footer-section h4 {
+        .cta-banner-content h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
             margin-bottom: 1.25rem;
+        }
+
+        .cta-banner-content p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .cta-buttons-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        /* ══════════════════════ FOOTER ══════════════════════ */
+        footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            padding: 5rem 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+            gap: 3rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.8;
+            margin: 1.25rem 0 1.75rem;
+            max-width: 320px;
+        }
+
+        .system-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.78rem;
+            font-family: var(--font-mono);
+            color: var(--emerald);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 0.4rem 0.85rem;
+            border-radius: 9999px;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
             font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
         }
 
-        .footer-section ul {
+        .footer-links {
             list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
         }
 
-        .footer-section ul li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-section a {
-            color: #cbd5e1;
+        .footer-links a {
+            color: var(--text-muted);
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .footer-links a:hover {
+            color: var(--primary-light);
+            transform: translateX(4px);
         }
 
-        .footer-section a:hover {
-            color: var(--primary);
+        .footer-subscribe-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .footer-subscribe-box input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+        }
+        [data-theme="light"] .footer-subscribe-box input {
+            background: #fff;
+        }
+        .footer-subscribe-box input:focus {
+            border-color: var(--primary);
         }
 
         .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 2rem;
-            text-align: center;
-            color: #94a3b8;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-subtle);
         }
 
-        /* ════════════════════ ANIMATIONS ════════════════════ */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        .footer-socials {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .social-link:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* ══════════════════════ MODAL: FILE COMPLAINT ══════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .complaint-modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glow);
+            border-radius: 28px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: var(--card-shadow), 0 0 60px -10px var(--primary-glow);
+            transform: scale(0.95);
+            transition: var(--transition-smooth);
+        }
+        .modal-overlay.open .complaint-modal-card {
+            transform: scale(1);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .modal-close-btn:hover {
+            background: var(--rose);
+            color: #ffffff;
+            border-color: var(--rose);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.85rem 1.15rem;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+        [data-theme="light"] .form-control {
+            background: #fff;
+        }
+        .form-control:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .anonymity-switch-card {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider-round {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: rgba(255,255,255,0.15);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider-round:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider-round {
+            background-color: var(--emerald);
+        }
+        input:checked + .slider-round:before {
+            transform: translateX(24px);
+        }
+
+        /* ══════════════════════ KEYFRAME ANIMATIONS ══════════════════════ */
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.15) translate(30px, -20px); }
+            100% { transform: scale(0.95) translate(-20px, 30px); }
+        }
+
+        @keyframes liveBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        @keyframes pulseNode {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 5px var(--cyan); }
+            50% { transform: scale(1.3); box-shadow: 0 0 15px var(--cyan); }
+        }
+
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ══════════════════════ RESPONSIVE BREAKPOINTS ══════════════════════ */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .process-timeline-container {
+                grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .feature-card {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        .feature-card:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-
-        .feature-card:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-
-        .feature-card:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-
-        .feature-card:nth-child(5) {
-            animation-delay: 0.4s;
-        }
-
-        .feature-card:nth-child(6) {
-            animation-delay: 0.5s;
-        }
-
-        /* ════════════════════ RESPONSIVE ════════════════════ */
-        @media (max-width: 768px) {
-            .nav-links {
+            .process-timeline-container::before {
                 display: none;
             }
-
-            .menu-toggle {
-                display: block;
+            .radar-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .hero h1 {
-                font-size: 2rem;
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
             }
+        }
 
-            .hero p {
-                font-size: 1rem;
+        @media (max-width: 768px) {
+            .nav-menu, .nav-actions .btn {
+                display: none;
             }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .cta-button {
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
                 justify-content: center;
             }
-
-            .section-title h2 {
-                font-size: 1.75rem;
+            .hero-title {
+                font-size: 2.4rem;
             }
-
-            .final-cta h2 {
-                font-size: 1.75rem;
-            }
-
-            .navbar {
-                padding: 1rem;
-            }
-
-            .nav-links {
+            .hero-stats-row {
+                grid-template-columns: 1fr;
                 gap: 1rem;
             }
-        }
-
-        /* ════════════════════ SCROLL ANIMATIONS ════════════════════ */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.6s ease;
+            .process-timeline-container {
+                grid-template-columns: 1fr;
+            }
+            .radar-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ════════════════════ HEADER ════════════════════ -->
-    <header id="header">
-        <div class="navbar">
-            <a href="#" class="logo">
-                <i class="fa-solid fa-shield-halved"></i>
-                CCMS
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
 
-            <div class="auth-buttons">
-                <a href="admin/" class="btn btn-secondary">Admin Panel</a>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
+    <!-- Ambient Visual Glow Blobs -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+    <div class="ambient-glow-3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- ══════════════════════ HEADER / NAVIGATION ══════════════════════ -->
+    <header id="siteHeader">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="brand-logo">
+                    <div class="logo-icon-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>CCMS</h1>
+                        <span>Anti-Corruption Sentinel</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#hero" class="nav-link active">Home</a></li>
+                    <li><a href="#security" class="nav-link">Security Matrix</a></li>
+                    <li><a href="#process" class="nav-link">Investigation Flow</a></li>
+                    <li><a href="#analytics" class="nav-link">Live Radar</a></li>
+                    <li><a href="#faq" class="nav-link">FAQ</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <!-- Theme Switcher -->
+                    <div class="theme-switcher">
+                        <button class="theme-btn active" data-set-theme="dark" title="Midnight Cyber Theme">
+                            <i class="fa-solid fa-moon"></i>
+                        </button>
+                        <button class="theme-btn" data-set-theme="light" title="Executive Light Theme">
+                            <i class="fa-solid fa-sun"></i>
+                        </button>
+                        <button class="theme-btn" data-set-theme="emerald" title="Emerald Vanguard Theme">
+                            <i class="fa-solid fa-shield"></i>
+                        </button>
+                    </div>
+
+                   
+                    
+                    <button class="btn btn-primary" onclick="openComplaintModal()" style="padding: 0.65rem 1.35rem; font-size: 0.88rem;">
+                        <i class="fa-solid fa-bullhorn"></i> File Complaint
+                    </button>
+
+                    <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
         </div>
     </header>
 
-    <!-- ════════════════════ HERO SECTION ════════════════════ -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">
-                <i class="fa-solid fa-sparkles"></i> Welcome to CCMS
-            </div>
-            <h1>Corruption Complaint Management System</h1>
-            <p>A secure, transparent, and efficient platform for managing corruption complaints with real-time tracking, whistleblower protection, and data-driven analytics.</p>
-            
-            <div class="hero-buttons">
-                <button class="cta-button cta-primary" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
-                    <i class="fa-solid fa-paper-plane"></i> Lodge Complaint
-                </button>
-                <button class="cta-button cta-secondary" onclick="alert('Video demo coming soon!')">
-                    <i class="fa-solid fa-play"></i> Watch Demo
-                </button>
+    <!-- ══════════════════════ HERO SECTION ══════════════════════ -->
+    <section class="hero-section" id="hero">
+        <canvas id="particleCanvas"></canvas>
+        <div class="container">
+            <div class="hero-grid">
+                
+                <!-- Left: Headline & Actions -->
+                <div class="hero-content">
+                    <div class="badge-pill">
+                        <span class="live-dot"></span>
+                        <span>Zero-Knowledge 256-Bit Encrypted Portal • v2.4 Live</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Eradicate Corruption with <span class="gradient-text">Absolute Confidentiality</span> & <span class="typewriter-word" id="typewriterText">Real-Time Audits</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Empowering citizens, whistleblowers, and oversight agencies with an immutable complaint pipeline, cryptographic anonymity, and instant case forensics.
+                    </p>
+
+                    <div class="hero-cta-group">
+                        <button class="btn btn-primary" onclick="openComplaintModal()">
+                            <i class="fa-solid fa-file-shield"></i> Lodge Confidential Complaint
+                        </button>
+                        <a href="#analytics" class="btn btn-secondary">
+                            <i class="fa-solid fa-chart-line"></i> View Live Dashboard
+                        </a>
+                    </div>
+
+                    <div class="hero-stats-row">
+                        <div class="hero-stat-item">
+                            <h3 class="counter" data-target="100">0</h3>
+                            <p>% Whistleblower Anonymity</p>
+                        </div>
+                        <div class="hero-stat-item">
+                            <h3 class="counter" data-target="98.4">0</h3>
+                            <p>% SLA Resolution Rate</p>
+                        </div>
+                        <div class="hero-stat-item">
+                            <h3 class="counter" data-target="1480">0</h3>
+                            <p>Cases Investigated</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive 3D Case Tracker & Terminal -->
+                <div class="hero-interactive-box">
+                    <div class="terminal-card" id="terminalCard">
+                        <div class="terminal-header">
+                            <div class="mac-dots">
+                                <span class="mac-dot dot-red"></span>
+                                <span class="mac-dot dot-yellow"></span>
+                                <span class="mac-dot dot-green"></span>
+                            </div>
+                            <div class="terminal-title">
+                                <i class="fa-solid fa-terminal"></i> LIVE CASE SENTINEL
+                            </div>
+                            <span class="badge-pill" style="padding: 2px 8px; font-size: 0.7rem;">AES-GCM-256</span>
+                        </div>
+
+                        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+                            Track Existing Complaint Status:
+                        </label>
+                        <div class="tracker-input-wrapper">
+                            <input type="text" id="sampleTrackerInput" class="tracker-input" value="CCMS-2026-9082" placeholder="e.g. CCMS-2026-XXXX">
+                            <button class="btn btn-cyan" onclick="simulateTrackCase()" style="padding: 0.65rem 1rem; font-size: 0.85rem;">
+                                <i class="fa-solid fa-magnifying-glass"></i> Track
+                            </button>
+                        </div>
+
+                        <div class="tracker-quick-tags">
+                            <span>Try samples:</span>
+                            <span class="quick-tag" onclick="loadSampleCase('CCMS-2026-9082', 'Investigation Active', 'Revenue Dept', 2)">#9082 (Active)</span>
+                            <span class="quick-tag" onclick="loadSampleCase('CCMS-2026-4150', 'Resolved & Action Taken', 'Public Works', 3)">#4150 (Resolved)</span>
+                        </div>
+
+                        <!-- Live Status Display Box -->
+                        <div class="case-result-display" id="caseResultDisplay">
+                            <div class="case-meta-header">
+                                <div>
+                                    <span class="case-id-badge" id="displayCaseId">CCMS-2026-9082</span>
+                                    <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">
+                                        Dept: <span id="displayCaseDept" style="color: var(--text-main); font-weight: 600;">Revenue & Procurement</span>
+                                    </div>
+                                </div>
+                                <span class="case-status-badge status-investigating" id="displayCaseStatus">Investigation Active</span>
+                            </div>
+
+                            <div class="mini-timeline" id="displayTimeline">
+                                <div class="timeline-node done">
+                                    <strong>Encrypted Submission Verified</strong>
+                                    <span>Cryptographic timestamp logged & SHA-256 sealed</span>
+                                </div>
+                                <div class="timeline-node done">
+                                    <strong>Triage & Division Assigned</strong>
+                                    <span>Specialized Anti-Corruption Cell #04 engaged</span>
+                                </div>
+                                <div class="timeline-node active">
+                                    <strong>Forensic Evidence Examination</strong>
+                                    <span>Officer review in progress • SLA: 48h remaining</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.25rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); display: flex; align-items: center; justify-content: space-between;">
+                            <span>Audit Hash: <span style="color: var(--cyan);">0x8f7a...3e9b</span></span>
+                            <span>Zero PII Stored</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- ════════════════════ FEATURES SECTION ════════════════════ -->
-    <section class="features" id="features">
-        <div class="section-title">
-            <h2>Powerful Features for Effective Complaint Management</h2>
-            <p>Everything you need to manage corruption complaints securely and efficiently</p>
+    <!-- ══════════════════════ MARQUEE TICKER ══════════════════════ -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <div class="marquee-item"><i class="fa-solid fa-shield-halved"></i> 256-BIT QUANTUM-RESISTANT ENCRYPTION</div>
+            <div class="marquee-item"><i class="fa-solid fa-user-ninja"></i> UNTRACEABLE CITIZEN WHISTLEBLOWER SHIELD</div>
+            <div class="marquee-item"><i class="fa-solid fa-bolt"></i> REAL-TIME SLA ESCALATION ENGINE</div>
+            <div class="marquee-item"><i class="fa-solid fa-fingerprint"></i> IMMUTABLE AUDIT LOGS & EVIDENCE VAULT</div>
+            <div class="marquee-item"><i class="fa-solid fa-building-columns"></i> 18+ GOVERNMENT DEPARTMENTS INTEGRATED</div>
+            <div class="marquee-item"><i class="fa-solid fa-chart-pie"></i> AUTOMATED BI-WEEKLY INTEGRITY REPORTS</div>
+            <!-- Duplicated for smooth loop -->
+            <div class="marquee-item"><i class="fa-solid fa-shield-halved"></i> 256-BIT QUANTUM-RESISTANT ENCRYPTION</div>
+            <div class="marquee-item"><i class="fa-solid fa-user-ninja"></i> UNTRACEABLE CITIZEN WHISTLEBLOWER SHIELD</div>
+            <div class="marquee-item"><i class="fa-solid fa-bolt"></i> REAL-TIME SLA ESCALATION ENGINE</div>
+            <div class="marquee-item"><i class="fa-solid fa-fingerprint"></i> IMMUTABLE AUDIT LOGS & EVIDENCE VAULT</div>
         </div>
+    </div>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3>Secure & Anonymous</h3>
-                <p>End-to-end encryption and anonymous whistleblower protection with encrypted communication channels.</p>
+    <!-- ══════════════════════ SECURITY MATRIX / FEATURES ══════════════════════ -->
+    <section class="security-section" id="security">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge-pill"><i class="fa-solid fa-lock"></i> Architecture Pillars</div>
+                <h2 class="section-title">Engineered for Absolute Integrity & Privacy</h2>
+                <p class="section-subtitle">
+                    State-of-the-art security mechanisms ensure that no identity is ever exposed while guaranteeing every piece of evidence is tamper-proof.
+                </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-chart-line"></i>
-                </div>
-                <h3>Real-Time Analytics</h3>
-                <p>Comprehensive dashboards with live statistics, trend analysis, and performance metrics.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <h3>SLA Tracking</h3>
-                <p>Automated Service Level Agreement tracking ensuring timely complaint resolution.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <h3>Officer Management</h3>
-                <p>Efficient assignment and tracking of investigation officers with workload balancing.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-file-pdf"></i>
-                </div>
-                <h3>Report Generation</h3>
-                <p>Automated PDF and Excel report generation for audits, statistics, and compliance.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <h3>Smart Notifications</h3>
-                <p>Real-time alerts and email notifications for all stakeholders on complaint updates.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ════════════════════ HOW IT WORKS ════════════════════ -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="section-title">
-            <h2>Simple 4-Step Process</h2>
-            <p>Filing a complaint is easy, secure, and confidential</p>
-        </div>
-
-        <div class="steps-container">
-            <div class="step fade-in">
-                <div class="step-number">1</div>
-                <h3>Submit Complaint</h3>
-                <p>Submit your complaint securely through our encrypted online portal with complete anonymity.</p>
-            </div>
-
-            <div class="step fade-in">
-                <div class="step-number">2</div>
-                <h3>Review & Categorize</h3>
-                <p>Our team reviews and categorizes your complaint for proper department assignment.</p>
-            </div>
-
-            <div class="step fade-in">
-                <div class="step-number">3</div>
-                <h3>Investigation</h3>
-                <p>Assigned officers conduct thorough investigation with regular status updates to you.</p>
-            </div>
-
-            <div class="step fade-in">
-                <div class="step-number">4</div>
-                <h3>Resolution</h3>
-                <p>Case is resolved with detailed findings and actions taken, ensuring accountability.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ════════════════════ STATS SECTION ════════════════════ -->
-    <section class="stats">
-        <div class="stats-grid">
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="1482">0</div>
-                <div class="stat-label">Complaints Managed</div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="89">0</div>
-                <div class="stat-label">Active Investigations</div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="84">0</div>
-                <div class="stat-label">% Resolution Rate</div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-number" data-target="18">0</div>
-                <div class="stat-label">Departments Covered</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ════════════════════ TESTIMONIALS ════════════════════ -->
-    <section class="testimonials">
-        <div class="section-title">
-            <h2>What Our Users Say</h2>
-            <p>Trusted by officers, administrators, and citizens across the nation</p>
-        </div>
-
-        <div class="testimonials-grid">
-            <div class="testimonial-card fade-in">
-                <div class="stars">★★★★★</div>
-                <p class="testimonial-text">"CCMS has revolutionized how we handle corruption complaints. The transparency and security features are exceptional. Highly recommended!"</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">SR</div>
-                    <div class="author-info">
-                        <h4>Inspector S. Rahman</h4>
-                        <p>Anti-Corruption Division</p>
+            <div class="security-grid">
+                <!-- Card 1 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-user-secret"></i>
+                        </div>
+                        <h3>Zero-Knowledge Whistleblower Shield</h3>
+                        <p>
+                            Personal IP addresses and device fingerprints are automatically stripped before reaching database nodes. Anonymity is mathematically guaranteed.
+                        </p>
                     </div>
+                    <ul class="feature-tag-list">
+                        <li>No IP Logging</li>
+                        <li>Tor/VPN Compatible</li>
+                        <li>Burner Token Auth</li>
+                    </ul>
                 </div>
-            </div>
 
-            <div class="testimonial-card fade-in">
-                <div class="stars">★★★★★</div>
-                <p class="testimonial-text">"As a citizen, I appreciate the anonymity and security features. I feel confident filing complaints knowing my identity is protected."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">TM</div>
-                    <div class="author-info">
-                        <h4>Tariq Mahmood</h4>
-                        <p>Citizen Whistleblower</p>
+                <!-- Card 2 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                        <h3>Encrypted Evidence Vault</h3>
+                        <p>
+                            Documents, audio recordings, and images are encrypted client-side using military-grade AES-256 before being mirrored into isolated cold storage.
+                        </p>
                     </div>
+                    <ul class="feature-tag-list">
+                        <li>Client-Side AES</li>
+                        <li>Virus & Malware Scrub</li>
+                        <li>Digital Watermarking</li>
+                    </ul>
                 </div>
-            </div>
 
-            <div class="testimonial-card fade-in">
-                <div class="stars">★★★★★</div>
-                <p class="testimonial-text">"The analytics dashboard gives us invaluable insights into corruption patterns. The reporting features have improved our strategic decision-making."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">DM</div>
-                    <div class="author-info">
-                        <h4>Dr. M. Hassan</h4>
-                        <p>Department Director</p>
+                <!-- Card 3 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-diagram-project"></i>
+                        </div>
+                        <h3>Automated Department Triage</h3>
+                        <p>
+                            Intelligent routing automatically assigns complaints to the appropriate anti-corruption commissioner based on jurisdiction and severity tiers.
+                        </p>
                     </div>
+                    <ul class="feature-tag-list">
+                        <li>Smart Routing</li>
+                        <li>Conflict-of-Interest Checks</li>
+                        <li>SLA Watchdog</li>
+                    </ul>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <h3>Immutable Forensic Audit Trail</h3>
+                        <p>
+                            Every officer action, comment, status change, and document access creates a cryptographically signed activity log that cannot be modified or deleted.
+                        </p>
+                    </div>
+                    <ul class="feature-tag-list">
+                        <li>Write-Once Logs</li>
+                        <li>Hash Chaining</li>
+                        <li>Tamper Alerts</li>
+                    </ul>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-bell-slash"></i>
+                        </div>
+                        <h3>Encrypted Notification Channel</h3>
+                        <p>
+                            Stay informed with encrypted status alerts and anonymous 2-way query channels without ever providing an email address or phone number.
+                        </p>
+                    </div>
+                    <ul class="feature-tag-list">
+                        <li>Anonymous Inbox</li>
+                        <li>Case Token Access</li>
+                        <li>End-to-End Messages</li>
+                    </ul>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="security-card">
+                    <div>
+                        <div class="card-icon-bubble">
+                            <i class="fa-solid fa-file-circle-check"></i>
+                        </div>
+                        <h3>Automated Legal & Audit Exports</h3>
+                        <p>
+                            One-click compilation of certified investigation reports formatted to supreme oversight board and judicial evidentiary standards.
+                        </p>
+                    </div>
+                    <ul class="feature-tag-list">
+                        <li>Signed PDF Dossiers</li>
+                        <li>Metadata Verifiers</li>
+                        <li>Judicial Ready</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ════════════════════ FAQ SECTION ════════════════════ -->
-    <section class="faq" id="faq">
-        <div class="section-title">
-            <h2>Frequently Asked Questions</h2>
-            <p>Find answers to common questions about CCMS</p>
-        </div>
-
-        <div class="faq-container">
-            <div class="faq-item active">
-                <div class="faq-header">
-                    <span>How do I file a complaint?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
-                </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        Simply click "Lodge Complaint" and fill out the secure form with details about the alleged corruption. You can provide evidence files and remain completely anonymous throughout the process.
-                    </div>
-                </div>
+    <!-- ══════════════════════ INVESTIGATION FLOW ══════════════════════ -->
+    <section class="process-section" id="process">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge-pill"><i class="fa-solid fa-route"></i> Transparent Workflow</div>
+                <h2 class="section-title">From Submission to Justice in 4 Stages</h2>
+                <p class="section-subtitle">
+                    A streamlined, accountable path designed to eliminate delays and ensure thorough departmental oversight.
+                </p>
             </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <span>Is my complaint completely confidential?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+            <div class="process-timeline-container">
+                <div class="process-step-card">
+                    <div class="step-index-circle">01</div>
+                    <h3>Encrypted Filing</h3>
+                    <p>Citizen submits detailed incident report and evidence with choice of complete anonymity.</p>
                 </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        Yes, our system uses end-to-end encryption and anonymous ID generation. Your personal information is never shared with the public and only authorized personnel can access complaint details.
-                    </div>
-                </div>
-            </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <span>How long does it take to resolve a complaint?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                <div class="process-step-card">
+                    <div class="step-index-circle">02</div>
+                    <h3>Forensic Triage</h3>
+                    <p>System validates evidence checksums and routes case to independent investigation unit.</p>
                 </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        Resolution time varies based on complexity. We track Service Level Agreements (SLA) for different complaint types. You can monitor progress through your dashboard anytime.
-                    </div>
-                </div>
-            </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <span>Can I track my complaint status?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                <div class="process-step-card">
+                    <div class="step-index-circle">03</div>
+                    <h3>Active Probe</h3>
+                    <p>Assigned officers gather depositions and execute on-site verification with strict SLA timers.</p>
                 </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        Absolutely! You can track your complaint status in real-time using your unique complaint ID. Updates are sent via email and are available on your personal dashboard.
-                    </div>
-                </div>
-            </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <span>What if I need to add more evidence?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                <div class="process-step-card">
+                    <div class="step-index-circle">04</div>
+                    <h3>Resolution & Action</h3>
+                    <p>Final findings are published, disciplinary/legal action is logged, and citizen is notified.</p>
                 </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        You can upload additional evidence at any time before the investigation concludes. Contact support with your complaint ID and we'll assist you in attaching the files securely.
-                    </div>
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-header">
-                    <span>Is there whistleblower protection?</span>
-                    <i class="fa-solid fa-chevron-down faq-icon"></i>
-                </div>
-                <div class="faq-content">
-                    <div class="faq-text">
-                        Yes, we provide comprehensive whistleblower protection including legal safeguards, identity protection, and confidential communication channels to ensure your safety.
-                    </div>
-                </div>
-            </section>
             </div>
         </div>
     </section>
 
-    <!-- ════════════════════ FINAL CTA ════════════════════ -->
-    <section class="final-cta" id="contact">
-        <h2>Ready to Make a Difference?</h2>
-        <p>Join thousands of citizens and officers making our communities more transparent and accountable. File a complaint today.</p>
-        <button class="cta-button" onclick="alert('Complaint form coming soon!')">
-            <i class="fa-solid fa-arrow-right"></i> Start Now
-        </button>
+    <!-- ══════════════════════ LIVE RADAR / ANALYTICS ══════════════════════ -->
+    <section class="analytics-preview-section" id="analytics">
+        <div class="container">
+            <div class="dashboard-glass-wrapper">
+                <div class="radar-top-bar">
+                    <div>
+                        <div class="badge-pill" style="margin-bottom: 0.5rem;">
+                            <span class="live-dot"></span> Live Anti-Corruption Telemetry
+                        </div>
+                        <h2 style="font-size: 1.85rem;">National Oversight Radar</h2>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">SYNC: LIVE (10s)</span>
+                        <a href="admin/analytics.html" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.82rem;">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Full Analytics
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4 Top KPI Cards -->
+                <div class="radar-stats-grid">
+                    <div class="radar-mini-card">
+                        <div class="radar-icon-val">
+                            <span class="radar-val counter" data-target="1482">0</span>
+                            <span class="radar-growth growth-up">+14% MoM</span>
+                        </div>
+                        <div class="radar-label">Total Registered Complaints</div>
+                    </div>
+
+                    <div class="radar-mini-card">
+                        <div class="radar-icon-val">
+                            <span class="radar-val counter" data-target="89">0</span>
+                            <span class="radar-growth growth-cyan">Active Now</span>
+                        </div>
+                        <div class="radar-label">Ongoing Investigations</div>
+                    </div>
+
+                    <div class="radar-mini-card">
+                        <div class="radar-icon-val">
+                            <span class="radar-val counter" data-target="1295">0</span>
+                            <span class="radar-growth growth-up">87.4%</span>
+                        </div>
+                        <div class="radar-label">Successfully Resolved</div>
+                    </div>
+
+                    <div class="radar-mini-card">
+                        <div class="radar-icon-val">
+                            <span class="radar-val counter" data-target="4.2">0</span>
+                            <span class="radar-growth growth-up">Days</span>
+                        </div>
+                        <div class="radar-label">Average Triage Time</div>
+                    </div>
+                </div>
+
+                <!-- Live Stream Feed Box -->
+                <div class="live-stream-box">
+                    <div class="stream-header">
+                        <h4><i class="fa-solid fa-satellite-dish" style="color: var(--cyan);"></i> Real-Time Public Activity Stream (Redacted)</h4>
+                        <span class="badge-pill" style="font-size: 0.72rem;">Automated Dispatch</span>
+                    </div>
+
+                    <div class="stream-items-list" id="streamList">
+                        <div class="stream-row">
+                            <div class="stream-left">
+                                <span class="stream-badge">CASE #CCMS-9831</span>
+                                <span>Evidence bundle securely uploaded & verified by Hash Checksum.</span>
+                            </div>
+                            <span class="stream-time">2 mins ago</span>
+                        </div>
+                        <div class="stream-row">
+                            <div class="stream-left">
+                                <span class="stream-badge" style="color: var(--emerald);">CASE #CCMS-9740</span>
+                                <span>Investigation completed: Disciplinary notice issued to Public Works division.</span>
+                            </div>
+                            <span class="stream-time">18 mins ago</span>
+                        </div>
+                        <div class="stream-row">
+                            <div class="stream-left">
+                                <span class="stream-badge" style="color: var(--amber);">CASE #CCMS-9712</span>
+                                <span>Triage escalated to High-Priority tier by Anti-Corruption Cell #02.</span>
+                            </div>
+                            <span class="stream-time">45 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- ════════════════════ FOOTER ════════════════════ -->
+    <!-- ══════════════════════ TESTIMONIALS ══════════════════════ -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge-pill"><i class="fa-solid fa-star"></i> Verified Trust</div>
+                <h2 class="section-title">Trusted by Investigators and Citizens</h2>
+                <p class="section-subtitle">
+                    Hear from individuals who experienced first-hand how CCMS transformed transparency and brought accountability.
+                </p>
+            </div>
+
+            <div class="testimonial-slider-grid">
+                <div class="testimonial-card">
+                    <div>
+                        <div class="rating-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">
+                            "The anonymous submission mechanism gave me the confidence to report bribery in procurement without risking my livelihood. Within 2 weeks, corrective action was taken."
+                        </p>
+                    </div>
+                    <div class="author-box">
+                        <div class="author-avatar">CW</div>
+                        <div class="author-info">
+                            <h4>Anonymous Whistleblower</h4>
+                            <p>Municipal Contractor</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div>
+                        <div class="rating-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">
+                            "As an anti-corruption commissioner, the automated SLA counters and tamper-proof audit trail have cut our case backlog by 60%. Essential public infrastructure."
+                        </p>
+                    </div>
+                    <div class="author-box">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info">
+                            <h4>Inspector S. Rahman</h4>
+                            <p>Special Oversight Bureau</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div>
+                        <div class="rating-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">
+                            "The transparent tracking timeline provided complete peace of mind. Knowing exactly when our village's school fund complaint was reviewed restored my faith in governance."
+                        </p>
+                    </div>
+                    <div class="author-box">
+                        <div class="author-avatar">TK</div>
+                        <div class="author-info">
+                            <h4>Tariq K.</h4>
+                            <p>Civic Rights Advocate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════ FAQ ACCORDION ══════════════════════ -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge-pill"><i class="fa-solid fa-circle-question"></i> Clarifications</div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">
+                    Common questions regarding your safety, legal standing, evidence handling, and investigation timelines.
+                </p>
+            </div>
+
+            <div class="faq-accordion-box">
+                <div class="faq-card active">
+                    <button class="faq-btn" onclick="toggleFaq(this)">
+                        <span>Can anyone trace my identity if I file anonymously?</span>
+                        <div class="faq-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+                    </button>
+                    <div class="faq-answer">
+                        No. When you submit an anonymous report, our system strips your IP address, device headers, and user-agent metadata before the record touches our encrypted database. You are assigned a unique cryptographic Case Token that serves as your sole key for tracking.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <button class="faq-btn" onclick="toggleFaq(this)">
+                        <span>What formats of evidence can I upload?</span>
+                        <div class="faq-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+                    </button>
+                    <div class="faq-answer">
+                        You can attach PDF documents, spreadsheets, photographs (JPEG, PNG), audio recordings (MP3, WAV), and video files up to 100MB. All files are automatically sanitized to remove EXIF location metadata before forensic storage.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <button class="faq-btn" onclick="toggleFaq(this)">
+                        <span>How long does an investigation usually take?</span>
+                        <div class="faq-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+                    </button>
+                    <div class="faq-answer">
+                        Initial triage and department routing are completed within 24 to 48 hours. Preliminary inquiries conclude within 14 business days according to national SLA statutory limits. You can monitor live progress on your tracking terminal.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <button class="faq-btn" onclick="toggleFaq(this)">
+                        <span>What happens after a corrupt act is confirmed?</span>
+                        <div class="faq-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+                    </button>
+                    <div class="faq-answer">
+                        Validated dossiers are automatically forwarded to the appropriate disciplinary tribunal, vigilance commission, or judicial prosecutor. A public summary is appended to the audit ledger while preserving complainant confidentiality.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <button class="faq-btn" onclick="toggleFaq(this)">
+                        <span>Is there legal whistleblower protection?</span>
+                        <div class="faq-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+                    </button>
+                    <div class="faq-answer">
+                        Yes. Submissions under CCMS fall under national Whistleblower Protection legislation, shielding complainants from employer retaliation, harassment, or unlawful termination.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════ FINAL CTA BANNER ══════════════════════ -->
+    <section class="cta-callout-section">
+        <div class="container">
+            <div class="cta-banner-box">
+                <div class="cta-banner-content">
+                    <div class="badge-pill" style="margin-bottom: 1rem;"><i class="fa-solid fa-bolt"></i> Break the Silence</div>
+                    <h2>Take a Stand for Transparent Governance Today</h2>
+                    <p>
+                        Your single report can halt systemic corruption and protect public resources. Safe, anonymous, and backed by law.
+                    </p>
+                    <div class="cta-buttons-center">
+                        <button class="btn btn-primary" onclick="openComplaintModal()" style="font-size: 1.05rem; padding: 1rem 2.25rem;">
+                            <i class="fa-solid fa-bullhorn"></i> File a Complaint Now
+                        </button>
+                        <a href="admin/" class="btn btn-secondary" style="font-size: 1.05rem; padding: 1rem 2rem;">
+                            <i class="fa-solid fa-shield-halved"></i> Officer Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════ FOOTER ══════════════════════ -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>CCMS</h4>
-                <p style="color: #cbd5e1; line-height: 1.8;">Building transparency and accountability through secure complaint management.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="brand-logo" style="margin-bottom: 1rem;">
+                        <div class="logo-icon-box">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="brand-text">
+                            <h1>CCMS</h1>
+                            <span>Anti-Corruption Sentinel</span>
+                        </div>
+                    </a>
+                    <p>
+                        The official high-security platform for reporting, investigating, and resolving corruption complaints with absolute confidentiality.
+                    </p>
+                    <div class="system-status-indicator">
+                        <span class="live-dot"></span> System Operational • 99.99% Uptime
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="#hero"><i class="fa-solid fa-angle-right"></i> Home Portal</a></li>
+                        <li><a href="#security"><i class="fa-solid fa-angle-right"></i> Security Matrix</a></li>
+                        <li><a href="#process"><i class="fa-solid fa-angle-right"></i> Investigation Flow</a></li>
+                        <li><a href="#analytics"><i class="fa-solid fa-angle-right"></i> National Radar</a></li>
+                        <li><a href="#faq"><i class="fa-solid fa-angle-right"></i> Knowledge Base</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Portals & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="admin/"><i class="fa-solid fa-lock"></i> Officer Administration</a></li>
+                        <li><a href="admin/reports.html"><i class="fa-solid fa-file-pdf"></i> Annual Audits</a></li>
+                        <li><a href="#"><i class="fa-solid fa-scale-balanced"></i> Whistleblower Act</a></li>
+                        <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Privacy Protocols</a></li>
+                        <li><a href="#"><i class="fa-solid fa-code"></i> API Integration</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Direct Alerts</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Receive bi-weekly transparency reports & national oversight statistics.
+                    </p>
+                    <div class="footer-subscribe-box">
+                        <input type="email" placeholder="Enter anonymous email..." id="newsletterEmail">
+                        <button class="btn btn-primary" onclick="handleSubscribe()" style="padding: 0.7rem;">
+                            <i class="fa-solid fa-paper-plane"></i> Subscribe to Alerts
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#how-it-works">How It Works</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="admin/">Admin Panel</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Corruption Complaint Management System (CCMS). Cryptographically Secured & Audited.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="social-link" title="Twitter/X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="social-link" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" class="social-link" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                </div>
             </div>
-
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Whistleblower Protection</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Report Security Issue</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 Corruption Complaint Management System. All rights reserved. | Built for transparency and accountability</p>
         </div>
     </footer>
 
-    <!-- ════════════════════ SCRIPTS ════════════════════ -->
+    <!-- ══════════════════════ MODAL: FILE COMPLAINT ══════════════════════ -->
+    <div class="modal-overlay" id="complaintModal">
+        <div class="complaint-modal-card">
+            <button class="modal-close-btn" onclick="closeComplaintModal()" title="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div style="margin-bottom: 1.5rem;">
+                <span class="badge-pill" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-shield-halved"></i> 256-Bit Encrypted Form</span>
+                <h2 style="font-size: 1.75rem; margin-top: 0.25rem;">File Corruption Complaint</h2>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">
+                    All submissions are cryptographically hashed. You may choose complete anonymity below.
+                </p>
+            </div>
+
+            <form id="complaintForm" onsubmit="handleComplaintSubmit(event)">
+                <!-- Anonymity Toggle -->
+                <div class="anonymity-switch-card">
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem; color: var(--text-main);">
+                            <i class="fa-solid fa-user-ninja" style="color: var(--cyan);"></i> Anonymous Whistleblower Mode
+                        </strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">
+                            Do not store my name, email, or IP address. Provide only a Tracking Token.
+                        </span>
+                    </div>
+                    <label class="switch-toggle">
+                        <input type="checkbox" id="anonToggle" checked onchange="toggleAnonFields(this.checked)">
+                        <span class="slider-round"></span>
+                    </label>
+                </div>
+
+                <!-- Personal Info (Hidden when anonymous) -->
+                <div id="personalInfoFields" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Full Legal Name</label>
+                            <input type="text" class="form-control" placeholder="e.g. John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" class="form-control" placeholder="email@domain.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department / Incident Location -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Target Department / Agency *</label>
+                        <select class="form-control" required style="cursor: pointer;">
+                            <option value="">Select Department...</option>
+                            <option value="revenue">Revenue & Tax Administration</option>
+                            <option value="procurement">Public Works & Procurement</option>
+                            <option value="police">Law Enforcement & Traffic</option>
+                            <option value="health">Healthcare & Medical Supply</option>
+                            <option value="education">Education & University Grants</option>
+                            <option value="land">Land Records & Urban Planning</option>
+                            <option value="other">Other Government Agency</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Incident Date Approx *</label>
+                        <input type="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Complaint Subject / Summary *</label>
+                    <input type="text" class="form-control" placeholder="e.g. Unlawful bribery demand for building permit clearance" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Detailed Incident Description & Persons Involved *</label>
+                    <textarea class="form-control" rows="4" placeholder="Describe the sequence of events, designated officer titles, demanded amounts, and locations..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-paperclip"></i> Attach Evidence (Documents, Images, Audio, Bills)</label>
+                    <input type="file" class="form-control" multiple style="padding: 0.6rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-subtle); display: block; margin-top: 4px;">
+                        Supported: PDF, JPG, PNG, MP3, MP4 up to 50MB. EXIF location data automatically sanitized.
+                    </span>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeComplaintModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-lock"></i> Submit Encrypted Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════ JAVASCRIPT LOGIC & ANIMATIONS ══════════════════════ -->
     <script>
-        // ── Header Scroll Effect ──
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
+        /* ── Theme Switching System ── */
+        const themeButtons = document.querySelectorAll('[data-set-theme]');
+        const htmlElement = document.documentElement;
+
+        // Load saved theme or default to dark
+        const savedTheme = localStorage.getItem('ccms_theme') || 'dark';
+        setTheme(savedTheme);
+
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selectedTheme = btn.getAttribute('data-set-theme');
+                setTheme(selectedTheme);
+            });
+        });
+
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('ccms_theme', theme);
+            themeButtons.forEach(btn => {
+                if (btn.getAttribute('data-set-theme') === theme) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        /* ── Typewriter Effect in Hero ── */
+        const phrases = [
+            "Real-Time Audits",
+            "Whistleblower Shields",
+            "Immutable Records",
+            "Zero-Tolerance Oversight"
+        ];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        const typewriterEl = document.getElementById('typewriterText');
+
+        function typeLoop() {
+            const currentPhrase = phrases[phraseIdx];
+            if (isDeleting) {
+                typewriterEl.textContent = currentPhrase.substring(0, charIdx - 1);
+                charIdx--;
             } else {
-                header.classList.remove('scrolled');
+                typewriterEl.textContent = currentPhrase.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 90;
+
+            if (!isDeleting && charIdx === currentPhrase.length) {
+                typeSpeed = 2200; // pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                typeSpeed = 400;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+        typeLoop();
+
+        /* ── Header Blur on Scroll ── */
+        const headerEl = document.getElementById('siteHeader');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                headerEl.classList.add('scrolled');
+            } else {
+                headerEl.classList.remove('scrolled');
             }
         });
 
-        // ── FAQ Accordion ──
-        document.querySelectorAll('.faq-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const faqItem = this.parentElement;
-                const isActive = faqItem.classList.contains('active');
-                
-                // Close all items
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Open clicked item if it wasn't active
-                if (!isActive) {
-                    faqItem.classList.add('active');
-                }
-            });
-        });
+        /* ── Animated Number Counters ── */
+        const counterEls = document.querySelectorAll('.counter');
+        let countersStarted = false;
 
-        // ── Counter Animation ──
-        const observerOptions = {
-            threshold: 0.5
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
+        const observerCounters = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.dataset.animated) {
-                    const target = parseInt(entry.target.dataset.target);
-                    const element = entry.target.querySelector('.stat-number');
-                    let current = 0;
-                    const increment = target / 50;
-                    
-                    const interval = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            element.textContent = target;
-                            clearInterval(interval);
-                        } else {
-                            element.textContent = Math.floor(current);
-                        }
-                    }, 20);
-                    
-                    entry.target.dataset.animated = true;
-                }
-            });
-        }, observerOptions);
+                if (entry.isIntersecting && !countersStarted) {
+                    countersStarted = true;
+                    counterEls.forEach(counter => {
+                        const target = parseFloat(counter.getAttribute('data-target'));
+                        const isDecimal = target % 1 !== 0;
+                        const duration = 1800;
+                        const stepTime = 25;
+                        const steps = duration / stepTime;
+                        const increment = target / steps;
+                        let current = 0;
 
-        document.querySelectorAll('.stat-card').forEach(card => {
-            observer.observe(card);
-        });
-
-        // ── Fade In Animation on Scroll ──
-        const fadeInObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-in').forEach(element => {
-            fadeInObserver.observe(element);
-        });
-
-        // ── Mobile Menu Toggle ──
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
-
-        // ── Smooth Scroll ──
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                counter.textContent = isDecimal ? target.toFixed(1) : target;
+                                clearInterval(timer);
+                            } else {
+                                counter.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+                            }
+                        }, stepTime);
                     });
                 }
             });
+        }, { threshold: 0.3 });
+
+        counterEls.forEach(c => observerCounters.observe(c));
+
+        /* ── Interactive 3D Card Tilt Effect ── */
+        const terminalCard = document.getElementById('terminalCard');
+        if (terminalCard) {
+            terminalCard.addEventListener('mousemove', (e) => {
+                const rect = terminalCard.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                const rotateX = -(y / rect.height) * 12;
+                const rotateY = (x / rect.width) * 12;
+                terminalCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            terminalCard.addEventListener('mouseleave', () => {
+                terminalCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            });
+        }
+
+        /* ── Interactive Case Tracker Simulator ── */
+        function loadSampleCase(id, status, dept, stage) {
+            document.getElementById('sampleTrackerInput').value = id;
+            document.getElementById('displayCaseId').textContent = id;
+            document.getElementById('displayCaseDept').textContent = dept;
+            const statusBadge = document.getElementById('displayCaseStatus');
+            statusBadge.textContent = status;
+
+            if (stage === 3) {
+                statusBadge.className = 'case-status-badge status-resolved';
+                document.getElementById('displayTimeline').innerHTML = `
+                    <div class="timeline-node done">
+                        <strong>Encrypted Submission Verified</strong>
+                        <span>Cryptographic timestamp logged & SHA-256 sealed</span>
+                    </div>
+                    <div class="timeline-node done">
+                        <strong>Forensic Evidence Examination</strong>
+                        <span>Cross-verified with internal bank & procurement ledger</span>
+                    </div>
+                    <div class="timeline-node done">
+                        <strong>Disciplinary Action Executed</strong>
+                        <span>Officer suspended • Recovery protocol initiated</span>
+                    </div>
+                `;
+            } else {
+                statusBadge.className = 'case-status-badge status-investigating';
+                document.getElementById('displayTimeline').innerHTML = `
+                    <div class="timeline-node done">
+                        <strong>Encrypted Submission Verified</strong>
+                        <span>Cryptographic timestamp logged & SHA-256 sealed</span>
+                    </div>
+                    <div class="timeline-node done">
+                        <strong>Triage & Division Assigned</strong>
+                        <span>Specialized Anti-Corruption Cell #04 engaged</span>
+                    </div>
+                    <div class="timeline-node active">
+                        <strong>Forensic Evidence Examination</strong>
+                        <span>Officer review in progress • SLA: 48h remaining</span>
+                    </div>
+                `;
+            }
+        }
+
+        function simulateTrackCase() {
+            const inputVal = document.getElementById('sampleTrackerInput').value.trim();
+            if (!inputVal) {
+                alert('Please enter a valid Complaint Tracking Token.');
+                return;
+            }
+
+            const randomDepts = ['Procurement Cell', 'Revenue & Customs', 'Public Health Inspection', 'Urban Land Vigilance'];
+            const randomDept = randomDepts[Math.floor(Math.random() * randomDepts.length)];
+            
+            document.getElementById('displayCaseId').textContent = inputVal.toUpperCase();
+            document.getElementById('displayCaseDept').textContent = randomDept;
+            document.getElementById('displayCaseStatus').className = 'case-status-badge status-investigating';
+            document.getElementById('displayCaseStatus').textContent = 'Investigation In Progress';
+
+            document.getElementById('displayTimeline').innerHTML = `
+                <div class="timeline-node done">
+                    <strong>Complaint Token Authenticated</strong>
+                    <span>Valid encrypted ledger entry located</span>
+                </div>
+                <div class="timeline-node done">
+                    <strong>Assigned to ${randomDept}</strong>
+                    <span>Vigilance Officer reviewing submitted documents</span>
+                </div>
+                <div class="timeline-node active">
+                    <strong>On-Site Inquiry Scheduled</strong>
+                    <span>Witness depositions underway</span>
+                </div>
+            `;
+        }
+
+        /* ── FAQ Accordion ── */
+        function toggleFaq(btn) {
+            const parentCard = btn.closest('.faq-card');
+            const isActive = parentCard.classList.contains('active');
+            
+            document.querySelectorAll('.faq-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            if (!isActive) {
+                parentCard.classList.add('active');
+            }
+        }
+
+        /* ── Modal Handling ── */
+        const modal = document.getElementById('complaintModal');
+        function openComplaintModal() {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeComplaintModal() {
+            modal.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeComplaintModal();
+            }
         });
+
+        function toggleAnonFields(isAnon) {
+            const personalFields = document.getElementById('personalInfoFields');
+            personalFields.style.display = isAnon ? 'none' : 'block';
+        }
+
+        function handleComplaintSubmit(e) {
+            e.preventDefault();
+            const token = 'CCMS-2026-' + Math.floor(1000 + Math.random() * 9000);
+            alert(`🔒 Complaint Encrypted & Filed Successfully!\n\nYour Unique Tracking Token is: ${token}\n\nPlease copy this token to track your case anonymously anytime.`);
+            closeComplaintModal();
+            loadSampleCase(token, 'Under Initial Triage', 'Anti-Corruption Cell', 2);
+        }
+
+        function handleSubscribe() {
+            const emailInput = document.getElementById('newsletterEmail');
+            if (!emailInput.value.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            alert('🎉 Subscribed successfully to CCMS national transparency alerts!');
+            emailInput.value = '';
+        }
+
+        /* ── Mobile Menu Toggle ── */
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        mobileBtn.addEventListener('click', () => {
+            const isVisible = navMenu.style.display === 'flex';
+            if (isVisible) {
+                navMenu.style.display = 'none';
+            } else {
+                navMenu.style.display = 'flex';
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.position = 'absolute';
+                navMenu.style.top = '80px';
+                navMenu.style.left = '0';
+                navMenu.style.width = '100%';
+                navMenu.style.background = 'var(--bg-surface)';
+                navMenu.style.padding = '2rem';
+                navMenu.style.borderBottom = '1px solid var(--border-color)';
+            }
+        });
+
+        /* ── Interactive Particle Background Canvas ── */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(canvas.width / 22, 55);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${0.25 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
     </script>
 </body>
 </html>
