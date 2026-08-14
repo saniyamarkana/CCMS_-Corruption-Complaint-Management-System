@@ -1,34 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Complaints — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
 
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
     <div class="sb-brand">
       <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
       <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
     </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
@@ -42,6 +54,7 @@
     </div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
@@ -53,17 +66,17 @@
       </div>
       <div class="nav-actions">
         <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
-        <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <button class="nav-icon-btn" id="themeToggle" title="Toggle Theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown">
           <div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown">
             <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin">
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li>
-            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
+            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -74,128 +87,238 @@
         <div>
           <div class="page-breadcrumb">
             <a href="index.html"><i class="fa-solid fa-house"></i></a>
-            <i class="fa-solid fa-chevron-right"></i><span>Manage Complaints</span>
+            <i class="fa-solid fa-chevron-right"></i><span>Complaints Master Docket</span>
           </div>
           <h1 class="page-title">Master Complaint Repository</h1>
           <p class="page-subtitle">Complete database of all corruption reports, whistleblower dockets, and active investigations.</p>
         </div>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newComplaintModal">
-          <i class="fa-solid fa-plus"></i> Lodge New Complaint
-        </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-primary btn-export-pdf" data-doc-name="Complaint_Repository_Full">
+            <i class="fa-solid fa-file-pdf"></i> Export Dossier
+          </button>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newComplaintModal">
+            <i class="fa-solid fa-plus"></i> Lodge New Complaint
+          </button>
+        </div>
       </div>
 
       <!-- KPI Row -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">1482</div><div class="kpi-label">Total Filed</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">245</div><div class="kpi-label">Pending Review</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">89</div><div class="kpi-label">Investigating</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">1078</div><div class="kpi-label">Resolved</div></div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-folder-tree"></i></div>
+          <div class="kpi-value counter-value">1482</div>
+          <div class="kpi-label">Total Filed</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +12% MoM</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="kpi-value counter-value">245</div>
+          <div class="kpi-label">Pending Allocation</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-hourglass-half"></i> In Triage</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="kpi-value counter-value">89</div>
+          <div class="kpi-label">Active Probes</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-bolt"></i> SLA Monitored</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="kpi-value counter-value">1078</div>
+          <div class="kpi-label">Resolved & Actioned</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> 87.4% Rate</div>
+        </div>
       </div>
 
-      <!-- Filter Bar -->
+      <!-- Interactive Multi-Filter Bar -->
       <div class="filter-bar">
         <div class="row g-3 align-items-end">
           <div class="col-md-3">
-            <label class="form-label">Filter by Status</label>
-            <select class="form-select"><option>All Case Statuses</option><option>New</option><option>Pending</option><option>Investigating</option><option>Resolved</option><option>Rejected</option></select>
+            <label class="form-label">Status Filter</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-filter-circle-dollar input-icon"></i>
+              <select class="form-select" id="statusFilter">
+                <option value="all">All Case Statuses</option>
+                <option value="New">New & Unassigned</option>
+                <option value="Pending">Pending Review</option>
+                <option value="Investigating">Active Investigation</option>
+                <option value="Resolved">Resolved & Closed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
           </div>
           <div class="col-md-3">
-            <label class="form-label">Filter by Department</label>
-            <select class="form-select"><option>All Departments</option><option>Public Works & Transport</option><option>Land & Revenue Board</option><option>Customs & Excise</option><option>Healthcare Directorate</option></select>
+            <label class="form-label">Department</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-building-columns input-icon"></i>
+              <select class="form-select" id="deptFilter">
+                <option value="all">All Departments</option>
+                <option value="Public Works">Public Works & Transport</option>
+                <option value="Land">Land & Revenue Board</option>
+                <option value="Customs">Customs & Excise</option>
+                <option value="Healthcare">Healthcare Directorate</option>
+                <option value="Police">Law Enforcement Cell</option>
+              </select>
+            </div>
           </div>
           <div class="col-md-2">
-            <label class="form-label">Priority Level</label>
-            <select class="form-select"><option>All Priorities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+            <label class="form-label">Priority</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-fire input-icon"></i>
+              <select class="form-select" id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
           </div>
-          <div class="col-md-2">
-            <label class="form-label">From Date</label>
-            <input type="date" class="form-control" value="2026-01-01">
-          </div>
-          <div class="col-md-2 d-flex gap-2">
-            <button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Filter</button>
-            <button class="btn btn-ghost" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+          <div class="col-md-4 d-flex gap-2">
+            <button class="btn btn-primary flex-grow-1" onclick="filterTableData()"><i class="fa-solid fa-filter"></i> Apply</button>
+            <button class="btn btn-ghost btn-reset-filters" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i> Reset</button>
           </div>
         </div>
       </div>
 
-      <!-- Complaints Table -->
+      <!-- Complaints Master Table -->
       <div class="card-box">
         <div class="card-box-head">
           <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-folder-open"></i></div>Complaint Master Docket</div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Complaints_Master_Export"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
-            <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-file-csv" style="color:var(--emerald-500);"></i> CSV</button>
+          <div class="d-flex gap-2 align-items-center">
+            <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Complaints_Master_Export"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('CSV export downloaded', 'success')"><i class="fa-solid fa-file-csv" style="color:var(--emerald-500);"></i> CSV</button>
           </div>
         </div>
         <div class="tbl-wrap">
           <table class="tbl" id="complaintsTable">
             <thead>
               <tr>
+                <th style="width: 40px;" class="no-sort"><input type="checkbox" class="form-check-input select-all-checkbox" id="selectAllRows"></th>
                 <th>Tracking ID</th>
-                <th>Complainant</th>
-                <th>Department</th>
-                <th>Category</th>
+                <th>Complainant Source</th>
+                <th>Department Scope</th>
+                <th>Corruption Category</th>
                 <th>Priority</th>
                 <th>Assigned Officer</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>Case Status</th>
+                <th class="text-end no-sort">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><a href="#" class="fw-bold" style="color:var(--indigo-600);">#CCMS-9821</a><div class="extra-small" style="color:var(--text-3);">Aug 07, 2026</div></td>
-                <td><div class="d-flex align-items-center gap-2"><span style="background:var(--g-dark);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;"><i class="fa-solid fa-user-secret"></i></span><div><div class="fw-semibold" style="font-size:.82rem;">Whistleblower WB-9921</div><div class="extra-small" style="color:var(--text-3);">Encrypted ID</div></div></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <a href="#" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);" onclick="openViewComplaint('#CCMS-9821', 'Whistleblower WB-9921 (Encrypted)', 'Public Works & Transport', 'Bribery & Kickbacks', 'Critical', 'K. Al-Hassan (ACO-401)', 'New', 'Highway Bridge Tender 15% kickback demand with audio evidence.')">#CCMS-9821</a>
+                  <div class="extra-small text-muted">Aug 07, 2026</div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <span style="background:var(--g-dark);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;"><i class="fa-solid fa-user-secret"></i></span>
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Whistleblower WB-9921</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">Encrypted Anonymity</div>
+                    </div>
+                  </div>
+                </td>
                 <td style="font-size:.82rem;">Public Works &amp; Transport</td>
                 <td style="font-size:.82rem;">Bribery / Kickbacks</td>
                 <td><span class="chip-critical">Critical</span></td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">K. Al-Hassan</div><div class="extra-small" style="color:var(--text-3);">ACO-401</div></td>
-                <td><span class="pill pill-new"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> New</span></td>
-                <td><div class="d-flex gap-1">
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewDetailsModal" title="View"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#updateStatusModal" title="Update Status"><i class="fa-solid fa-rotate" style="color:var(--amber-500);"></i></button>
-                  <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint" title="Delete"><i class="fa-solid fa-trash" style="color:var(--rose-500);"></i></button>
-                </div></td>
+                <td><div class="fw-semibold" style="font-size:.82rem;">K. Al-Hassan</div><div class="extra-small text-muted" style="font-family:var(--font-mono);">ACO-401</div></td>
+                <td><span class="pill pill-new pill-live">New</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openViewComplaint('#CCMS-9821', 'Whistleblower WB-9921 (Encrypted)', 'Public Works & Transport', 'Bribery & Kickbacks', 'Critical', 'K. Al-Hassan (ACO-401)', 'New', 'Highway Bridge Tender 15% kickback demand with audio evidence.')" title="View Case"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openStatusModal('#CCMS-9821')" title="Update Status"><i class="fa-solid fa-rotate text-warning"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint" title="Delete"><i class="fa-solid fa-trash text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
+
               <tr>
-                <td><a href="#" class="fw-bold" style="color:var(--indigo-600);">#CCMS-9820</a><div class="extra-small" style="color:var(--text-3);">Aug 06, 2026</div></td>
-                <td><div class="d-flex align-items-center gap-2"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt=""><div><div class="fw-semibold" style="font-size:.82rem;">Tariq Mahmood</div><div class="extra-small" style="color:var(--text-3);">Citizen #88412</div></div></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <a href="#" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);" onclick="openViewComplaint('#CCMS-9820', 'Tariq Mahmood (Citizen #88412)', 'Land & Revenue Board', 'Embezzlement', 'High', 'N. Jahan (ACO-402)', 'Investigating', 'Falsified deed registration and unlawful extortion of title transfer fees.')">#CCMS-9820</a>
+                  <div class="extra-small text-muted">Aug 06, 2026</div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="">
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Tariq Mahmood</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">Citizen #88412</div>
+                    </div>
+                  </div>
+                </td>
                 <td style="font-size:.82rem;">Land &amp; Revenue Board</td>
                 <td style="font-size:.82rem;">Embezzlement</td>
                 <td><span class="chip-high">High</span></td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">N. Jahan</div><div class="extra-small" style="color:var(--text-3);">ACO-402</div></td>
-                <td><span class="pill pill-investigating"><i class="fa-solid fa-magnifying-glass" style="font-size:.4rem;"></i> Investigating</span></td>
-                <td><div class="d-flex gap-1">
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewDetailsModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#updateStatusModal"><i class="fa-solid fa-rotate" style="color:var(--amber-500);"></i></button>
-                  <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint"><i class="fa-solid fa-trash" style="color:var(--rose-500);"></i></button>
-                </div></td>
+                <td><div class="fw-semibold" style="font-size:.82rem;">N. Jahan</div><div class="extra-small text-muted" style="font-family:var(--font-mono);">ACO-402</div></td>
+                <td><span class="pill pill-investigating pill-live">Investigating</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openViewComplaint('#CCMS-9820', 'Tariq Mahmood (Citizen #88412)', 'Land & Revenue Board', 'Embezzlement', 'High', 'N. Jahan (ACO-402)', 'Investigating', 'Falsified deed registration and unlawful extortion of title transfer fees.')"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openStatusModal('#CCMS-9820')"><i class="fa-solid fa-rotate text-warning"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint"><i class="fa-solid fa-trash text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
+
               <tr>
-                <td><a href="#" class="fw-bold" style="color:var(--indigo-600);">#CCMS-9819</a><div class="extra-small" style="color:var(--text-3);">Aug 05, 2026</div></td>
-                <td><div class="d-flex align-items-center gap-2"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt=""><div><div class="fw-semibold" style="font-size:.82rem;">Farhana Akhtar</div><div class="extra-small" style="color:var(--text-3);">Citizen #90123</div></div></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <a href="#" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);" onclick="openViewComplaint('#CCMS-9819', 'Farhana Akhtar (Citizen #90123)', 'Customs & Excise', 'Procurement Fraud', 'Medium', 'Unassigned', 'Pending', 'Unauthorized container clearance without duty declaration.')">#CCMS-9819</a>
+                  <div class="extra-small text-muted">Aug 05, 2026</div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="">
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Farhana Akhtar</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">Citizen #90123</div>
+                    </div>
+                  </div>
+                </td>
                 <td style="font-size:.82rem;">Customs &amp; Excise</td>
                 <td style="font-size:.82rem;">Procurement Fraud</td>
                 <td><span class="chip-medium">Medium</span></td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">Unassigned</div><div class="extra-small" style="color:var(--rose-500);">Needs Allocation</div></td>
-                <td><span class="pill pill-pending"><i class="fa-solid fa-clock" style="font-size:.4rem;"></i> Pending</span></td>
-                <td><div class="d-flex gap-1">
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewDetailsModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                  <a href="assign-complaints.html" class="btn btn-primary btn-icon btn-sm" title="Assign Officer"><i class="fa-solid fa-user-plus"></i></a>
-                  <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint"><i class="fa-solid fa-trash" style="color:var(--rose-500);"></i></button>
-                </div></td>
+                <td><div class="fw-semibold text-danger" style="font-size:.82rem;">Unassigned</div><div class="extra-small text-danger">Needs Allocation</div></td>
+                <td><span class="pill pill-pending pill-live">Pending</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openViewComplaint('#CCMS-9819', 'Farhana Akhtar (Citizen #90123)', 'Customs & Excise', 'Procurement Fraud', 'Medium', 'Unassigned', 'Pending', 'Unauthorized container clearance without duty declaration.')"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <a href="assign-complaints.html" class="btn btn-primary btn-icon btn-sm" title="Assign Officer"><i class="fa-solid fa-user-plus"></i></a>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint"><i class="fa-solid fa-trash text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
+
               <tr>
-                <td><a href="#" class="fw-bold" style="color:var(--indigo-600);">#CCMS-9801</a><div class="extra-small" style="color:var(--text-3);">Jul 30, 2026</div></td>
-                <td><div class="d-flex align-items-center gap-2"><span style="background:var(--g-dark);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;"><i class="fa-solid fa-user-secret"></i></span><div><div class="fw-semibold" style="font-size:.82rem;">Whistleblower WB-8810</div><div class="extra-small" style="color:var(--text-3);">Encrypted ID</div></div></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <a href="#" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);" onclick="openViewComplaint('#CCMS-9801', 'Whistleblower WB-8810 (Encrypted)', 'Healthcare Directorate', 'Abuse of Power', 'Critical', 'R. Islam (ACO-403)', 'Resolved', 'Medical equipment supply misappropriation confirmed. Recovery notice executed.')">#CCMS-9801</a>
+                  <div class="extra-small text-muted">Jul 30, 2026</div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <span style="background:var(--g-dark);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;"><i class="fa-solid fa-user-secret"></i></span>
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Whistleblower WB-8810</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">Encrypted Anonymity</div>
+                    </div>
+                  </div>
+                </td>
                 <td style="font-size:.82rem;">Healthcare Directorate</td>
                 <td style="font-size:.82rem;">Abuse of Power</td>
                 <td><span class="chip-critical">Critical</span></td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">R. Islam</div><div class="extra-small" style="color:var(--text-3);">ACO-403</div></td>
-                <td><span class="pill pill-resolved"><i class="fa-solid fa-circle-check" style="font-size:.4rem;"></i> Resolved</span></td>
-                <td><div class="d-flex gap-1">
-                  <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewDetailsModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                  <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i></button>
-                </div></td>
+                <td><div class="fw-semibold" style="font-size:.82rem;">R. Islam</div><div class="extra-small text-muted" style="font-family:var(--font-mono);">ACO-403</div></td>
+                <td><span class="pill pill-resolved pill-live">Resolved</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="openViewComplaint('#CCMS-9801', 'Whistleblower WB-8810 (Encrypted)', 'Healthcare Directorate', 'Abuse of Power', 'Critical', 'R. Islam (ACO-403)', 'Resolved', 'Medical equipment supply misappropriation confirmed. Recovery notice executed.')"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Complaint_9801_CaseFile"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -205,110 +328,207 @@
   </div>
 </div>
 
-<!-- Lodge New Complaint Modal -->
+<!-- ══════════════════════ MODAL: LODGE NEW COMPLAINT ══════════════════════ -->
 <div class="modal fade" id="newComplaintModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="fa-solid fa-folder-plus me-2" style="color:var(--indigo-500);"></i>Lodge New Corruption Complaint</h5>
+        <h5 class="modal-title"><i class="fa-solid fa-folder-plus text-primary me-2"></i> Lodge New Corruption Complaint</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <form class="ajax-form">
         <div class="modal-body" style="padding:24px;">
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Target Department</label>
-              <select class="form-select" required><option value="">Select Department</option><option>Public Works & Transport</option><option>Land & Revenue Board</option><option>Customs & Excise</option><option>Healthcare Directorate</option></select>
+          <!-- Step indicators -->
+          <div class="form-steps-nav">
+            <div class="form-step-item active">
+              <div class="form-step-circle">1</div>
+              <div class="form-step-label">Jurisdiction</div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Offense Category</label>
-              <select class="form-select" required><option value="">Select Category</option><option>Bribery & Kickbacks</option><option>Public Fund Embezzlement</option><option>Procurement & Tender Fraud</option><option>Abuse of Power</option></select>
+            <div class="form-step-item">
+              <div class="form-step-circle">2</div>
+              <div class="form-step-label">Allegation</div>
             </div>
-          </div>
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Complainant Identity</label>
-              <select class="form-select"><option value="Citizen">Registered Public Citizen</option><option value="Whistleblower">Protected Whistleblower (Anonymous)</option></select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Severity Priority</label>
-              <select class="form-select"><option value="Critical">🔴 Critical Priority (7-Day SLA)</option><option value="High">🟡 High Priority (14-Day SLA)</option><option value="Medium">🔵 Medium Priority (21-Day SLA)</option><option value="Low">⚪ Low Priority (30-Day SLA)</option></select>
+            <div class="form-step-item">
+              <div class="form-step-circle">3</div>
+              <div class="form-step-label">Evidence</div>
             </div>
           </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Target Department *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-building-columns input-icon"></i>
+                <select class="form-select" required>
+                  <option value="">Select Department...</option>
+                  <option>Public Works & Transport</option>
+                  <option>Land & Revenue Board</option>
+                  <option>Customs & Excise</option>
+                  <option>Healthcare Directorate</option>
+                  <option>Education & University Grants</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Offense Category *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-tags input-icon"></i>
+                <select class="form-select" required>
+                  <option value="">Select Category...</option>
+                  <option>Bribery & Kickbacks</option>
+                  <option>Public Fund Embezzlement</option>
+                  <option>Procurement & Tender Fraud</option>
+                  <option>Abuse of Power</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Complainant Identity Protocol *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-user-shield input-icon"></i>
+                <select class="form-select">
+                  <option value="whistleblower">Protected Whistleblower (Encrypted Anonymous)</option>
+                  <option value="citizen">Registered Public Citizen</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">SLA Severity Level *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-triangle-exclamation input-icon"></i>
+                <select class="form-select">
+                  <option value="Critical">🔴 Critical Priority (7-Day Statutory SLA)</option>
+                  <option value="High">🟡 High Priority (14-Day SLA)</option>
+                  <option value="Medium" selected>🔵 Medium Priority (21-Day SLA)</option>
+                  <option value="Low">⚪ Low Priority (30-Day SLA)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div class="mb-3">
-            <label class="form-label">Allegation Details</label>
-            <textarea class="form-control" rows="4" required placeholder="Describe the corruption event — involved officials, date, location, demanded amount…"></textarea>
+            <label class="form-label">Allegation Statement & Particulars *</label>
+            <textarea class="form-control" rows="4" required placeholder="Describe the corrupt transaction, involved official positions, requested amounts, exact locations, and timestamps..."></textarea>
+            <div class="char-counter">0 / 2,000 characters</div>
           </div>
+
           <div class="mb-0">
-            <label class="form-label">Evidence Attachments (PDF, Audio, Images)</label>
-            <input type="file" class="form-control" multiple accept=".pdf,.mp3,.jpg,.png">
+            <label class="form-label">Attach Sanitized Evidence</label>
+            <div class="file-dropzone">
+              <div class="file-dropzone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <p class="mb-1 dropzone-text"><strong>Drag & Drop Evidence Files Here</strong> or <span class="text-primary fw-bold">Browse</span></p>
+              <span class="extra-small text-muted">Supports PDF, JPG, PNG, MP3, MP4 up to 50MB. EXIF metadata is stripped automatically.</span>
+              <input type="file" multiple accept=".pdf,.mp3,.mp4,.jpg,.png,.docx">
+            </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Complaint</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-lock me-1"></i> Register & Encrypt Docket</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- View Details Modal -->
+<!-- ══════════════════════ MODAL: VIEW DETAILS ══════════════════════ -->
 <div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <div><div class="d-flex gap-2 mb-1"><span class="pill pill-new">New</span><span class="chip-critical">Critical</span></div>
-        <h5 class="modal-title">#CCMS-9821 — Bribery Case File</h5></div>
+        <div>
+          <div class="d-flex gap-2 mb-1">
+            <span class="pill pill-new" id="modalViewStatusBadge">New</span>
+            <span class="chip-critical" id="modalViewPriority">Critical</span>
+          </div>
+          <h5 class="modal-title" id="modalViewId">#CCMS-9821 — Complaint Dossier</h5>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" style="padding:24px;">
-        <div style="background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:12px;padding:14px 18px;display:flex;gap:12px;margin-bottom:20px;">
-          <i class="fa-solid fa-triangle-exclamation" style="color:#f43f5e;font-size:1.1rem;margin-top:2px;"></i>
-          <div><div class="fw-bold" style="color:#f43f5e;">CRITICAL — SLA Expires in 12 Hours</div><div class="extra-small" style="color:var(--text-2);">Immediate officer assignment required. Whistleblower identity protected.</div></div>
+        <div class="p-3 border rounded-3 bg-body-tertiary mb-3">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="extra-small text-muted">Complainant:</div>
+              <strong id="modalViewComplainant">Whistleblower WB-9921</strong>
+            </div>
+            <div class="col-md-6">
+              <div class="extra-small text-muted">Department Scope:</div>
+              <strong id="modalViewDept">Public Works & Transport</strong>
+            </div>
+            <div class="col-md-6 mt-2">
+              <div class="extra-small text-muted">Assigned Officer:</div>
+              <strong id="modalViewOfficer">K. Al-Hassan (ACO-401)</strong>
+            </div>
+            <div class="col-md-6 mt-2">
+              <div class="extra-small text-muted">Category:</div>
+              <strong id="modalViewCat">Bribery & Kickbacks</strong>
+            </div>
+          </div>
         </div>
-        <p style="font-size:.875rem;color:var(--text-2);line-height:1.7;">Allegation of illegal bribery during highway bridge maintenance tender. Officials demanded 15% kickback. Audio recordings and financial receipts submitted as evidence.</p>
-        <div class="timeline mt-3">
-          <div class="tl-item"><div class="tl-dot indigo"><i class="fa-solid fa-plus"></i></div><div class="tl-body"><div class="tl-title">Complaint Registered</div><div class="tl-time">Aug 07, 2026 · 09:15 AM</div><div class="tl-desc">Submitted by Whistleblower WB-9921 with 2 encrypted attachments.</div></div></div>
-          <div class="tl-item"><div class="tl-dot amber"><i class="fa-solid fa-hourglass"></i></div><div class="tl-body"><div class="tl-title">Assignment Pending</div><div class="tl-time">Aug 07, 2026 · 10:00 AM</div><div class="tl-desc">Awaiting officer allocation by HQ Anti-Corruption.</div></div></div>
+
+        <h6 class="fw-bold extra-small text-uppercase text-muted mb-2">Allegation Statement</h6>
+        <p style="font-size:.875rem;line-height:1.7;" id="modalViewDesc">
+          Allegation of illegal bribery during highway bridge maintenance tender. Officials demanded 15% kickback. Audio recordings and financial receipts submitted as evidence.
+        </p>
+
+        <h6 class="fw-bold extra-small text-uppercase text-muted mt-4 mb-3">Investigation Milestone Audit</h6>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot indigo"><i class="fa-solid fa-plus"></i></div><div class="tl-body"><div class="tl-title">Complaint Registered & Checksum Signed</div><div class="tl-time">Aug 07, 2026 · 09:15 AM</div><div class="tl-desc">Automated SHA-256 hash stamp applied. Initial triage completed.</div></div></div>
+          <div class="tl-item"><div class="tl-dot amber"><i class="fa-solid fa-user-tag"></i></div><div class="tl-body"><div class="tl-title">Assigned to Anti-Corruption Cell #01</div><div class="tl-time">Aug 07, 2026 · 10:00 AM</div><div class="tl-desc">Officer assigned with statutory 7-day turnaround requirement.</div></div></div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
-        <a href="assign-complaints.html" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus"></i> Assign Officer</a>
-        <button class="btn btn-primary btn-export-pdf" data-doc-name="Complaint_9821_CaseFile"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+        <a href="assign-complaints.html" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus"></i> Reassign</a>
+        <button class="btn btn-primary btn-export-pdf" data-doc-name="Complaint_Case_Dossier"><i class="fa-solid fa-file-pdf"></i> Download Official PDF</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Update Status Modal -->
+<!-- ══════════════════════ MODAL: UPDATE STATUS ══════════════════════ -->
 <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="fa-solid fa-rotate me-2" style="color:var(--amber-500);"></i>Update Complaint Status</h5>
+        <h5 class="modal-title"><i class="fa-solid fa-rotate text-warning me-2"></i> Update Investigation Status</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <form class="ajax-form">
         <div class="modal-body" style="padding:24px;">
           <div class="mb-3">
-            <label class="form-label">New Status</label>
-            <select class="form-select" id="newStatus" required>
-              <option value="">Select New Status</option>
-              <option value="Under Active Investigation">🔍 Under Active Investigation</option>
-              <option value="Resolved & Closed">✅ Resolved &amp; Closed</option>
-              <option value="Rejected / Dismissed">❌ Rejected / Dismissed</option>
-            </select>
+            <label class="form-label">Selected Case Docket</label>
+            <input type="text" class="form-control" id="statusTargetCase" value="#CCMS-9821" readonly style="font-family:var(--font-mono);">
           </div>
-          <div class="mb-0">
-            <label class="form-label">Officer Findings & Remarks</label>
-            <textarea class="form-control" rows="4" required placeholder="Enter investigation notes, evidence findings, or resolution summary…"></textarea>
+          <div class="mb-3">
+            <label class="form-label">New Investigation State *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-arrows-spin input-icon"></i>
+              <select class="form-select" id="newStatus" required>
+                <option value="">Select New Status...</option>
+                <option value="Under Active Investigation">🔍 Under Active Investigation</option>
+                <option value="Evidence Verified & Trial Scheduled">⚖️ Evidence Verified / Action Initiated</option>
+                <option value="Resolved & Closed">✅ Resolved &amp; Closed</option>
+                <option value="Rejected / Dismissed">❌ Rejected / Lack of Substantial Evidence</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Investigator Findings & Disciplinary Directive *</label>
+            <textarea class="form-control" rows="4" required placeholder="Detail the official evidence findings, sanctions, or rationale for resolution..."></textarea>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="notifyCitizenCheck" checked>
+            <label class="form-check-label extra-small" for="notifyCitizenCheck">Dispatch encrypted status notice to Complainant's anonymous inbox</label>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Update Status &amp; Notify</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i> Sign &amp; Commit Status</button>
         </div>
       </form>
     </div>
@@ -319,5 +539,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  function openViewComplaint(id, complainant, dept, cat, priority, officer, status, desc) {
+    $('#modalViewId').text(`${id} — Case File`);
+    $('#modalViewComplainant').text(complainant);
+    $('#modalViewDept').text(dept);
+    $('#modalViewCat').text(cat);
+    $('#modalViewPriority').text(priority);
+    $('#modalViewOfficer').text(officer);
+    $('#modalViewStatusBadge').text(status);
+    $('#modalViewDesc').text(desc);
+    const modal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
+    modal.show();
+  }
+
+  function openStatusModal(caseId) {
+    $('#statusTargetCase').val(caseId);
+    const modal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+    modal.show();
+  }
+</script>
 </body>
 </html>

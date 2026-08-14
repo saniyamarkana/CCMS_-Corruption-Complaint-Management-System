@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Officers — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
@@ -23,19 +24,32 @@
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
-    <div class="sb-brand"><div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div><div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
+    </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
@@ -44,17 +58,18 @@
     <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search officer name, badge, rank…"></div>
+        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="officerSearch" placeholder="Search officer name, badge, rank…"></div>
       </div>
       <div class="nav-actions">
         <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div>
-          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
+          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li><li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
         </div>
       </div>
     </nav>
@@ -63,30 +78,87 @@
       <div class="page-header">
         <div>
           <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Manage Officers</span></div>
-          <h1 class="page-title">Anti-Corruption Officers</h1>
-          <p class="page-subtitle">Roster of all investigating officers, their ranks, workloads, and performance metrics.</p>
+          <h1 class="page-title">Anti-Corruption Investigators Roster</h1>
+          <p class="page-subtitle">Roster of all investigating officers, their ranks, caseloads, and statutory clearance metrics.</p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
           <button class="btn btn-ghost btn-export-pdf" data-doc-name="Officers_Roster_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOfficerModal"><i class="fa-solid fa-user-plus"></i> Add Officer</button>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOfficerModal"><i class="fa-solid fa-user-plus"></i> Register Officer</button>
         </div>
       </div>
 
       <!-- KPI Row -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">64</div><div class="kpi-label">Total Officers</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">58</div><div class="kpi-label">On Active Duty</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">6</div><div class="kpi-label">On Leave</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">245</div><div class="kpi-label">Active Assignments</div></div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-id-badge"></i></div>
+          <div class="kpi-value counter-value">64</div>
+          <div class="kpi-label">Total Officers</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> 18 Divisions</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <div class="kpi-value counter-value">58</div>
+          <div class="kpi-label">On Active Duty</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-bolt"></i> 90.6% Active</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-plane-departure"></i></div>
+          <div class="kpi-value counter-value">6</div>
+          <div class="kpi-label">On Approved Leave</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-umbrella-beach"></i> Rotational</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-folder-tree"></i></div>
+          <div class="kpi-value counter-value">245</div>
+          <div class="kpi-label">Active Assignments</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-scale-balanced"></i> Avg 3.8/Officer</div>
+        </div>
       </div>
 
       <!-- Filter Bar -->
       <div class="filter-bar">
         <div class="row g-3 align-items-end">
-          <div class="col-md-3"><label class="form-label">Rank / Designation</label><select class="form-select"><option>All Ranks</option><option>Inspector</option><option>Sub-Inspector</option><option>Constable</option><option>Special Investigator</option></select></div>
-          <div class="col-md-3"><label class="form-label">Assigned Department</label><select class="form-select"><option>All Departments</option><option>Public Works & Transport</option><option>Land & Revenue Board</option><option>Customs & Excise</option></select></div>
-          <div class="col-md-3"><label class="form-label">Status</label><select class="form-select"><option>All</option><option>On Duty</option><option>On Leave</option></select></div>
-          <div class="col-md-3 d-flex gap-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Filter</button><button class="btn btn-ghost" title="Reset"><i class="fa-solid fa-rotate-left"></i></button></div>
+          <div class="col-md-3">
+            <label class="form-label">Rank / Designation</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-medal input-icon"></i>
+              <select class="form-select" id="rankFilter">
+                <option value="">All Ranks</option>
+                <option>Chief Inspector</option>
+                <option>Senior Inspector</option>
+                <option>Sub-Inspector</option>
+                <option>Special Investigator</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Assigned Department</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-building-columns input-icon"></i>
+              <select class="form-select" id="officerDeptFilter">
+                <option value="">All Departments</option>
+                <option>Public Works & Transport</option>
+                <option>Land & Revenue Board</option>
+                <option>Customs & Excise</option>
+                <option>Healthcare Directorate</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Duty Status</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-shield-halved input-icon"></i>
+              <select class="form-select" id="dutyFilter">
+                <option value="">All Statuses</option>
+                <option>On Duty</option>
+                <option>On Leave</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-primary w-100" onclick="filterOfficerCards()"><i class="fa-solid fa-filter"></i> Filter</button>
+            <button class="btn btn-ghost" onclick="resetOfficerFilter()" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+          </div>
         </div>
       </div>
 
@@ -94,7 +166,7 @@
       <div class="row g-3" id="officerGrid">
 
         <!-- Officer 1 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 officer-item" data-dept="Public Works" data-rank="Senior Inspector" data-status="On Duty">
           <div class="officer-card">
             <div class="officer-banner" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
@@ -102,34 +174,33 @@
             </div>
             <div class="officer-body">
               <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">K. Al-Hassan</div><div class="extra-small" style="color:var(--text-3);">Khalid Mohammed Al-Hassan</div></div>
-                <span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Duty</span>
+                <div><div class="fw-bold" style="font-size:1rem;">K. Al-Hassan</div><div class="extra-small text-muted">Khalid Mohammed Al-Hassan</div></div>
+                <span class="pill pill-active pill-live">On Duty</span>
               </div>
               <div class="mb-3">
                 <span class="badge-rank" style="background:rgba(79,70,229,.15);color:var(--indigo-600);"><i class="fa-solid fa-medal"></i> Senior Inspector</span>
               </div>
               <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">18</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">142</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">91%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">18</div><div class="extra-small text-muted">Active</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">142</div><div class="extra-small text-muted">Resolved</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">91%</div><div class="extra-small text-muted">Success</div></div></div>
               </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
+              <div class="extra-small fw-bold text-muted mb-1">WORKLOAD CAPACITY</div>
               <div class="workload-bar"><div class="workload-fill" style="width:72%;background:var(--g-primary);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>18 / 25 cases</span><span class="fw-bold" style="color:var(--indigo-600);">72%</span></div>
+              <div class="d-flex justify-content-between extra-small mt-1 text-muted"><span>18 / 25 cases</span><span class="fw-bold" style="color:var(--indigo-600);">72%</span></div>
             </div>
             <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Public Works Dept.</div>
+              <div class="extra-small text-muted"><i class="fa-solid fa-building me-1"></i>Public Works Dept.</div>
               <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal" title="View Profile"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal" title="Edit"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="khalid@acc.gov.bd" title="Email"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm" onclick="showOfficerProfile('K. Al-Hassan', 'Khalid Mohammed Al-Hassan', 'ACO-401', 'Senior Inspector', 'Public Works & Transport', 'khalid@acc.gov.bd', '18', '142', '91%', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80')" title="View Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="khalid@acc.gov.bd" title="Email"><i class="fa-solid fa-envelope text-info"></i></button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Officer 2 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 officer-item" data-dept="Land" data-rank="Sub-Inspector" data-status="On Duty">
           <div class="officer-card">
             <div class="officer-banner" style="background:linear-gradient(135deg,#10b981,#059669);">
               <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
@@ -137,32 +208,31 @@
             </div>
             <div class="officer-body">
               <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">N. Jahan</div><div class="extra-small" style="color:var(--text-3);">Nusrat Jahan Chowdhury</div></div>
-                <span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Duty</span>
+                <div><div class="fw-bold" style="font-size:1rem;">N. Jahan</div><div class="extra-small text-muted">Nusrat Jahan Chowdhury</div></div>
+                <span class="pill pill-active pill-live">On Duty</span>
               </div>
               <div class="mb-3"><span class="badge-rank" style="background:rgba(16,185,129,.15);color:var(--emerald-500);"><i class="fa-solid fa-medal"></i> Sub-Inspector</span></div>
               <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">9</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">98</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">95%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">9</div><div class="extra-small text-muted">Active</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">98</div><div class="extra-small text-muted">Resolved</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">95%</div><div class="extra-small text-muted">Success</div></div></div>
               </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
+              <div class="extra-small fw-bold text-muted mb-1">WORKLOAD CAPACITY</div>
               <div class="workload-bar"><div class="workload-fill" style="width:45%;background:var(--g-emerald);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>9 / 20 cases</span><span class="fw-bold" style="color:var(--emerald-500);">45%</span></div>
+              <div class="d-flex justify-content-between extra-small mt-1 text-muted"><span>9 / 20 cases</span><span class="fw-bold" style="color:var(--emerald-500);">45%</span></div>
             </div>
             <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Land &amp; Revenue Board</div>
+              <div class="extra-small text-muted"><i class="fa-solid fa-building me-1"></i>Land &amp; Revenue Board</div>
               <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="nusrat@acc.gov.bd"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm" onclick="showOfficerProfile('N. Jahan', 'Nusrat Jahan Chowdhury', 'ACO-402', 'Sub-Inspector', 'Land & Revenue Board', 'nusrat@acc.gov.bd', '9', '98', '95%', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80')"><i class="fa-solid fa-eye text-primary"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="nusrat@acc.gov.bd"><i class="fa-solid fa-envelope text-info"></i></button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Officer 3 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 officer-item" data-dept="Healthcare" data-rank="Inspector" data-status="On Leave">
           <div class="officer-card">
             <div class="officer-banner" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
               <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
@@ -170,124 +240,24 @@
             </div>
             <div class="officer-body">
               <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">R. Islam</div><div class="extra-small" style="color:var(--text-3);">Rafiqul Islam Bhuiyan</div></div>
+                <div><div class="fw-bold" style="font-size:1rem;">R. Islam</div><div class="extra-small text-muted">Rafiqul Islam Bhuiyan</div></div>
                 <span class="pill pill-blocked">On Leave</span>
               </div>
               <div class="mb-3"><span class="badge-rank" style="background:rgba(245,158,11,.15);color:var(--amber-500);"><i class="fa-solid fa-medal"></i> Inspector (Spl. Ops)</span></div>
               <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">0</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">201</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">88%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">0</div><div class="extra-small text-muted">Active</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">201</div><div class="extra-small text-muted">Resolved</div></div></div>
+                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">88%</div><div class="extra-small text-muted">Success</div></div></div>
               </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
+              <div class="extra-small fw-bold text-muted mb-1">WORKLOAD CAPACITY</div>
               <div class="workload-bar"><div class="workload-fill" style="width:0%;background:var(--g-amber);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>0 / 25 cases (on leave)</span><span class="fw-bold" style="color:var(--text-3);">0%</span></div>
+              <div class="d-flex justify-content-between extra-small mt-1 text-muted"><span>0 / 25 cases (on leave)</span><span class="fw-bold" style="color:var(--amber-500);">0%</span></div>
             </div>
             <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Healthcare Directorate</div>
+              <div class="extra-small text-muted"><i class="fa-solid fa-building me-1"></i>Healthcare Directorate</div>
               <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="rafiqul@acc.gov.bd"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Officer 4 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="officer-card">
-            <div class="officer-banner" style="background:linear-gradient(135deg,#f43f5e,#e11d48);">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
-              <div class="ms-3 pb-1" style="color:rgba(255,255,255,.7);font-size:.7rem;font-weight:700;">ACO-404</div>
-            </div>
-            <div class="officer-body">
-              <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">A. Siddiqui</div><div class="extra-small" style="color:var(--text-3);">Ahmed Imran Siddiqui</div></div>
-                <span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Duty</span>
-              </div>
-              <div class="mb-3"><span class="badge-rank" style="background:rgba(244,63,94,.15);color:var(--rose-500);"><i class="fa-solid fa-medal"></i> Chief Inspector</span></div>
-              <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">22</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">319</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">93%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
-              </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
-              <div class="workload-bar"><div class="workload-fill" style="width:88%;background:var(--g-rose);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>22 / 25 cases</span><span class="fw-bold" style="color:var(--rose-500);">88% — Near Limit</span></div>
-            </div>
-            <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Customs &amp; Excise</div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="ahmed@acc.gov.bd"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Officer 5 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="officer-card">
-            <div class="officer-banner" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">
-              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
-              <div class="ms-3 pb-1" style="color:rgba(255,255,255,.7);font-size:.7rem;font-weight:700;">ACO-405</div>
-            </div>
-            <div class="officer-body">
-              <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">S. Begum</div><div class="extra-small" style="color:var(--text-3);">Sabrina Begum Talukder</div></div>
-                <span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Duty</span>
-              </div>
-              <div class="mb-3"><span class="badge-rank" style="background:rgba(6,182,212,.15);color:var(--cyan-500);"><i class="fa-solid fa-medal"></i> Sub-Inspector</span></div>
-              <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">12</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">76</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">87%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
-              </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
-              <div class="workload-bar"><div class="workload-fill" style="width:60%;background:var(--g-cyan);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>12 / 20 cases</span><span class="fw-bold" style="color:var(--cyan-500);">60%</span></div>
-            </div>
-            <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Finance Division</div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="sabrina@acc.gov.bd"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Officer 6 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="officer-card">
-            <div class="officer-banner" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">
-              <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80" class="officer-avatar" alt="Officer">
-              <div class="ms-3 pb-1" style="color:rgba(255,255,255,.7);font-size:.7rem;font-weight:700;">ACO-406</div>
-            </div>
-            <div class="officer-body">
-              <div class="d-flex align-items-start justify-content-between mb-1">
-                <div><div class="fw-bold" style="font-size:1rem;">M. Hossain</div><div class="extra-small" style="color:var(--text-3);">Mohammad Enam Hossain</div></div>
-                <span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Duty</span>
-              </div>
-              <div class="mb-3"><span class="badge-rank" style="background:rgba(139,92,246,.15);color:var(--violet-500);"><i class="fa-solid fa-medal"></i> Deputy Inspector</span></div>
-              <div class="row g-2 text-center mb-3">
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.1rem;">15</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.1rem;">134</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-                <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.1rem;">90%</div><div class="extra-small" style="color:var(--text-3);">Success</div></div></div>
-              </div>
-              <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:4px;">WORKLOAD CAPACITY</div>
-              <div class="workload-bar"><div class="workload-fill" style="width:60%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1" style="color:var(--text-3);"><span>15 / 25 cases</span><span class="fw-bold" style="color:var(--violet-500);">60%</span></div>
-            </div>
-            <div class="officer-footer">
-              <div class="extra-small" style="color:var(--text-3);"><i class="fa-solid fa-building me-1"></i>Education Dept.</div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewOfficerModal"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editOfficerModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i></button>
-                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="enam@acc.gov.bd"><i class="fa-solid fa-envelope" style="color:var(--cyan-500);"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm" onclick="showOfficerProfile('R. Islam', 'Rafiqul Islam Bhuiyan', 'ACO-403', 'Inspector (Special Ops)', 'Healthcare Directorate', 'rafiqul@acc.gov.bd', '0', '201', '88%', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80')"><i class="fa-solid fa-eye text-primary"></i></button>
+                <button class="btn btn-ghost btn-icon btn-sm btn-send-email" data-email="rafiqul@acc.gov.bd"><i class="fa-solid fa-envelope text-info"></i></button>
               </div>
             </div>
           </div>
@@ -298,80 +268,122 @@
   </div>
 </div>
 
-<!-- Add Officer Modal -->
+<!-- ══════════════════════ MODAL: ADD OFFICER ══════════════════════ -->
 <div class="modal fade" id="addOfficerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-user-shield me-2" style="color:var(--indigo-500);"></i>Register New Officer</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-user-shield text-primary me-2"></i> Register Designated Field Officer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
       <form class="ajax-form">
         <div class="modal-body" style="padding:24px;">
           <div class="row g-3 mb-3">
-            <div class="col-md-6"><label class="form-label">Full Name</label><input type="text" class="form-control" required placeholder="Officer's full legal name"></div>
-            <div class="col-md-6"><label class="form-label">Badge / Force Number</label><input type="text" class="form-control" required placeholder="e.g. ACO-407"></div>
+            <div class="col-md-6">
+              <label class="form-label">Full Name *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-user input-icon"></i>
+                <input type="text" class="form-control" required placeholder="e.g. Tariq Mahmood Hossain">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Badge Identifier *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-id-badge input-icon"></i>
+                <input type="text" class="form-control" required placeholder="e.g. ACO-408">
+              </div>
+            </div>
           </div>
           <div class="row g-3 mb-3">
-            <div class="col-md-6"><label class="form-label">Rank / Designation</label><select class="form-select" required><option value="">Select Rank</option><option>Chief Inspector</option><option>Senior Inspector</option><option>Inspector (Special Ops)</option><option>Deputy Inspector</option><option>Sub-Inspector</option></select></div>
-            <div class="col-md-6"><label class="form-label">Assigned Department</label><select class="form-select" required><option value="">Select Department</option><option>Public Works & Transport</option><option>Land & Revenue Board</option><option>Customs & Excise</option><option>Healthcare Directorate</option></select></div>
+            <div class="col-md-6">
+              <label class="form-label">Rank / Designation *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-medal input-icon"></i>
+                <select class="form-select" required>
+                  <option value="">Select Rank...</option>
+                  <option>Chief Inspector</option>
+                  <option>Senior Inspector</option>
+                  <option>Inspector (Special Ops)</option>
+                  <option>Deputy Inspector</option>
+                  <option>Sub-Inspector</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Jurisdiction Department *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-building-columns input-icon"></i>
+                <select class="form-select" required>
+                  <option value="">Select Department...</option>
+                  <option>Public Works & Transport</option>
+                  <option>Land & Revenue Board</option>
+                  <option>Customs & Excise</option>
+                  <option>Healthcare Directorate</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div class="row g-3 mb-3">
-            <div class="col-md-6"><label class="form-label">Official Email</label><input type="email" class="form-control" required placeholder="badge@acc.gov.bd"></div>
-            <div class="col-md-6"><label class="form-label">Mobile</label><input type="tel" class="form-control" placeholder="+880 17XX XXX XXX"></div>
+            <div class="col-md-6">
+              <label class="form-label">Official Secure Email *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" class="form-control" required placeholder="officer@acc.gov">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Mobile Contact</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="tel" class="form-control" placeholder="+1 (555) 019-2834">
+              </div>
+            </div>
           </div>
-          <div class="mb-0"><label class="form-label">Photo Upload</label><input type="file" class="form-control" accept="image/*"></div>
+          <div class="mb-0">
+            <label class="form-label">Officer Credentials Photo</label>
+            <input type="file" class="form-control" accept="image/*">
+          </div>
         </div>
-        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Register Officer</button></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i> Register Officer</button>
+        </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- View Officer Modal -->
+<!-- ══════════════════════ MODAL: VIEW OFFICER PROFILE ══════════════════════ -->
 <div class="modal fade" id="viewOfficerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header" style="background:var(--g-primary);"><h5 class="modal-title" style="color:#fff;"><i class="fa-solid fa-id-badge me-2"></i>Officer Profile — ACO-401</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-id-badge text-primary me-2"></i> Officer Dossier</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
       <div class="modal-body" style="padding:24px;">
         <div class="d-flex align-items-center gap-3 mb-4">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80" style="width:80px;height:80px;border-radius:16px;object-fit:cover;border:3px solid var(--indigo-300);" alt="">
-          <div><div class="fw-bold" style="font-size:1.1rem;">K. Al-Hassan</div><div class="extra-small" style="color:var(--text-3);">ACO-401 · Senior Inspector</div><div class="mt-1"><span class="pill pill-active"><i class="fa-solid fa-circle" style="font-size:.4rem;"></i> On Active Duty</span></div></div>
+          <img src="" id="profAvatar" style="width:72px;height:72px;border-radius:16px;object-fit:cover;border:2px solid var(--border);" alt="">
+          <div>
+            <div class="fw-bold" style="font-size:1.1rem;" id="profName">K. Al-Hassan</div>
+            <div class="extra-small text-muted" id="profRank">ACO-401 · Senior Inspector</div>
+            <div class="mt-1"><span class="pill pill-active pill-live">On Active Duty</span></div>
+          </div>
         </div>
-        <div class="row g-2 mb-4">
-          <div class="col-6"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT.</div><div style="font-size:.8rem;margin-top:2px;">Public Works &amp; Transport</div></div></div>
-          <div class="col-6"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;"><div class="extra-small fw-bold" style="color:var(--text-3);">EMAIL</div><div style="font-size:.8rem;margin-top:2px;">khalid@acc.gov.bd</div></div></div>
-          <div class="col-4"><div style="background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.2);border-radius:10px;padding:12px;text-align:center;"><div class="fw-bold" style="color:var(--indigo-600);font-size:1.3rem;">18</div><div class="extra-small" style="color:var(--text-3);">Assigned</div></div></div>
-          <div class="col-4"><div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:12px;text-align:center;"><div class="fw-bold" style="color:var(--emerald-500);font-size:1.3rem;">142</div><div class="extra-small" style="color:var(--text-3);">Resolved</div></div></div>
-          <div class="col-4"><div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px;text-align:center;"><div class="fw-bold" style="color:var(--amber-500);font-size:1.3rem;">91%</div><div class="extra-small" style="color:var(--text-3);">Success Rate</div></div></div>
+        <div class="row g-2 mb-3">
+          <div class="col-6"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="extra-small text-muted">DEPT.</div><div class="fw-semibold extra-small" id="profDept">Public Works</div></div></div>
+          <div class="col-6"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="extra-small text-muted">EMAIL</div><div class="fw-semibold extra-small" id="profEmail">khalid@acc.gov</div></div></div>
         </div>
-        <div class="extra-small fw-bold" style="color:var(--text-3);margin-bottom:6px;">WORKLOAD CAPACITY</div>
-        <div class="workload-bar"><div class="workload-fill" style="width:72%;background:var(--g-primary);"></div></div>
-        <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">18 / 25 case capacity</span><span class="fw-bold" style="color:var(--indigo-600);">72%</span></div>
+        <div class="row g-2 text-center mb-3">
+          <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="fw-bold text-primary" id="profActive">18</div><div class="extra-small text-muted">Active</div></div></div>
+          <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="fw-bold text-success" id="profResolved">142</div><div class="extra-small text-muted">Resolved</div></div></div>
+          <div class="col-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="fw-bold text-warning" id="profRate">91%</div><div class="extra-small text-muted">Success</div></div></div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-outline-primary btn-send-email" data-email="khalid@acc.gov.bd"><i class="fa-solid fa-envelope"></i> Email Officer</button>
-        <button class="btn btn-primary btn-export-pdf" data-doc-name="Officer_ACO401_Profile"><i class="fa-solid fa-file-pdf"></i> PDF Report</button>
+        <button class="btn btn-primary btn-export-pdf" data-doc-name="Officer_Performance_Dossier"><i class="fa-solid fa-file-pdf me-1"></i> Export Officer Dossier</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Officer Modal -->
-<div class="modal fade" id="editOfficerModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-pen-to-square me-2" style="color:var(--amber-500);"></i>Edit Officer — ACO-401</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <form class="ajax-form">
-        <div class="modal-body" style="padding:24px;">
-          <div class="mb-3"><label class="form-label">Full Name</label><input type="text" class="form-control" value="Khalid Mohammed Al-Hassan" required></div>
-          <div class="row g-3 mb-3">
-            <div class="col-md-6"><label class="form-label">Rank</label><select class="form-select"><option selected>Senior Inspector</option><option>Chief Inspector</option><option>Inspector (Special Ops)</option><option>Deputy Inspector</option><option>Sub-Inspector</option></select></div>
-            <div class="col-md-6"><label class="form-label">Department</label><select class="form-select"><option selected>Public Works & Transport</option><option>Land & Revenue Board</option><option>Customs & Excise</option></select></div>
-          </div>
-          <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" value="khalid@acc.gov.bd" required></div>
-          <div class="mb-0"><label class="form-label">Status</label><select class="form-select"><option selected>On Active Duty</option><option>On Leave</option><option>Suspended</option></select></div>
-        </div>
-        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary">Save Changes</button></div>
-      </form>
     </div>
   </div>
 </div>
@@ -380,5 +392,49 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  function showOfficerProfile(name, full, badge, rank, dept, email, active, resolved, rate, avatar) {
+    $('#profName').text(full || name);
+    $('#profRank').text(`${badge} · ${rank}`);
+    $('#profDept').text(dept);
+    $('#profEmail').text(email);
+    $('#profActive').text(active);
+    $('#profResolved').text(resolved);
+    $('#profRate').text(rate);
+    $('#profAvatar').attr('src', avatar);
+    const modal = new bootstrap.Modal(document.getElementById('viewOfficerModal'));
+    modal.show();
+  }
+
+  function filterOfficerCards() {
+    const rank = $('#rankFilter').val()?.toLowerCase() || '';
+    const dept = $('#officerDeptFilter').val()?.toLowerCase() || '';
+    const status = $('#dutyFilter').val()?.toLowerCase() || '';
+
+    $('.officer-item').each(function () {
+      const cardRank = $(this).data('rank')?.toLowerCase() || '';
+      const cardDept = $(this).data('dept')?.toLowerCase() || '';
+      const cardStatus = $(this).data('status')?.toLowerCase() || '';
+
+      const matchRank = !rank || cardRank.includes(rank);
+      const matchDept = !dept || cardDept.includes(dept);
+      const matchStatus = !status || cardStatus.includes(status);
+
+      $(this).toggle(matchRank && matchDept && matchStatus);
+    });
+  }
+
+  function resetOfficerFilter() {
+    $('#rankFilter, #officerDeptFilter, #dutyFilter, #officerSearch').val('');
+    $('.officer-item').show();
+  }
+
+  $('#officerSearch').on('keyup', function () {
+    const val = $(this).val().toLowerCase();
+    $('.officer-item').each(function () {
+      $(this).toggle($(this).text().toLowerCase().includes(val));
+    });
+  });
+</script>
 </body>
 </html>

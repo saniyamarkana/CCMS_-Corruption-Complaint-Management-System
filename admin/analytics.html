@@ -2,29 +2,43 @@
 <html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytics — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Analytics & Intelligence Radar — CCMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
-    <div class="sb-brand"><div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div><div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
+    </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
@@ -33,17 +47,18 @@
     <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Search analytics…"></div>
+        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search department statistics…"></div>
       </div>
       <div class="nav-actions">
-        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
+        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>Real-Time Telemetry</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div>
-          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
+          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li><li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
         </div>
       </div>
     </nav>
@@ -51,19 +66,41 @@
     <main class="content-body">
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Analytics</span></div>
-          <h1 class="page-title">Intelligence Analytics Hub</h1>
-          <p class="page-subtitle">Advanced multi-dimensional corruption trend data, SLA metrics, geographic heatmaps, and predictive patterns.</p>
+          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Intelligence</span><i class="fa-solid fa-chevron-right"></i><span>Analytics</span></div>
+          <h1 class="page-title">National Intelligence &amp; Analytics Radar</h1>
+          <p class="page-subtitle">Interactive corruption heatmaps, department SLA performance, prosecution trends, and telemetry.</p>
         </div>
-        <button class="btn btn-primary btn-export-pdf" data-doc-name="Analytics_Intelligence_Report"><i class="fa-solid fa-file-pdf"></i> Export Full Report</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary btn-export-pdf" data-doc-name="National_Analytics_Dossier_2026"><i class="fa-solid fa-file-pdf"></i> Export Analytics Dossier</button>
+        </div>
       </div>
 
       <!-- KPI Row -->
       <div class="kpi-grid">
-        <div class="kpi-card indigo"><div class="kpi-icon"><i class="fa-solid fa-percent"></i></div><div class="kpi-value counter-value">84</div><div class="kpi-label">SLA Compliance Rate</div><div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +3.2% vs Q2</div></div>
-        <div class="kpi-card emerald"><div class="kpi-icon"><i class="fa-solid fa-stopwatch"></i></div><div class="kpi-value counter-value">11</div><div class="kpi-label">Avg Resolution Days</div><div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Improved from 14d</div></div>
-        <div class="kpi-card amber"><div class="kpi-icon"><i class="fa-solid fa-file-signature"></i></div><div class="kpi-value counter-value">342</div><div class="kpi-label">Prosecution Referrals</div><div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +18 this month</div></div>
-        <div class="kpi-card rose"><div class="kpi-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div><div class="kpi-value counter-value">28</div><div class="kpi-label">Est. Crores Recovered</div><div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Financial year total</div></div>
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-percent"></i></div>
+          <div class="kpi-value counter-value">87.4%</div>
+          <div class="kpi-label">SLA Compliance Benchmark</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +3.2% vs Q2</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-stopwatch"></i></div>
+          <div class="kpi-value counter-value">4.2</div>
+          <div class="kpi-label">Average Resolution (Days)</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Improved from 14.2d</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          <div class="kpi-value counter-value">342</div>
+          <div class="kpi-label">Judicial Prosecutions</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +18 this month</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+          <div class="kpi-value counter-value">$28.4M</div>
+          <div class="kpi-label">Public Funds Recovered</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Treasury Total</div>
+        </div>
       </div>
 
       <!-- Charts Row 1 -->
@@ -71,21 +108,22 @@
         <div class="col-lg-8">
           <div class="card-box">
             <div class="card-box-head">
-              <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-bar"></i></div>Department-Wise Complaint Volume (2026)</div>
+              <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-bar"></i></div>Department-Wise Complaint Volume &amp; Clearance</div>
+              <span class="extra-small text-muted" style="font-family:var(--font-mono);">SYNC: LIVE</span>
             </div>
             <div class="card-box-body"><canvas id="deptChart" height="260"></canvas></div>
           </div>
         </div>
         <div class="col-lg-4">
           <div class="card-box h-100">
-            <div class="card-box-head"><div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-pie"></i></div>Resolution Outcomes</div></div>
+            <div class="card-box-head"><div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-pie"></i></div>Resolution Outcome Distribution</div></div>
             <div class="card-box-body d-flex flex-column align-items-center">
               <canvas id="outcomeChart" height="220"></canvas>
               <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#10b981;display:inline-block;"></span> Resolved</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#6366f1;display:inline-block;"></span> Prosecuted</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block;"></span> Pending</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f43f5e;display:inline-block;"></span> Rejected</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#10b981;display:inline-block;"></span> Resolved (54%)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#6366f1;display:inline-block;"></span> Prosecuted (23%)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block;"></span> Pending (14%)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f43f5e;display:inline-block;"></span> Rejected (9%)</div>
               </div>
             </div>
           </div>
@@ -102,7 +140,7 @@
         </div>
         <div class="col-lg-6">
           <div class="card-box">
-            <div class="card-box-head"><div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-area"></i></div>Category Distribution by Priority</div></div>
+            <div class="card-box-head"><div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-chart-area"></i></div>Offense Category Distribution by Severity</div></div>
             <div class="card-box-body"><canvas id="categoryChart" height="260"></canvas></div>
           </div>
         </div>
@@ -111,12 +149,12 @@
       <!-- Top Corrupt Depts Table -->
       <div class="card-box">
         <div class="card-box-head">
-          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-ranking-star"></i></div>Top Corruption-Prone Departments (Ranked)</div>
+          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-ranking-star"></i></div>Department Integrity Vulnerability Ranking</div>
           <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Department_Risk_Analysis"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export</button>
         </div>
         <div class="tbl-wrap">
           <table class="tbl">
-            <thead><tr><th>Rank</th><th>Department</th><th>Total Cases</th><th>Critical</th><th>Resolution Rate</th><th>Avg Days</th><th>Risk Level</th></tr></thead>
+            <thead><tr><th>Rank</th><th>Department</th><th>Total Cases</th><th>Critical</th><th>Resolution Rate</th><th>Avg Turnaround</th><th>Risk Tier</th></tr></thead>
             <tbody>
               <tr>
                 <td><span class="fw-bold" style="color:var(--rose-500);">#1</span></td>
@@ -124,7 +162,7 @@
                 <td class="fw-bold text-center">284</td>
                 <td class="fw-bold text-center" style="color:var(--rose-500);">68</td>
                 <td><div class="progress mb-1" style="height:6px;"><div class="progress-bar" style="width:62%;background:var(--amber-500);"></div></div><div class="extra-small text-end" style="color:var(--text-2);">62%</div></td>
-                <td class="fw-bold text-center">18</td>
+                <td class="fw-bold text-center">18 Days</td>
                 <td><span class="chip-critical">Critical</span></td>
               </tr>
               <tr>
@@ -133,7 +171,7 @@
                 <td class="fw-bold text-center">241</td>
                 <td class="fw-bold text-center" style="color:var(--rose-500);">45</td>
                 <td><div class="progress mb-1" style="height:6px;"><div class="progress-bar" style="width:71%;background:var(--cyan-500);"></div></div><div class="extra-small text-end" style="color:var(--text-2);">71%</div></td>
-                <td class="fw-bold text-center">14</td>
+                <td class="fw-bold text-center">14 Days</td>
                 <td><span class="chip-high">High</span></td>
               </tr>
               <tr>
@@ -142,7 +180,7 @@
                 <td class="fw-bold text-center">198</td>
                 <td class="fw-bold text-center" style="color:var(--rose-500);">31</td>
                 <td><div class="progress mb-1" style="height:6px;"><div class="progress-bar" style="width:78%;background:var(--emerald-500);"></div></div><div class="extra-small text-end" style="color:var(--text-2);">78%</div></td>
-                <td class="fw-bold text-center">11</td>
+                <td class="fw-bold text-center">11 Days</td>
                 <td><span class="chip-medium">Medium</span></td>
               </tr>
               <tr>
@@ -151,7 +189,7 @@
                 <td class="fw-bold text-center">172</td>
                 <td class="fw-bold text-center" style="color:var(--rose-500);">22</td>
                 <td><div class="progress mb-1" style="height:6px;"><div class="progress-bar" style="width:85%;background:var(--emerald-500);"></div></div><div class="extra-small text-end" style="color:var(--text-2);">85%</div></td>
-                <td class="fw-bold text-center">9</td>
+                <td class="fw-bold text-center">9 Days</td>
                 <td><span class="chip-low">Low</span></td>
               </tr>
             </tbody>
@@ -173,7 +211,7 @@ $(document).ready(function(){
   const gridColor = 'rgba(100,116,139,0.1)';
   const tickColor = '#94a3b8';
   const tooltipBg = 'rgba(15,21,36,.9)';
-  const baseFont = { family: 'Inter', size: 12 };
+  const baseFont = { family: 'Plus Jakarta Sans', size: 12 };
 
   /* Department Bar Chart */
   new Chart(document.getElementById('deptChart').getContext('2d'), {
@@ -223,15 +261,6 @@ $(document).ready(function(){
       ]
     },
     options: { responsive:true, maintainAspectRatio:true, plugins:{ legend:{position:'top',align:'end',labels:{boxWidth:10,boxHeight:10,borderRadius:5,useBorderRadius:true,font:baseFont,padding:16}}, tooltip:{backgroundColor:tooltipBg,titleColor:'#f8fafc',bodyColor:'#94a3b8',cornerRadius:10} }, scales:{ r:{grid:{color:gridColor},ticks:{font:baseFont,color:tickColor}} } }
-  });
-
-  /* KPI counter animation */
-  $('.kpi-value').each(function(){
-    const el = $(this);
-    const raw = el.text().replace(/,/g,'');
-    const end = parseInt(raw,10);
-    if(isNaN(end)) return;
-    $({n:0}).animate({n:end},{duration:1400,easing:'swing',step(v){el.text(Math.floor(v).toLocaleString())},complete(){el.text(end.toLocaleString())}});
   });
 });
 </script>

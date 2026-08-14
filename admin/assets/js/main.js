@@ -54,32 +54,144 @@ $(document).ready(function () {
     });
   });
 
-  /* ── TABLE SEARCH ───────────────────────────────── */
-  $('#tableSearch').on('keyup', function () {
-    const v = $(this).val().toLowerCase().trim();
+  /* ── TABLE SEARCH & MULTI-FILTER ───────────────── */
+  function filterTableData() {
+    const searchVal = $('#tableSearch').val()?.toLowerCase().trim() || '';
+    const deptVal   = $('#deptFilter').val()?.toLowerCase().trim() || '';
+    const statusVal = $('#statusFilter').val()?.toLowerCase().trim() || '';
+    const prioVal   = $('#priorityFilter').val()?.toLowerCase().trim() || '';
+    const typeVal   = $('#typeFilter').val()?.toLowerCase().trim() || '';
 
     $('.tbl tbody tr:not(.no-res)').each(function () {
-      $(this).toggle($(this).text().toLowerCase().includes(v));
+      const rowText = $(this).text().toLowerCase();
+      const matchesSearch = !searchVal || rowText.includes(searchVal);
+      const matchesDept   = !deptVal   || deptVal === 'all'   || rowText.includes(deptVal);
+      const matchesStatus = !statusVal || statusVal === 'all' || rowText.includes(statusVal);
+      const matchesPrio   = !prioVal   || prioVal === 'all'   || rowText.includes(prioVal);
+      const matchesType   = !typeVal   || typeVal === 'all'   || rowText.includes(typeVal);
+
+      $(this).toggle(matchesSearch && matchesDept && matchesStatus && matchesPrio && matchesType);
     });
 
     $('.tbl tbody .no-res').remove();
+    const visibleCount = $('.tbl tbody tr:not(.no-res):visible').length;
+    if (!visibleCount) {
+      const cols = $('.tbl thead th').length || 8;
+      $('.tbl tbody').append(
+        `<tr class="no-res"><td colspan="${cols}" class="text-center py-5" style="color:var(--text-3);">
+          <i class="fa-solid fa-folder-open d-block mb-2" style="font-size:2rem;color:var(--indigo-400);"></i>
+          No matching records found for active filters.
+        </td></tr>`
+      );
+    }
+  }
 
-    if (v) {
-      const visible = $('.tbl tbody tr:not(.no-res):visible').length;
-      if (!visible) {
-        const cols = $('.tbl thead th').length || 8;
-        $('.tbl tbody').append(
-          `<tr class="no-res"><td colspan="${cols}" class="text-center py-5" style="color:var(--text-3);">
-            <i class="fa-solid fa-folder-open d-block mb-2" style="font-size:2rem;color:#818cf8;"></i>
-            No results for <strong>"${v}"</strong>
-          </td></tr>`
-        );
+  $('#tableSearch').on('keyup', filterTableData);
+  $('#deptFilter, #statusFilter, #priorityFilter, #typeFilter, #periodFilter, #roleFilter').on('change', filterTableData);
+
+  $('#btnResetFilters, .btn-reset-filters').on('click', function (e) {
+    e.preventDefault();
+    $('#tableSearch').val('');
+    $('#deptFilter, #statusFilter, #priorityFilter, #typeFilter, #periodFilter, #roleFilter').val('');
+    filterTableData();
+    showToast('Filters reset to default');
+  });
+
+  /* ── BULK SELECTION & ACTION BAR ────────────────── */
+  $(document).on('change', '#selectAllRows, .select-all-checkbox', function () {
+    const isChecked = $(this).is(':checked');
+    $('.row-checkbox').prop('checked', isChecked);
+    updateBulkActionBar();
+  });
+
+  $(document).on('change', '.row-checkbox', function () {
+    const total = $('.row-checkbox').length;
+    const checked = $('.row-checkbox:checked').length;
+    $('#selectAllRows, .select-all-checkbox').prop('checked', total === checked && total > 0);
+    updateBulkActionBar();
+  });
+
+  function updateBulkActionBar() {
+    const count = $('.row-checkbox:checked').length;
+    let bar = $('#bulkActionBar');
+    if (!bar.length && count > 0) {
+      $('body').append(`
+        <div class="bulk-actions-bar show" id="bulkActionBar">
+          <span class="bulk-count-badge" id="bulkCountBadge">${count} Selected</span>
+          <button class="btn btn-sm btn-ghost" id="btnBulkExport"><i class="fa-solid fa-download"></i> Export Selected</button>
+          <button class="btn btn-sm btn-ghost text-primary" id="btnBulkStatus"><i class="fa-solid fa-pen-to-square"></i> Change Status</button>
+          <button class="btn btn-sm btn-danger-soft" id="btnBulkDelete"><i class="fa-solid fa-trash"></i> Delete Selected</button>
+          <button class="btn btn-sm btn-icon btn-ghost" id="btnCancelBulk" title="Cancel selection"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      `);
+    } else if (bar.length) {
+      if (count > 0) {
+        bar.addClass('show');
+        $('#bulkCountBadge').text(`${count} Selected`);
+      } else {
+        bar.removeClass('show');
       }
+    }
+  }
+
+  $(document).on('click', '#btnCancelBulk', function () {
+    $('.row-checkbox, #selectAllRows, .select-all-checkbox').prop('checked', false);
+    updateBulkActionBar();
+  });
+
+  $(document).on('click', '#btnBulkDelete', function () {
+    const count = $('.row-checkbox:checked').length;
+    Swal.fire({
+      icon: 'warning',
+      title: `Delete ${count} records?`,
+      text: 'This action is permanent and cannot be undone.',
+      showCancelButton: true,
+      confirmButtonColor: '#f43f5e',
+      confirmButtonText: 'Yes, Delete All'
+    }).then(res => {
+      if (res.isConfirmed) {
+        $('.row-checkbox:checked').closest('tr').fadeOut(350, function () {
+          $(this).remove();
+          updateBulkActionBar();
+        });
+        Swal.fire({ icon: 'success', title: 'Deleted', text: `${count} records removed.`, timer: 1500, showConfirmButton: false });
+      }
+    });
+  });
+
+  $(document).on('click', '#btnBulkExport', function () {
+    const count = $('.row-checkbox:checked').length;
+    Swal.fire({
+      icon: 'success',
+      title: 'Bulk Export Ready',
+      text: `Exported ${count} selected records to CSV dossier.`,
+      confirmButtonColor: '#4f46e5'
+    });
+  });
+
+  /* ── DRAG & DROP FILE ZONE ─────────────────────── */
+  $(document).on('dragover', '.file-dropzone', function (e) {
+    e.preventDefault();
+    $(this).addClass('dragover');
+  });
+
+  $(document).on('dragleave drop', '.file-dropzone', function (e) {
+    e.preventDefault();
+    $(this).removeClass('dragover');
+  });
+
+  $(document).on('change', '.file-dropzone input[type="file"]', function () {
+    const files = this.files;
+    const parent = $(this).closest('.file-dropzone');
+    if (files.length > 0) {
+      const names = Array.from(files).map(f => f.name).join(', ');
+      parent.find('.dropzone-text').html(`<strong>${files.length} file(s) selected:</strong> <br><span class="extra-small text-muted">${names}</span>`);
+      parent.find('.file-dropzone-icon').html('<i class="fa-solid fa-file-circle-check text-success"></i>');
     }
   });
 
   /* ── TABLE SORT (click any TH) ──────────────────── */
-  $(document).on('click', '.tbl thead th', function () {
+  $(document).on('click', '.tbl thead th:not(.no-sort)', function () {
     const idx = $(this).index();
     const asc = !$(this).data('asc');
     $(this).data('asc', asc);

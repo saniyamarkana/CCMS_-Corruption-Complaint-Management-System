@@ -2,29 +2,43 @@
 <html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Departments — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Manage Monitored Departments — CCMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
-    <div class="sb-brand"><div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div><div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
+    </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
@@ -33,17 +47,18 @@
     <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search department name or code…"></div>
+        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="deptSearch" placeholder="Search department name or code…"></div>
       </div>
       <div class="nav-actions">
-        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
+        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>Oversight Active</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div>
-          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
+          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li><li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
         </div>
       </div>
     </nav>
@@ -51,9 +66,9 @@
     <main class="content-body">
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Manage Departments</span></div>
-          <h1 class="page-title">Monitored Public Departments</h1>
-          <p class="page-subtitle">Directory of government bodies, corruption risk ratings, and HOD contacts.</p>
+          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Departments</span></div>
+          <h1 class="page-title">Monitored Government Departments</h1>
+          <p class="page-subtitle">Directory of public institutions, corruption risk assessments, and focal officer contacts.</p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
           <button class="btn btn-ghost btn-export-pdf" data-doc-name="Departments_Directory_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
@@ -62,222 +77,187 @@
       </div>
 
       <!-- KPIs -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">18</div><div class="kpi-label">Total Monitored</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">4</div><div class="kpi-label">Critical Risk Zones</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">7</div><div class="kpi-label">Under Active Probe</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">7</div><div class="kpi-label">Compliance Certified</div></div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-building-columns"></i></div>
+          <div class="kpi-value counter-value">18</div>
+          <div class="kpi-label">Total Monitored Bodies</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> 100% Connected</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="kpi-value counter-value">4</div>
+          <div class="kpi-label">High-Risk Irregularities</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-fire"></i> Special Probe</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="kpi-value counter-value">7</div>
+          <div class="kpi-label">Active Audit Inquiries</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-clock"></i> In Progress</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="kpi-value counter-value">7</div>
+          <div class="kpi-label">Certified Compliant</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-shield"></i> Clean Rating</div>
+        </div>
       </div>
 
       <!-- Dept Cards Grid -->
-      <div class="row g-3">
+      <div class="row g-3" id="deptGrid">
 
         <!-- Dept 1 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 dept-item">
           <div class="dept-card">
             <div class="dept-card-banner" style="background:linear-gradient(135deg,#f43f5e,#be123c);">
-              <div class="d-flex align-items-center gap-10 mb-1">
+              <div class="d-flex align-items-center mb-1">
                 <i class="fa-solid fa-road" style="font-size:1.4rem;"></i>
                 <div class="ms-2">
                   <div class="fw-bold" style="font-size:1rem;">Public Works &amp; Transport</div>
                   <div class="extra-small" style="opacity:.75;">Ministry of Infrastructure</div>
                 </div>
               </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">🔴 HIGH RISK ZONE</span>
+              <span class="pill pill-live" style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.7rem;font-weight:800;margin-top:8px;">CRITICAL RISK ZONE</span>
             </div>
             <div class="dept-card-body">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div>
-                <span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-PWT-01</span>
+                <div class="extra-small fw-bold text-muted">DEPT CODE</div>
+                <span class="fw-bold extra-small text-primary" style="font-family:var(--font-mono);">DEPT-PWT-01</span>
               </div>
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div>
+                <div class="extra-small text-muted">Head of Dept (HOD):</div>
                 <div class="fw-bold extra-small">Engr. M. A. Karim</div>
               </div>
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div>
-                <span style="background:var(--g-rose);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">412 Cases</span>
+                <div class="extra-small text-muted">Complaints Filed:</div>
+                <span style="background:rgba(244,63,94,0.15);color:var(--rose-500);padding:2px 8px;border-radius:6px;font-weight:800;font-size:0.8rem;">412 Cases</span>
               </div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:72%;background:var(--g-amber);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--amber-500);">72.4%</span></div>
             </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_PWT_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
+            <div class="dept-card-footer d-flex justify-content-between align-items-center">
+              <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>4 Officers Assigned</span>
+              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
 
         <!-- Dept 2 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 dept-item">
           <div class="dept-card">
-            <div class="dept-card-banner" style="background:linear-gradient(135deg,#f59e0b,#b45309);">
-              <div class="d-flex align-items-center gap-10 mb-1">
-                <i class="fa-solid fa-landmark" style="font-size:1.4rem;"></i>
-                <div class="ms-2"><div class="fw-bold" style="font-size:1rem;">Land &amp; Revenue Board</div><div class="extra-small" style="opacity:.75;">Ministry of Finance &amp; Land</div></div>
+            <div class="dept-card-banner" style="background:linear-gradient(135deg,#6366f1,#4338ca);">
+              <div class="d-flex align-items-center mb-1">
+                <i class="fa-solid fa-coins" style="font-size:1.4rem;"></i>
+                <div class="ms-2">
+                  <div class="fw-bold" style="font-size:1rem;">Revenue &amp; Customs Board</div>
+                  <div class="extra-small" style="opacity:.75;">Ministry of Finance</div>
+                </div>
               </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">🟡 MODERATE RISK</span>
+              <span class="pill pill-live" style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.7rem;font-weight:800;margin-top:8px;">HIGH VIGILANCE</span>
             </div>
             <div class="dept-card-body">
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div><span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-LRB-02</span></div>
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div><div class="fw-bold extra-small">Dr. Shahana Parveen</div></div>
-              <div class="d-flex justify-content-between mb-3"><div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div><span style="background:var(--g-amber);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">328 Cases</span></div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:88%;background:var(--g-emerald);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--emerald-500);">88.9%</span></div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="extra-small fw-bold text-muted">DEPT CODE</div>
+                <span class="fw-bold extra-small text-primary" style="font-family:var(--font-mono);">DEPT-REV-02</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="extra-small text-muted">Head of Dept (HOD):</div>
+                <div class="fw-bold extra-small">Dr. S. K. Majumder</div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="extra-small text-muted">Complaints Filed:</div>
+                <span style="background:rgba(99,102,241,0.15);color:var(--indigo-600);padding:2px 8px;border-radius:6px;font-weight:800;font-size:0.8rem;">328 Cases</span>
+              </div>
             </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_LRB_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
+            <div class="dept-card-footer d-flex justify-content-between align-items-center">
+              <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>6 Officers Assigned</span>
+              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
 
         <!-- Dept 3 -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 dept-item">
           <div class="dept-card">
-            <div class="dept-card-banner" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">
-              <div class="d-flex align-items-center gap-10 mb-1">
-                <i class="fa-solid fa-ship" style="font-size:1.4rem;"></i>
-                <div class="ms-2"><div class="fw-bold" style="font-size:1rem;">Customs &amp; Excise</div><div class="extra-small" style="opacity:.75;">Ministry of Commerce</div></div>
+            <div class="dept-card-banner" style="background:linear-gradient(135deg,#10b981,#059669);">
+              <div class="d-flex align-items-center mb-1">
+                <i class="fa-solid fa-heart-pulse" style="font-size:1.4rem;"></i>
+                <div class="ms-2">
+                  <div class="fw-bold" style="font-size:1rem;">Healthcare Directorate</div>
+                  <div class="extra-small" style="opacity:.75;">Ministry of Health</div>
+                </div>
               </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">🔵 MONITORED</span>
+              <span class="pill pill-live" style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.7rem;font-weight:800;margin-top:8px;">COMPLIANCE AUDIT OK</span>
             </div>
             <div class="dept-card-body">
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div><span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-CCD-03</span></div>
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div><div class="fw-bold extra-small">Comm. R. K. Das</div></div>
-              <div class="d-flex justify-content-between mb-3"><div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div><span style="background:var(--g-cyan);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">215 Cases</span></div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:91%;background:var(--g-emerald);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--emerald-500);">91.2%</span></div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="extra-small fw-bold text-muted">DEPT CODE</div>
+                <span class="fw-bold extra-small text-primary" style="font-family:var(--font-mono);">DEPT-MED-03</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="extra-small text-muted">Head of Dept (HOD):</div>
+                <div class="fw-bold extra-small">Prof. N. Haque</div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="extra-small text-muted">Complaints Filed:</div>
+                <span style="background:rgba(16,185,129,0.15);color:var(--emerald-500);padding:2px 8px;border-radius:6px;font-weight:800;font-size:0.8rem;">184 Cases</span>
+              </div>
             </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_CCD_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
+            <div class="dept-card-footer d-flex justify-content-between align-items-center">
+              <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>3 Officers Assigned</span>
+              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
 
-        <!-- Dept 4 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="dept-card">
-            <div class="dept-card-banner" style="background:linear-gradient(135deg,#10b981,#047857);">
-              <div class="d-flex align-items-center gap-10 mb-1">
-                <i class="fa-solid fa-hospital" style="font-size:1.4rem;"></i>
-                <div class="ms-2"><div class="fw-bold" style="font-size:1rem;">Healthcare Directorate</div><div class="extra-small" style="opacity:.75;">Ministry of Health</div></div>
-              </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">✅ COMPLIANT</span>
-            </div>
-            <div class="dept-card-body">
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div><span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-HCD-04</span></div>
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div><div class="fw-bold extra-small">Dr. Hasibur Rahman</div></div>
-              <div class="d-flex justify-content-between mb-3"><div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div><span style="background:var(--g-emerald);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">172 Cases</span></div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:96%;background:var(--g-emerald);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--emerald-500);">96.5%</span></div>
-            </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_HCD_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dept 5 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="dept-card">
-            <div class="dept-card-banner" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">
-              <div class="d-flex align-items-center gap-10 mb-1">
-                <i class="fa-solid fa-graduation-cap" style="font-size:1.4rem;"></i>
-                <div class="ms-2"><div class="fw-bold" style="font-size:1rem;">Education Department</div><div class="extra-small" style="opacity:.75;">Ministry of Education</div></div>
-              </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">🟡 MODERATE RISK</span>
-            </div>
-            <div class="dept-card-body">
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div><span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-EDU-05</span></div>
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div><div class="fw-bold extra-small">Prof. K. R. Ahmed</div></div>
-              <div class="d-flex justify-content-between mb-3"><div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div><span style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">145 Cases</span></div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:79%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--violet-500);">79.3%</span></div>
-            </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_EDU_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dept 6 -->
-        <div class="col-lg-4 col-md-6">
-          <div class="dept-card">
-            <div class="dept-card-banner" style="background:linear-gradient(135deg,#4f46e5,#312e81);">
-              <div class="d-flex align-items-center gap-10 mb-1">
-                <i class="fa-solid fa-coins" style="font-size:1.4rem;"></i>
-                <div class="ms-2"><div class="fw-bold" style="font-size:1rem;">Finance Division</div><div class="extra-small" style="opacity:.75;">Ministry of Finance</div></div>
-              </div>
-              <span style="background:rgba(255,255,255,.2);padding:.2em .7em;border-radius:6px;font-size:.7rem;font-weight:800;margin-top:10px;display:inline-block;">🔴 HIGH RISK ZONE</span>
-            </div>
-            <div class="dept-card-body">
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small fw-bold" style="color:var(--text-3);">DEPT CODE</div><span class="fw-bold extra-small" style="color:var(--indigo-500);">DEPT-FIN-06</span></div>
-              <div class="d-flex justify-content-between mb-2"><div class="extra-small" style="color:var(--text-2);">Head of Dept (HOD):</div><div class="fw-bold extra-small">Sec. M. Hussain</div></div>
-              <div class="d-flex justify-content-between mb-3"><div class="extra-small" style="color:var(--text-2);">Total Complaints Filed:</div><span style="background:var(--g-primary);color:#fff;padding:.2em .75em;border-radius:8px;font-weight:800;font-size:.8rem;">311 Cases</span></div>
-              <div class="extra-small fw-bold mb-1" style="color:var(--text-3);">Resolution Compliance Rate</div>
-              <div class="progress" style="height:7px;"><div class="progress-bar" style="width:68%;background:var(--g-amber);"></div></div>
-              <div class="d-flex justify-content-between extra-small mt-1"><span style="color:var(--text-3);">Resolved / Total</span><span class="fw-bold" style="color:var(--amber-500);">68.1%</span></div>
-            </div>
-            <div class="dept-card-footer">
-              <button class="btn btn-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#editDeptModal"><i class="fa-solid fa-pen-to-square" style="color:var(--amber-500);"></i> Edit</button>
-              <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Dept_FIN_Audit_PDF"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Audit</button>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /row -->
+      </div>
     </main>
   </div>
 </div>
 
-<!-- Add Dept Modal -->
+<!-- ══════════════════════ MODAL: ADD DEPARTMENT ══════════════════════ -->
 <div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-building-columns me-2" style="color:var(--indigo-500);"></i>Register New Department</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <form class="ajax-form">
-        <div class="modal-body" style="padding:24px;">
-          <div class="row g-3 mb-3">
-            <div class="col-md-8"><label class="form-label">Department Name</label><input type="text" class="form-control" required placeholder="Full official name"></div>
-            <div class="col-md-4"><label class="form-label">Dept Code</label><input type="text" class="form-control" required placeholder="e.g. DEPT-ABC-07"></div>
-          </div>
-          <div class="row g-3 mb-3">
-            <div class="col-md-6"><label class="form-label">Ministry / Parent Body</label><input type="text" class="form-control" placeholder="Ministry of…"></div>
-            <div class="col-md-6"><label class="form-label">Head of Department (HOD)</label><input type="text" class="form-control" required placeholder="Full name with designation"></div>
-          </div>
-          <div class="row g-3 mb-0">
-            <div class="col-md-6"><label class="form-label">HOD Email</label><input type="email" class="form-control" placeholder="hod@ministry.gov.bd"></div>
-            <div class="col-md-6"><label class="form-label">Risk Level</label><select class="form-select"><option value="Critical">🔴 High Risk Zone</option><option value="Moderate">🟡 Moderate Risk</option><option value="Monitored">🔵 Under Monitoring</option><option value="Compliant">✅ Compliance Certified</option></select></div>
-          </div>
-        </div>
-        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Department</button></div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Dept Modal -->
-<div class="modal fade" id="editDeptModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-pen-to-square me-2" style="color:var(--amber-500);"></i>Edit Department</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-building-columns text-primary me-2"></i> Register Monitored Department</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
       <form class="ajax-form">
-        <div class="modal-body" style="padding:24px;">
-          <div class="mb-3"><label class="form-label">Department Name</label><input type="text" class="form-control" value="Public Works & Transport" required></div>
-          <div class="mb-3"><label class="form-label">Head of Department (HOD)</label><input type="text" class="form-control" value="Engr. M. A. Karim" required></div>
-          <div class="mb-3"><label class="form-label">HOD Email</label><input type="email" class="form-control" value="hod.pwt@ministry.gov.bd"></div>
-          <div class="mb-0"><label class="form-label">Risk Level</label><select class="form-select"><option selected>🔴 High Risk Zone</option><option>🟡 Moderate Risk</option><option>🔵 Under Monitoring</option><option>✅ Compliance Certified</option></select></div>
+        <div class="modal-body" style="padding: 24px;">
+          <div class="mb-3">
+            <label class="form-label">Department Name *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-landmark input-icon"></i>
+              <input type="text" class="form-control" required placeholder="e.g. Urban Development & Planning">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Department Code *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-code input-icon"></i>
+              <input type="text" class="form-control" required placeholder="e.g. DEPT-UDP-04">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Head of Department (HOD) *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-user-tie input-icon"></i>
+              <input type="text" class="form-control" required placeholder="Official title & name">
+            </div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label">Initial Risk Tier</label>
+            <select class="form-select">
+              <option value="high">🔴 High Vulnerability Zone</option>
+              <option value="medium" selected>🟡 Standard Oversight</option>
+              <option value="low">🟢 Low Risk / Compliance Certified</option>
+            </select>
+          </div>
         </div>
-        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary">Save Changes</button></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i> Register Department</button>
+        </div>
       </form>
     </div>
   </div>
@@ -287,5 +267,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  $('#deptSearch').on('keyup', function () {
+    const val = $(this).val().toLowerCase();
+    $('.dept-item').each(function () {
+      $(this).toggle($(this).text().toLowerCase().includes(val));
+    });
+  });
+</script>
 </body>
 </html>

@@ -1044,3 +1044,187 @@ img { display: block; }
   .kpi-grid { grid-template-columns: repeat(2,1fr); }
   .top-navbar { padding: 0 14px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   NEW INTERACTIVE FORM & UI ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Floating Input Groups with Icons */
+.input-icon-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-icon-group i.input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-3);
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition: var(--tx);
+  z-index: 5;
+}
+.input-icon-group .form-control,
+.input-icon-group .form-select {
+  padding-left: 38px !important;
+}
+.input-icon-group .form-control:focus ~ i.input-icon,
+.input-icon-group .form-select:focus ~ i.input-icon {
+  color: var(--indigo-500);
+}
+
+/* Enhanced Drag-and-Drop File Upload Box */
+.file-dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--r-md);
+  padding: 24px;
+  text-align: center;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: var(--tx);
+  position: relative;
+}
+.file-dropzone:hover, .file-dropzone.dragover {
+  border-color: var(--indigo-500);
+  background: rgba(79, 70, 229, 0.05);
+}
+.file-dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.file-dropzone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(79, 70, 229, 0.12);
+  color: var(--indigo-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin: 0 auto 10px;
+}
+
+/* Form Steps Indicator */
+.form-steps-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  position: relative;
+}
+.form-steps-nav::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.form-step-item {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  cursor: pointer;
+}
+.form-step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0 auto 6px;
+  transition: var(--tx);
+}
+.form-step-item.active .form-step-circle {
+  background: var(--indigo-600);
+  border-color: var(--indigo-600);
+  color: #ffffff;
+  box-shadow: 0 0 15px var(--sh-primary);
+}
+.form-step-item.done .form-step-circle {
+  background: var(--emerald-500);
+  border-color: var(--emerald-500);
+  color: #ffffff;
+}
+.form-step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+/* Interactive Floating Bulk Action Bar */
+.bulk-actions-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-lg), 0 0 30px rgba(79, 70, 229, 0.2);
+  border-radius: 9999px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1050;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bulk-actions-bar.show {
+  transform: translateX(-50%) translateY(0);
+}
+.bulk-count-badge {
+  background: var(--indigo-600);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+/* Character Counter & Form Hints */
+.char-counter {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Pill Live Pulse Indicator */
+.pill-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pill-live::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: pulse-live-dot 1.5s infinite;
+}
+@keyframes pulse-live-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.8); opacity: 0.4; }
+}
+
+/* Checkbox Modern Styling */
+.form-check-input:checked {
+  background-color: var(--indigo-600);
+  border-color: var(--indigo-600);
+}
+

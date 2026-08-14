@@ -2,48 +2,80 @@
 <html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assign Complaints — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Assign Complaints & Triage Dispatch — CCMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
-    <div class="sb-brand"><div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div><div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
+    </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
       <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
-    <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
+    <div class="sb-footer">
+      <div class="sb-admin-card">
+        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar">
+        <div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div>
+      </div>
+    </div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search complaints by ID, department or officer…"></div>
+        <div class="search-wrap d-none d-md-block">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="tableSearch" placeholder="Search complaints by ID, department, or officer…">
+        </div>
       </div>
       <div class="nav-actions">
-        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
+        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>Triage Engine Active</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-        <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div>
-          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
+        <div class="dropdown">
+          <div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin">
+            <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
+            <li><div class="dropdown-divider"></div></li>
+            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -51,66 +83,183 @@
     <main class="content-body">
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Assign Complaints</span></div>
+          <div class="page-breadcrumb">
+            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <i class="fa-solid fa-chevron-right"></i><span>Triage Dispatch</span>
+          </div>
           <h1 class="page-title">Investigations Assignment Center</h1>
-          <p class="page-subtitle">Review new cases, validate recommendations, and dispatch investigators to active workload queues.</p>
+          <p class="page-subtitle">Review incoming corruption complaints, validate recommendations, and balance investigator caseloads.</p>
         </div>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#batchAssignModal"><i class="fa-solid fa-robot"></i> Auto-Assign Batch</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#batchAssignModal">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Smart Auto-Triage Batch
+          </button>
+        </div>
       </div>
 
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">24</div><div class="kpi-label">Unassigned Cases</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">18</div><div class="kpi-label">Assigned Today</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">14</div><div class="kpi-label">Available Officers</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">5</div><div class="kpi-label">Departments Alert</div></div></div>
+      <!-- KPI Row -->
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-inbox"></i></div>
+          <div class="kpi-value counter-value">24</div>
+          <div class="kpi-label">Unassigned Complaints</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-triangle-exclamation"></i> Action Required</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-user-check"></i></div>
+          <div class="kpi-value counter-value">18</div>
+          <div class="kpi-label">Assigned Today</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> On Schedule</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <div class="kpi-value counter-value">14</div>
+          <div class="kpi-label">Available Field Officers</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-circle-dot"></i> Ready for Duty</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-stopwatch"></i></div>
+          <div class="kpi-value counter-value">5</div>
+          <div class="kpi-label">SLA Breach Warnings</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-fire"></i> High Priority</div>
+        </div>
       </div>
 
+      <!-- Filter Bar -->
       <div class="filter-bar">
         <div class="row g-3 align-items-end">
-          <div class="col-md-3"><label class="form-label">Department</label><select class="form-select"><option>All Departments</option><option>Customs & Excise</option><option>Land & Revenue</option><option>Transport</option></select></div>
-          <div class="col-md-3"><label class="form-label">Category</label><select class="form-select"><option>All Categories</option><option>Procurement Fraud</option><option>Bribery / Kickbacks</option><option>Illegal Tender</option></select></div>
-          <div class="col-md-3"><label class="form-label">Priority</label><select class="form-select"><option>All Priorities</option><option>Critical</option><option>High</option><option>Medium</option></select></div>
-          <div class="col-md-3 d-flex gap-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Filter</button><button class="btn btn-ghost" title="Reset"><i class="fa-solid fa-rotate-left"></i></button></div>
+          <div class="col-md-3">
+            <label class="form-label">Department</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-building-columns input-icon"></i>
+              <select class="form-select" id="deptFilter">
+                <option value="all">All Departments</option>
+                <option value="Customs">Customs & Excise</option>
+                <option value="Land">Land & Revenue</option>
+                <option value="Public Works">Public Works & Transport</option>
+                <option value="Healthcare">Healthcare Directorate</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Category</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-tags input-icon"></i>
+              <select class="form-select" id="typeFilter">
+                <option value="all">All Categories</option>
+                <option value="Procurement">Procurement Fraud</option>
+                <option value="Bribery">Bribery / Kickbacks</option>
+                <option value="Embezzlement">Embezzlement</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Priority</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-fire input-icon"></i>
+              <select class="form-select" id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex gap-2">
+            <button class="btn btn-primary flex-grow-1" onclick="filterTableData()"><i class="fa-solid fa-filter"></i> Filter Queue</button>
+            <button class="btn btn-ghost btn-reset-filters" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
         </div>
       </div>
 
+      <!-- Unassigned Complaints Table -->
       <div class="card-box">
         <div class="card-box-head">
-          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-list-check"></i></div>Unassigned Complaints</div>
-          <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Unassigned_Complaints_Export"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
+          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-list-check"></i></div>Pending Assignment Queue</div>
+          <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Unassigned_Complaints_Export"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> PDF Queue</button>
         </div>
         <div class="tbl-wrap">
           <table class="tbl" id="complaintsTable">
             <thead>
-              <tr><th>Case ID</th><th>Department</th><th>Category</th><th>Severity</th><th>Due</th><th>Recommended Officer</th><th>Action</th></tr>
+              <tr>
+                <th style="width: 40px;" class="no-sort"><input type="checkbox" class="form-check-input select-all-checkbox" id="selectAllRows"></th>
+                <th>Case ID</th>
+                <th>Department Scope</th>
+                <th>Category</th>
+                <th>Severity Priority</th>
+                <th>SLA Countdown</th>
+                <th>Smart Match Officer</th>
+                <th class="text-end no-sort">Action</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#CCMS-9819</td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9819</td>
                 <td>Customs & Excise</td>
                 <td>Procurement Fraud</td>
-                <td><span class="pill pill-warning">High</span></td>
-                <td class="extra-small">24h left</td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">Insp. Rafiqul Islam</div><div class="extra-small" style="color:var(--text-3);">0 active cases</div></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#assignOfficerModal"><i class="fa-solid fa-user-check" style="color:var(--indigo-500);"></i></button></div></td>
+                <td><span class="chip-high">High</span></td>
+                <td><span class="sla sla-critical"><i class="fa-solid fa-clock"></i> 24h Left</span></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" style="width:28px;height:28px;border-radius:6px;object-fit:cover;" alt="">
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Insp. Rafiqul Islam</div>
+                      <div class="extra-small text-muted">0 Active Cases (Recommended)</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-primary btn-sm" onclick="openAssignModal('#CCMS-9819', 'Customs & Excise', 'Insp. Rafiqul Islam')">
+                    <i class="fa-solid fa-user-plus"></i> Assign Now
+                  </button>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#CCMS-9825</td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9825</td>
                 <td>Land & Revenue Board</td>
                 <td>Bribery / Kickbacks</td>
-                <td><span class="pill pill-danger">Critical</span></td>
-                <td class="extra-small">18h left</td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">AD Nusrat Jahan</div><div class="extra-small" style="color:var(--text-3);">2 active cases</div></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#assignOfficerModal"><i class="fa-solid fa-user-check" style="color:var(--indigo-500);"></i></button></div></td>
+                <td><span class="chip-critical">Critical</span></td>
+                <td><span class="sla sla-critical"><i class="fa-solid fa-fire"></i> 12h Left</span></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" style="width:28px;height:28px;border-radius:6px;object-fit:cover;" alt="">
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Insp. Nusrat Jahan</div>
+                      <div class="extra-small text-muted">1 Active Case · 96% Rating</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-primary btn-sm" onclick="openAssignModal('#CCMS-9825', 'Land & Revenue Board', 'Insp. Nusrat Jahan')">
+                    <i class="fa-solid fa-user-plus"></i> Assign Now
+                  </button>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#CCMS-9834</td>
-                <td>Transport Authority</td>
-                <td>Illegal Tender</td>
-                <td><span class="pill pill-new">Medium</span></td>
-                <td class="extra-small">3d left</td>
-                <td><div class="fw-semibold" style="font-size:.82rem;">Insp. Kabir Al-Hassan</div><div class="extra-small" style="color:var(--text-3);">4 active cases</div></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#assignOfficerModal"><i class="fa-solid fa-user-check" style="color:var(--indigo-500);"></i></button></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9830</td>
+                <td>Public Works & Transport</td>
+                <td>Illegal Tender Award</td>
+                <td><span class="chip-medium">Medium</span></td>
+                <td><span class="sla sla-warn"><i class="fa-solid fa-clock"></i> 48h Left</span></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" style="width:28px;height:28px;border-radius:6px;object-fit:cover;" alt="">
+                    <div>
+                      <div class="fw-semibold" style="font-size:.82rem;">Insp. Tariq Al-Hassan</div>
+                      <div class="extra-small text-muted">2 Active Cases</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-primary btn-sm" onclick="openAssignModal('#CCMS-9830', 'Public Works & Transport', 'Insp. Tariq Al-Hassan')">
+                    <i class="fa-solid fa-user-plus"></i> Assign Now
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -120,28 +269,89 @@
   </div>
 </div>
 
+<!-- ══════════════════════ MODAL: ASSIGN OFFICER DIRECT ══════════════════════ -->
 <div class="modal fade" id="assignOfficerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-user-gear me-2" style="color:var(--indigo-500);"></i>Assign Officer to Complaint</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-user-tag text-primary me-2"></i> Assign Investigating Officer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
       <form class="ajax-form">
-        <div class="modal-body" style="padding:24px;">
-          <div class="mb-3"><label class="form-label">Choose Officer</label><select class="form-select" required><option value="">Select officer</option><option value="ACO-403">Insp. Rafiqul Islam — Customs Cell (0 active cases)</option><option value="ACO-402">AD Nusrat Jahan — Land Cell (2 active cases)</option><option value="ACO-401">Insp. Kabir Al-Hassan — Public Works (4 active cases)</option></select></div>
-          <div class="mb-3"><label class="form-label">Assignment Notes</label><textarea class="form-control" rows="3" placeholder="Add instructions or priority notes..."></textarea></div>
-          <div class="form-check"><input class="form-check-input" type="checkbox" checked id="notifyOfficer"><label class="form-check-label small" for="notifyOfficer">Send immediate notification to selected officer</label></div>
+        <div class="modal-body" style="padding: 24px;">
+          <div class="mb-3">
+            <label class="form-label">Case Docket</label>
+            <input type="text" class="form-control" id="assignCaseId" readonly style="font-family:var(--font-mono); font-weight:700;">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Jurisdiction Department</label>
+            <input type="text" class="form-control" id="assignDept" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Select Designated Field Officer *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-user-shield input-icon"></i>
+              <select class="form-select" id="assignOfficerSelect" required>
+                <option value="">Choose Officer...</option>
+                <option value="1">Insp. Rafiqul Islam (0 Active Cases · 98% Clearance)</option>
+                <option value="2">Insp. Nusrat Jahan (1 Active Case · 96% Clearance)</option>
+                <option value="3">Insp. Tariq Al-Hassan (2 Active Cases · 94% Clearance)</option>
+                <option value="4">Insp. Kabir Hossain (1 Active Case · 91% Clearance)</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Statutory SLA Target Completion Date *</label>
+            <input type="date" class="form-control" value="2026-08-21" required>
+          </div>
+          <div class="mb-0">
+            <label class="form-label">Assignment Directive / Triage Instructions</label>
+            <textarea class="form-control" rows="3" placeholder="Provide instructions, witness priorities, or specific audit focus..."></textarea>
+          </div>
         </div>
-        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary">Confirm Assignment</button></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i> Confirm & Dispatch Officer</button>
+        </div>
       </form>
     </div>
   </div>
 </div>
 
+<!-- ══════════════════════ MODAL: SMART BATCH AUTO-ASSIGN ══════════════════════ -->
 <div class="modal fade" id="batchAssignModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-robot me-2" style="color:var(--indigo-500);"></i>Auto-Assign Complaints</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body" style="padding:24px;"><p>Run intelligent batch allocation across all unassigned complaints based on officer availability, department fit, and current workload.</p><div class="form-check mt-3"><input class="form-check-input" type="checkbox" id="includeCriticalOnly" checked><label class="form-check-label" for="includeCriticalOnly">Only assign critical and high-priority complaints</label></div></div>
-      <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Run Assignment</button></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i> Auto-Triage & Batch Assign</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form class="ajax-form">
+        <div class="modal-body" style="padding: 24px;">
+          <p class="extra-small text-muted mb-3">
+            Automatically allocates pending dockets according to jurisdiction specialty, officer caseload balance, and strict anti-conflict rules.
+          </p>
+          <div class="mb-3">
+            <label class="form-label">Batch Scope</label>
+            <select class="form-select">
+              <option>All 24 Unassigned Cases</option>
+              <option>Only Critical & High Severity Cases (8 cases)</option>
+            </select>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="checkConflict" checked>
+            <label class="form-check-label extra-small" for="checkConflict">Enforce Conflict-of-Interest Screening</label>
+          </div>
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" id="notifyOfficers" checked>
+            <label class="form-check-label extra-small" for="notifyOfficers">Send Instant SMS & Encrypted Email Alerts to Assigned Officers</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-bolt me-1"></i> Execute Auto-Triage</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -150,5 +360,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  function openAssignModal(caseId, dept, officer) {
+    $('#assignCaseId').val(caseId);
+    $('#assignDept').val(dept);
+    const modal = new bootstrap.Modal(document.getElementById('assignOfficerModal'));
+    modal.show();
+  }
+</script>
 </body>
 </html>

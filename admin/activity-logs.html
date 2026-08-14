@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Activity Logs — CCMS Admin</title>
+  <title>Security Audit Trail Logs — CCMS Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
     <div class="sb-brand">
       <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
@@ -23,16 +24,25 @@
       </div>
     </div>
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
-      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Manage Categories</span></a>
+      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
@@ -49,14 +59,15 @@
     </div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search activity by IP, user, action…"></div>
+        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search activity by IP, user, action, case…"></div>
       </div>
       <div class="nav-actions">
-        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
+        <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>Tamper-Proof Audit Active</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown">
           <div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown">
@@ -67,9 +78,10 @@
             </div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li>
+            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -78,83 +90,152 @@
     <main class="content-body">
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Activity Logs</span></div>
-          <h1 class="page-title">System Security & Audit Trail Logs</h1>
-          <p class="page-subtitle">Immutable log records of admin authentication, case edits, officer assignments, and export events.</p>
+          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Intelligence</span><i class="fa-solid fa-chevron-right"></i><span>Audit Ledger</span></div>
+          <h1 class="page-title">Immutable Forensic Audit Trail</h1>
+          <p class="page-subtitle">Cryptographically signed logs of all administrator authentication, case triage, officer assignments, and dossier exports.</p>
         </div>
-        <button class="btn btn-primary btn-export-pdf" data-doc-name="Audit_Trail_Security_Logs_Aug_2026"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export Audit Logs</button>
+        <button class="btn btn-primary btn-export-pdf" data-doc-name="Audit_Trail_Security_Logs_Aug_2026"><i class="fa-solid fa-file-pdf me-1"></i> Export Signed Audit Ledger</button>
       </div>
 
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">1,250</div><div class="kpi-label">Audit Entries</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">48</div><div class="kpi-label">Login Sessions</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">12</div><div class="kpi-label">Case Updates</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">6</div><div class="kpi-label">Export Events</div></div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-fingerprint"></i></div>
+          <div class="kpi-value counter-value">1250</div>
+          <div class="kpi-label">Cryptographic Log Records</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-lock"></i> SHA-256 Sealed</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-key"></i></div>
+          <div class="kpi-value counter-value">48</div>
+          <div class="kpi-label">Admin Auth Sessions</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+          <div class="kpi-value counter-value">124</div>
+          <div class="kpi-label">Case State Transitions</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-clock"></i> Timestamps OK</div>
+        </div>
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-file-export"></i></div>
+          <div class="kpi-value counter-value">16</div>
+          <div class="kpi-label">Judicial Export Events</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> Watermarked</div>
+        </div>
       </div>
 
       <div class="filter-bar">
         <div class="row g-3 align-items-end">
-          <div class="col-md-3"><label class="form-label">User Category</label><select class="form-select"><option>All Account Roles</option><option>Super Admin</option><option>Officer</option><option>Citizen</option></select></div>
-          <div class="col-md-3"><label class="form-label">Action Type</label><select class="form-select"><option>All Action Types</option><option>Login</option><option>Complaint</option><option>Assign</option><option>PDF</option></select></div>
-          <div class="col-md-3"><label class="form-label">Date Range</label><input type="text" class="form-control" value="Aug 01, 2026 - Aug 07, 2026"></div>
-          <div class="col-md-3 d-flex gap-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Filter</button><button class="btn btn-ghost" title="Reset"><i class="fa-solid fa-rotate-left"></i></button></div>
+          <div class="col-md-3">
+            <label class="form-label">Action Classification</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-list-check input-icon"></i>
+              <select class="form-select" id="typeFilter">
+                <option value="all">All Action Types</option>
+                <option value="LOGIN">User / Admin Login</option>
+                <option value="CREATE">Case Registration</option>
+                <option value="ASSIGN">Officer Assignment</option>
+                <option value="UPDATE">Status / State Update</option>
+                <option value="EXPORT">PDF / Data Export</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">User Category</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-user-shield input-icon"></i>
+              <select class="form-select" id="roleFilter">
+                <option value="all">All Actors</option>
+                <option value="Super Admin">Super Administrator</option>
+                <option value="Officer">Field Investigator</option>
+                <option value="System">System Auto-Watchdog</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Log Time Window</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-calendar-days input-icon"></i>
+              <select class="form-select">
+                <option>Last 24 Hours</option>
+                <option selected>Last 7 Days</option>
+                <option>Last 30 Days</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-primary w-100" onclick="filterTableData()"><i class="fa-solid fa-filter"></i> Filter</button>
+            <button class="btn btn-ghost btn-reset-filters" title="Reset"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
         </div>
       </div>
 
       <div class="card-box">
         <div class="card-box-head">
-          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>System Event Log</div>
-          <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Audit_Logs_Export"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
+          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-fingerprint"></i></div>System Security &amp; Activity Ledger</div>
+          <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Audit_Ledger_Export"><i class="fa-solid fa-file-pdf text-danger"></i> PDF Export</button>
         </div>
         <div class="tbl-wrap">
-          <table class="tbl" id="activityLogTable">
+          <table class="tbl" id="activityTable">
             <thead>
               <tr>
-                <th>Log ID</th>
+                <th style="width:40px;" class="no-sort"><input type="checkbox" class="form-check-input select-all-checkbox" id="selectAllRows"></th>
                 <th>Timestamp</th>
-                <th>Performed By</th>
-                <th>Action</th>
-                <th>IP Address</th>
-                <th>Related Ref</th>
-                <th>Audit Details</th>
+                <th>Actor Name &amp; Role</th>
+                <th>IP &amp; Node</th>
+                <th>Action Type</th>
+                <th>Event Description</th>
+                <th>Integrity Seal</th>
+                <th class="text-end no-sort">Verify</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#LOG-99481</td>
-                <td><div class="fw-semibold">Aug 07, 2026</div><div class="extra-small text-muted">21:30:14 PM</div></td>
-                <td><div class="fw-semibold">Inspector Admin</div><span class="pill pill-info">Super Admin</span></td>
-                <td><span class="pill pill-success">PDF Generated</span></td>
-                <td class="font-monospace">192.168.1.45</td>
-                <td class="font-monospace text-primary">#CCMS-9821</td>
-                <td class="extra-small text-muted">Generated confidential PDF case file via Dompdf engine.</td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="extra-small" style="font-family:var(--font-mono);">Aug 07, 2026 · 14:45</td>
+                <td>
+                  <div class="fw-semibold" style="font-size:.82rem;">Insp. S. Rahman</div>
+                  <div class="extra-small text-muted">Super Admin</div>
+                </td>
+                <td><span style="font-family:var(--font-mono);font-size:.78rem;">192.168.1.104</span></td>
+                <td><span class="log-action-badge log-assign"><i class="fa-solid fa-user-tag"></i> ASSIGN</span></td>
+                <td style="font-size:.82rem;">Assigned Case <strong>#CCMS-9821</strong> to Insp. Khalid Al-Hassan.</td>
+                <td><span class="pill pill-active pill-live" style="font-size:0.68rem;font-family:var(--font-mono);">0x8f7a...3e9b</span></td>
+                <td class="text-end">
+                  <button class="btn btn-ghost btn-icon btn-sm" onclick="verifyHash('0x8f7a912e3e9b418290bcda12', 'Aug 07, 2026 · 14:45', 'Insp. S. Rahman', 'Case Assignment #CCMS-9821')" title="Verify Cryptographic Hash"><i class="fa-solid fa-shield-check text-primary"></i></button>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#LOG-99480</td>
-                <td><div class="fw-semibold">Aug 07, 2026</div><div class="extra-small text-muted">20:45:02 PM</div></td>
-                <td><div class="fw-semibold">Insp. K. Al-Hassan</div><span class="pill pill-warning">Officer ACO-401</span></td>
-                <td><span class="pill pill-warning">Status Updated</span></td>
-                <td class="font-monospace">10.0.4.112</td>
-                <td class="font-monospace text-primary">#CCMS-9820</td>
-                <td class="extra-small text-muted">Transitioned status from Pending to Under Active Investigation.</td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="extra-small" style="font-family:var(--font-mono);">Aug 07, 2026 · 11:20</td>
+                <td>
+                  <div class="fw-semibold" style="font-size:.82rem;">System Watchdog</div>
+                  <div class="extra-small text-muted">Automated Service</div>
+                </td>
+                <td><span style="font-family:var(--font-mono);font-size:.78rem;">127.0.0.1 (Local)</span></td>
+                <td><span class="log-action-badge log-create"><i class="fa-solid fa-folder-plus"></i> CREATE</span></td>
+                <td style="font-size:.82rem;">Encrypted citizen complaint token <strong>#CCMS-9821</strong> ingested.</td>
+                <td><span class="pill pill-active pill-live" style="font-size:0.68rem;font-family:var(--font-mono);">0x19ca...881f</span></td>
+                <td class="text-end">
+                  <button class="btn btn-ghost btn-icon btn-sm" onclick="verifyHash('0x19ca4452881fcba019283741', 'Aug 07, 2026 · 11:20', 'System Watchdog', 'Encrypted Ingestion #CCMS-9821')"><i class="fa-solid fa-shield-check text-primary"></i></button>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#LOG-99479</td>
-                <td><div class="fw-semibold">Aug 07, 2026</div><div class="extra-small text-muted">19:12:33 PM</div></td>
-                <td><div class="fw-semibold">Whistleblower WB-9921</div><span class="pill pill-dark">Protected Account</span></td>
-                <td><span class="pill pill-info">Complaint Lodged</span></td>
-                <td class="font-monospace">103.48.22.18</td>
-                <td class="font-monospace text-primary">#CCMS-9821</td>
-                <td class="extra-small text-muted">Lodged a new high-severity complaint with 2 media attachments.</td>
-              </tr>
-              <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">#LOG-99478</td>
-                <td><div class="fw-semibold">Aug 07, 2026</div><div class="extra-small text-muted">18:00:01 PM</div></td>
-                <td><div class="fw-semibold">Inspector Admin</div><span class="pill pill-info">Super Admin</span></td>
-                <td><span class="pill pill-secondary">System Login</span></td>
-                <td class="font-monospace">192.168.1.45</td>
-                <td class="text-muted">-</td>
-                <td class="extra-small text-muted">Successful administrator login session initiated via XAMPP localhost.</td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td class="extra-small" style="font-family:var(--font-mono);">Aug 06, 2026 · 09:15</td>
+                <td>
+                  <div class="fw-semibold" style="font-size:.82rem;">Insp. S. Rahman</div>
+                  <div class="extra-small text-muted">Super Admin</div>
+                </td>
+                <td><span style="font-family:var(--font-mono);font-size:.78rem;">192.168.1.104</span></td>
+                <td><span class="log-action-badge log-login"><i class="fa-solid fa-key"></i> LOGIN</span></td>
+                <td style="font-size:.82rem;">Successful 2FA Hardware Key session initialization.</td>
+                <td><span class="pill pill-active pill-live" style="font-size:0.68rem;font-family:var(--font-mono);">0x77ab...4091</span></td>
+                <td class="text-end">
+                  <button class="btn btn-ghost btn-icon btn-sm" onclick="verifyHash('0x77ab90014091abff88291024', 'Aug 06, 2026 · 09:15', 'Insp. S. Rahman', '2FA Authentication Event')"><i class="fa-solid fa-shield-check text-primary"></i></button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -164,9 +245,46 @@
   </div>
 </div>
 
+<!-- ══════════════════════ MODAL: HASH VERIFICATION ══════════════════════ -->
+<div class="modal fade" id="hashVerifyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-shield-check text-success me-2"></i> Cryptographic Integrity Verified</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:24px;">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;">
+          <div class="extra-small text-muted mb-1">SHA-256 Hash Seal</div>
+          <div class="fw-bold extra-small text-primary" id="hashModalVal" style="font-family:var(--font-mono);word-break:break-all;">0x8f7a912e3e9b418290bcda12</div>
+        </div>
+        <div class="row g-2">
+          <div class="col-6"><div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="extra-small text-muted">Timestamp</div><strong class="extra-small" id="hashModalTime">Aug 07, 2026 · 14:45</strong></div></div>
+          <div class="col-6"><div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;"><div class="extra-small text-muted">Actor</div><strong class="extra-small" id="hashModalActor">Insp. S. Rahman</strong></div></div>
+        </div>
+        <div class="mt-3 extra-small text-muted">
+          <i class="fa-solid fa-circle-check text-success me-1"></i> Block sequence verified against national immutable ledger root. Zero tampering detected.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  function verifyHash(hash, time, actor, desc) {
+    $('#hashModalVal').text(hash);
+    $('#hashModalTime').text(time);
+    $('#hashModalActor').text(actor);
+    const modal = new bootstrap.Modal(document.getElementById('hashVerifyModal'));
+    modal.show();
+  }
+</script>
 </body>
 </html>

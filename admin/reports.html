@@ -1,111 +1,369 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reports — CCMS Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Forensic Audits — CCMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div id="wrapper">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
   <aside id="sidebar">
-    <div class="sb-brand"><div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div><div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div>
+        <div class="sb-title">CCMS</div>
+        <div class="sb-sub">Anti-Corruption</div>
+      </div>
+    </div>
+    
     <nav class="sb-nav">
+      <div class="sb-section-label">Public Portal</div>
+      <a href="../index.html" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Citizen Portal</span>
+      </a>
+
       <div class="sb-section-label">Main Overview</div>
       <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
       <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
       <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      
       <div class="sb-section-label">Personnel</div>
       <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
       <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      
       <div class="sb-section-label">System Masters</div>
       <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
       <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      
       <div class="sb-section-label">Intelligence</div>
       <a href="reports.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
       <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
       <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
-    <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
+    
+    <div class="sb-footer">
+      <div class="sb-admin-card">
+        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar">
+        <div class="sb-admin-info">
+          <div class="sb-admin-name">Insp. S. Rahman</div>
+          <div class="sb-admin-role">Super Administrator</div>
+        </div>
+      </div>
+    </div>
   </aside>
 
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
   <div id="main-content">
     <nav class="top-navbar">
       <div class="d-flex align-items-center gap-3">
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="search-wrap d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="tableSearch" placeholder="Search reports by type or date…"></div>
+        <div class="search-wrap d-none d-md-block">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="tableSearch" placeholder="Search reports by title, department, or date…">
+        </div>
       </div>
+      
       <div class="nav-actions">
         <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>System Online</div>
-        <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-        <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i> Settings</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item" href="#" style="color:var(--rose-500);"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul></div>
+        <button class="nav-icon-btn" id="themeToggle" title="Toggle Theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        
+        <div class="dropdown">
+          <div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin">
+            <div class="d-none d-md-block">
+              <div class="nav-profile-name">Inspector Admin</div>
+              <div class="nav-profile-role">Super Administrator</div>
+            </div>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
+            <li><div class="dropdown-divider"></div></li>
+            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
     <main class="content-body">
+      <!-- Page Header -->
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Reports</span></div>
-          <h1 class="page-title">Anti-Corruption Reporting Hub</h1>
-          <p class="page-subtitle">Generate executive summaries, risk audits, and performance exports.</p>
+          <div class="page-breadcrumb">
+            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Intelligence</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Reporting Hub</span>
+          </div>
+          <h1 class="page-title">Forensic Audits & Report Generation</h1>
+          <p class="page-subtitle">Compile certified PDF dossiers, department risk matrices, and statistical executive summaries.</p>
         </div>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#previewReportModal"><i class="fa-solid fa-eye"></i> Preview Report</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scheduleReportModal">
+            <i class="fa-solid fa-clock"></i> Schedule Auto-Report
+          </button>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generateCustomReportModal">
+            <i class="fa-solid fa-plus"></i> Generate Custom Report
+          </button>
+        </div>
       </div>
 
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="kpi-card indigo" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">38</div><div class="kpi-label">Reports Generated</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card emerald" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">12</div><div class="kpi-label">Critical Audits</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card amber" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">5</div><div class="kpi-label">Custom Templates</div></div></div>
-        <div class="col-6 col-xl-3"><div class="kpi-card rose" style="padding:16px 18px;"><div class="kpi-value counter-value" style="font-size:1.6rem;">92%</div><div class="kpi-label">On-Time Delivery</div></div></div>
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <div class="kpi-icon"><i class="fa-solid fa-file-pdf"></i></div>
+          <div class="kpi-value counter-value">148</div>
+          <div class="kpi-label">Audits Compiled</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +18% this month</div>
+        </div>
+
+        <div class="kpi-card rose">
+          <div class="kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="kpi-value counter-value">24</div>
+          <div class="kpi-label">High-Risk Irregularities</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-shield-halved"></i> Action Flagged</div>
+        </div>
+
+        <div class="kpi-card emerald">
+          <div class="kpi-icon"><i class="fa-solid fa-stamp"></i></div>
+          <div class="kpi-value counter-value">94.8%</div>
+          <div class="kpi-label">SLA Compliance Rate</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-check"></i> Within Benchmark</div>
+        </div>
+
+        <div class="kpi-card amber">
+          <div class="kpi-icon"><i class="fa-solid fa-building-columns"></i></div>
+          <div class="kpi-value counter-value">18</div>
+          <div class="kpi-label">Departments Audited</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-circle-dot"></i> Realtime Sync</div>
+        </div>
       </div>
 
+      <!-- Interactive Multi-Filter Bar -->
       <div class="filter-bar">
         <div class="row g-3 align-items-end">
-          <div class="col-md-3"><label class="form-label">Report Type</label><select class="form-select"><option>All Types</option><option>Executive Audit</option><option>Risk Analysis</option><option>Officer Performance</option></select></div>
-          <div class="col-md-3"><label class="form-label">Department</label><select class="form-select"><option>All Departments</option><option>Public Works</option><option>Land & Revenue</option><option>Customs</option></select></div>
-          <div class="col-md-3"><label class="form-label">Period</label><select class="form-select"><option>Last 30 Days</option><option>Last Quarter</option><option>Year-to-Date</option></select></div>
-          <div class="col-md-3 d-flex gap-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Apply</button><button class="btn btn-ghost" title="Reset"><i class="fa-solid fa-rotate-left"></i></button></div>
+          <div class="col-md-3">
+            <label class="form-label">Report Category</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-layer-group input-icon"></i>
+              <select class="form-select" id="typeFilter">
+                <option value="all">All Report Categories</option>
+                <option value="Executive">Executive Briefings</option>
+                <option value="Risk">Risk & Vulnerability</option>
+                <option value="Officer">Officer Performance</option>
+                <option value="Financial">Financial Discrepancy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Target Department</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-building-columns input-icon"></i>
+              <select class="form-select" id="deptFilter">
+                <option value="all">All Departments</option>
+                <option value="Public Works">Public Works & Highways</option>
+                <option value="Revenue">Revenue & Customs</option>
+                <option value="Healthcare">Healthcare Administration</option>
+                <option value="Land">Land Records Bureau</option>
+                <option value="Police">Law Enforcement Cell</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Time Horizon</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-calendar-days input-icon"></i>
+              <select class="form-select" id="periodFilter">
+                <option value="all">Current Quarter (Q3 2026)</option>
+                <option value="month">Last 30 Days</option>
+                <option value="year">Full Year 2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex gap-2">
+            <button class="btn btn-primary flex-grow-1" onclick="filterTableData()">
+              <i class="fa-solid fa-filter"></i> Apply Filters
+            </button>
+            <button class="btn btn-ghost btn-reset-filters" title="Reset All Filters">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+            <button class="btn btn-ghost btn-export-pdf" data-doc-name="All_Reports_Index">
+              <i class="fa-solid fa-download"></i>
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- Report Templates & Archives Table -->
       <div class="card-box">
         <div class="card-box-head">
-          <div class="card-box-title"><div class="title-icon"><i class="fa-solid fa-file-lines"></i></div>Available Report Templates</div>
-          <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Report_Templates_Overview"><i class="fa-solid fa-file-pdf" style="color:var(--rose-500);"></i> Export PDF</button>
+          <div class="card-box-title">
+            <div class="title-icon"><i class="fa-solid fa-file-invoice"></i></div>
+            Anti-Corruption Dossiers & Intelligence Archive
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <span class="extra-small text-muted">Showing 6 Active Templates</span>
+          </div>
         </div>
+
         <div class="tbl-wrap">
           <table class="tbl" id="reportsTable">
             <thead>
-              <tr><th>Template</th><th>Purpose</th><th>Format</th><th>Last Run</th><th>Status</th><th>Actions</th></tr>
+              <tr>
+                <th style="width: 40px;" class="no-sort">
+                  <input type="checkbox" class="form-check-input select-all-checkbox" id="selectAllRows">
+                </th>
+                <th>Report Title & Dossier Code</th>
+                <th>Category</th>
+                <th>Target Scope</th>
+                <th>Security Level</th>
+                <th>Last Compiled</th>
+                <th>Status</th>
+                <th class="text-end no-sort">Actions</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">Monthly Executive Audit</td>
-                <td style="font-size:.82rem;">Institution-wide performance summary for senior leadership.</td>
-                <td><span class="pill pill-primary">PDF</span></td>
-                <td class="extra-small">Aug 07, 2026</td>
-                <td><span class="pill pill-active">Ready</span></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#previewReportModal" title="Preview"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button><button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Monthly_Executive_Audit_Report"><i class="fa-solid fa-download" style="color:var(--rose-500);"></i></button></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="card-icon-bubble" style="width:34px;height:34px;font-size:0.9rem;margin-bottom:0;background:rgba(99,102,241,0.15);color:var(--indigo-500);border-radius:8px;">
+                      <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold" style="color:var(--indigo-600);">National Anti-Corruption Executive Summary</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">REF-2026-EXEC-Q3</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="pill pill-primary">Executive</span></td>
+                <td><strong>All 18 Departments</strong></td>
+                <td><span class="chip-critical">CLASSIFIED / CONFIDENTIAL</span></td>
+                <td class="extra-small">Aug 12, 2026 · 14:30</td>
+                <td><span class="pill pill-active pill-live">Ready</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="previewDossier('National Anti-Corruption Executive Summary', 'REF-2026-EXEC-Q3', 'Executive', 'All Departments', '1,482 Cases', '87.4%')" title="Preview Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="National_Anti_Corruption_Executive_Summary_2026" title="Export PDF"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">Department Risk Matrix</td>
-                <td style="font-size:.82rem;">Comparative risk report for each major department.</td>
-                <td><span class="pill pill-emerald">Excel</span></td>
-                <td class="extra-small">Aug 05, 2026</td>
-                <td><span class="pill pill-active">Ready</span></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#previewReportModal" title="Preview"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button><button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Department_Risk_Report_2026"><i class="fa-solid fa-download" style="color:var(--rose-500);"></i></button></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="card-icon-bubble" style="width:34px;height:34px;font-size:0.9rem;margin-bottom:0;background:rgba(244,63,94,0.15);color:var(--rose-500);border-radius:8px;">
+                      <i class="fa-solid fa-file-excel"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold" style="color:var(--indigo-600);">Public Works Procurement Forensic Audit</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">AUD-PW-2026-088</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="pill pill-rejected">Risk</span></td>
+                <td><strong>Public Works & Highways</strong></td>
+                <td><span class="chip-high">HIGH INTEGRITY RISK</span></td>
+                <td class="extra-small">Aug 10, 2026 · 09:15</td>
+                <td><span class="pill pill-active pill-live">Ready</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="previewDossier('Public Works Procurement Forensic Audit', 'AUD-PW-2026-088', 'Risk Audit', 'Public Works', '312 Cases', '74.2%')" title="Preview Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Public_Works_Forensic_Audit_2026" title="Export PDF"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
+
               <tr>
-                <td class="fw-bold" style="color:var(--indigo-600);">Officer Performance Audit</td>
-                <td style="font-size:.82rem;">Investigating officer response and closure metrics.</td>
-                <td><span class="pill pill-amber">PDF</span></td>
-                <td class="extra-small">Aug 03, 2026</td>
-                <td><span class="pill pill-active">Ready</span></td>
-                <td><div class="d-flex gap-1"><button class="btn btn-ghost btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#previewReportModal" title="Preview"><i class="fa-solid fa-eye" style="color:var(--indigo-500);"></i></button><button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Officer_Performance_Report_2026"><i class="fa-solid fa-download" style="color:var(--rose-500);"></i></button></div></td>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="card-icon-bubble" style="width:34px;height:34px;font-size:0.9rem;margin-bottom:0;background:rgba(16,185,129,0.15);color:var(--emerald-500);border-radius:8px;">
+                      <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold" style="color:var(--indigo-600);">Revenue & Tax Evasion Bribery Ledger</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">REV-AUD-9912</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="pill pill-emerald">Financial</span></td>
+                <td><strong>Revenue & Customs</strong></td>
+                <td><span class="chip-medium">STANDARD OVERSIGHT</span></td>
+                <td class="extra-small">Aug 08, 2026 · 16:45</td>
+                <td><span class="pill pill-active pill-live">Ready</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="previewDossier('Revenue & Tax Bribery Ledger', 'REV-AUD-9912', 'Financial', 'Revenue & Customs', '420 Cases', '92.1%')" title="Preview Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Revenue_Customs_Bribery_Ledger_2026" title="Export PDF"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="card-icon-bubble" style="width:34px;height:34px;font-size:0.9rem;margin-bottom:0;background:rgba(245,158,11,0.15);color:var(--amber-500);border-radius:8px;">
+                      <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold" style="color:var(--indigo-600);">Investigating Officer Clearance Benchmark</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">PERF-OFFICER-04</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="pill pill-amber">Officer</span></td>
+                <td><strong>All Field Commissioners</strong></td>
+                <td><span class="chip-low">INTERNAL METRIC</span></td>
+                <td class="extra-small">Aug 05, 2026 · 11:20</td>
+                <td><span class="pill pill-active pill-live">Ready</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="previewDossier('Investigating Officer Clearance Benchmark', 'PERF-OFFICER-04', 'Officer Performance', 'Internal Bureau', '42 Officers', '94.8%')" title="Preview Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Officer_Clearance_Benchmark_2026" title="Export PDF"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="card-icon-bubble" style="width:34px;height:34px;font-size:0.9rem;margin-bottom:0;background:rgba(6,182,212,0.15);color:var(--cyan-500);border-radius:8px;">
+                      <i class="fa-solid fa-file-shield"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold" style="color:var(--indigo-600);">Land Records Vigilance & Title Fraud Report</div>
+                      <div class="extra-small text-muted" style="font-family:var(--font-mono);">LND-VIG-2026</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="pill pill-new">Risk</span></td>
+                <td><strong>Land Records Bureau</strong></td>
+                <td><span class="chip-high">HIGH INTEGRITY RISK</span></td>
+                <td class="extra-small">Aug 01, 2026 · 18:00</td>
+                <td><span class="pill pill-active pill-live">Ready</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-ghost btn-icon btn-sm" onclick="previewDossier('Land Records Vigilance & Fraud Report', 'LND-VIG-2026', 'Risk Audit', 'Land Records', '198 Cases', '81.5%')" title="Preview Dossier"><i class="fa-solid fa-eye text-primary"></i></button>
+                    <button class="btn btn-ghost btn-icon btn-sm btn-export-pdf" data-doc-name="Land_Records_Vigilance_Report_2026" title="Export PDF"><i class="fa-solid fa-file-arrow-down text-danger"></i></button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -115,26 +373,227 @@
   </div>
 </div>
 
+<!-- ══════════════════════ MODAL: CUSTOM REPORT GENERATOR ══════════════════════ -->
+<div class="modal fade" id="generateCustomReportModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i> Custom Forensic Report Generator</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form class="ajax-form">
+        <div class="modal-body" style="padding: 24px;">
+          <!-- Steps Header -->
+          <div class="form-steps-nav">
+            <div class="form-step-item active">
+              <div class="form-step-circle">1</div>
+              <div class="form-step-label">Parameters</div>
+            </div>
+            <div class="form-step-item">
+              <div class="form-step-circle">2</div>
+              <div class="form-step-label">Data Fields</div>
+            </div>
+            <div class="form-step-item">
+              <div class="form-step-circle">3</div>
+              <div class="form-step-label">Export Format</div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Report Title *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-heading input-icon"></i>
+                <input type="text" class="form-control" placeholder="e.g. Q3 Procurement Fraud Audit" required>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Dossier Classification *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-shield-halved input-icon"></i>
+                <select class="form-select" required>
+                  <option value="confidential">Confidential / Judicial Record</option>
+                  <option value="internal">Internal Vigilance Memo</option>
+                  <option value="public">Public Oversight Summary</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Scope / Department *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-building-columns input-icon"></i>
+                <select class="form-select" required>
+                  <option value="">Select Target Department...</option>
+                  <option value="all">All Combined Departments</option>
+                  <option value="pw">Public Works & Highways</option>
+                  <option value="rev">Revenue & Customs</option>
+                  <option value="health">Healthcare & Hospitals</option>
+                  <option value="land">Land Records Bureau</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date Range *</label>
+              <div class="input-icon-group">
+                <i class="fa-solid fa-calendar-range input-icon"></i>
+                <input type="date" class="form-control" required value="2026-08-01">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Include Analytical Modules</label>
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="mod1" checked>
+                    <label class="form-check-label extra-small" for="mod1">SLA Breach Timeline</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="mod2" checked>
+                    <label class="form-check-label extra-small" for="mod2">Bribery Demanded vs Recovered</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="mod3" checked>
+                    <label class="form-check-label extra-small" for="mod3">Officer Clearance Metrics</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Executive Memo / Purpose Notes</label>
+              <textarea class="form-control" rows="3" placeholder="Provide background directives for this audit..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-file-pdf me-1"></i> Generate & Compile Dossier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ MODAL: SCHEDULE AUTO-REPORT ══════════════════════ -->
+<div class="modal fade" id="scheduleReportModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-clock text-primary me-2"></i> Schedule Recurring Audit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form class="ajax-form">
+        <div class="modal-body" style="padding: 24px;">
+          <div class="form-group mb-3">
+            <label class="form-label">Frequency *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-rotate input-icon"></i>
+              <select class="form-select" required>
+                <option value="weekly">Every Monday 08:00 AM (Weekly)</option>
+                <option value="biweekly">Bi-Weekly (1st & 15th of month)</option>
+                <option value="monthly" selected>Monthly Comprehensive Close</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label">Dispatch Recipients (Emails) *</label>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input type="text" class="form-control" placeholder="director@acc.gov, legal@vigilance.gov" required>
+            </div>
+            <span class="extra-small text-muted">Separate multiple authorized addresses with commas.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Delivery Format</label>
+            <select class="form-select">
+              <option value="pdf">Digitally Signed PDF Attachment</option>
+              <option value="both">PDF + Excel Raw Data Table</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check me-1"></i> Save Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ MODAL: PREVIEW REPORT DOSSIER ══════════════════════ -->
 <div class="modal fade" id="previewReportModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-eye me-2" style="color:var(--indigo-500);"></i>Report Preview</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body" style="padding:24px;">
-        <div class="row g-3">
-          <div class="col-md-6"><label class="form-label">Preview Mode</label><select class="form-select"><option>Full PDF</option><option>Summary</option><option>Data Only</option></select></div>
-          <div class="col-md-6"><label class="form-label">Report Period</label><input type="text" class="form-control" value="Aug 2026" readonly></div>
-        </div>
-        <div class="mt-4" style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;">
-          <div class="d-flex justify-content-between align-items-center mb-3"><div><div class="fw-bold">Monthly Executive Audit</div><div class="extra-small text-muted">Aug 2026 · PDF</div></div><div><span class="pill pill-new">Draft</span></div></div>
-          <p class="extra-small text-muted">A concise executive summary of complaint volumes, resolution rates, and department compliance trends.</p>
-          <div class="row g-3 mt-3">
-            <div class="col-md-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;"><div class="extra-small text-muted">Total Cases</div><div class="fw-semibold">1,482</div></div></div>
-            <div class="col-md-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;"><div class="extra-small text-muted">Resolved</div><div class="fw-semibold">1,078</div></div></div>
-            <div class="col-md-4"><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;"><div class="extra-small text-muted">SLA Rate</div><div class="fw-semibold">84.6%</div></div></div>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-file-circle-check text-primary me-2"></i> Dossier Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" style="padding: 24px;">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-3">
+            <div>
+              <span class="badge-pill mb-2" style="font-size:0.7rem;">OFFICIAL AUDIT DOSSIER</span>
+              <h3 id="prevTitle" style="font-size:1.3rem;margin-bottom:2px;">National Anti-Corruption Executive Summary</h3>
+              <div class="extra-small text-muted" id="prevCode" style="font-family:var(--font-mono);">REF-2026-EXEC-Q3</div>
+            </div>
+            <span class="chip-critical" id="prevScope">All 18 Departments</span>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;">
+                <div class="extra-small text-muted">Audited Volume</div>
+                <div class="fw-bold" style="font-size:1.25rem;color:var(--indigo-600);" id="prevCases">1,482 Cases</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;">
+                <div class="extra-small text-muted">Resolution Rate</div>
+                <div class="fw-bold" style="font-size:1.25rem;color:var(--emerald-500);" id="prevRate">87.4%</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;">
+                <div class="extra-small text-muted">Checksum Hash</div>
+                <div class="extra-small fw-bold" style="font-family:var(--font-mono);color:var(--cyan-500);margin-top:4px;">0x8a92...f71c</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded-3 bg-body-tertiary">
+            <h6 class="fw-bold extra-small text-uppercase text-muted mb-2">Executive Overview & Key Findings</h6>
+            <p class="extra-small mb-0" style="line-height:1.7;">
+              During the Q3 2026 evaluation period, comprehensive digital triage recorded 1,482 corruption submissions. 
+              The automated department watchdog successfully reduced average inquiry cycles from 14.2 days down to 4.2 days. 
+              24 critical systemic vulnerabilities were identified and forwarded to supreme tribunal oversight.
+            </p>
           </div>
         </div>
       </div>
-      <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-primary btn-export-pdf" data-doc-name="Preview_Report_PDF"><i class="fa-solid fa-file-pdf me-1"></i> Download Preview</button></div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-export-pdf" data-doc-name="Preview_Official_Audit_Report">
+          <i class="fa-solid fa-file-arrow-down me-1"></i> Download PDF Dossier
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -143,5 +602,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script>
+  function previewDossier(title, code, cat, scope, cases, rate) {
+    $('#prevTitle').text(title);
+    $('#prevCode').text(code);
+    $('#prevScope').text(scope);
+    $('#prevCases').text(cases);
+    $('#prevRate').text(rate);
+    const modal = new bootstrap.Modal(document.getElementById('previewReportModal'));
+    modal.show();
+  }
+</script>
 </body>
 </html>
