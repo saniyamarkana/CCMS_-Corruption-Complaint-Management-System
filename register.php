@@ -716,9 +716,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </form>
 
           <div class="notice-card">
-            <i class="fa-solid fa-circle-info text-primary mt-1"></i>
+            <i class="fa-solid fa-user-shield mt-1" style="color: var(--cyan);"></i>
             <div>
-              <strong>Officer & Admin Accounts:</strong> Investigating officer accounts are provisioned exclusively by Central Administration via the Admin Panel.
+              <strong>Are you an Investigating Officer?</strong> Register your official credentials at the <a href="officer/register.php" class="fw-bold text-info text-decoration-none">Officer Registration Portal &rarr;</a>
             </div>
           </div>
 

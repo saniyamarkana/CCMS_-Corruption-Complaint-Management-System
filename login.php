@@ -733,7 +733,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         showcaseIcon.innerHTML = '<i class="fa-solid fa-user-tie"></i>';
         showcaseTitle.innerText = 'Investigator Command Center';
         showcaseDesc.innerText = 'Forensic investigation workspace with assigned case dockets, evidence vault, evidentiary hearing logs, and suspect interview records.';
-        bottomRegisterBox.innerHTML = `<span class="text-muted"><i class="fa-solid fa-shield-halved me-1"></i> Officer accounts are provisioned exclusively by Central Administration.</span>`;
+        bottomRegisterBox.innerHTML = `<span>New officer joining the bureau?</span> <a href="officer/register.php" class="ms-1 fw-bold text-info"><i class="fa-solid fa-user-plus me-1"></i>Register Officer Account</a>`;
       } else if (role === 'admin') {
         labelId.innerText = 'Administrator Email';
         inputId.placeholder = 'admin@ccms.com';
