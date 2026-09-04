@@ -1,5 +1,9 @@
+<?php
+require_once '../db.php';
+$admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? 'Super Administrator');
+?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +26,13 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+  <!-- Ambient Visual Glow Blobs -->
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+  <div class="ambient-glow-3"></div>
+  <div class="grid-overlay"></div>
+
 <div id="wrapper">
 
   <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
@@ -35,64 +46,72 @@
     </div>
 
     <nav class="sb-nav">
-      <div class="sb-section-label">Public Portal</div>
-      <a href="../index.html" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+      <div class="sb-section-label">External Portals</div>
+      <a href="../citizen/dashboard.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>
         <span>Citizen Portal</span>
+      </a>
+      <a href="../officer/index.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
+        <span>Officer Command</span>
+      </a>
+      <a href="../index.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Public Sentinel</span>
       </a>
 
       <div class="sb-section-label">Main Overview</div>
-      <a href="index.html" class="sb-link active">
+      <a href="index.php" class="sb-link active">
         <div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div>
         <span>Dashboard</span>
       </a>
 
-      <a href="manage-complaints.html" class="sb-link">
+      <a href="manage-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div>
         <span>Manage Complaints</span>
         <span class="sb-badge">12</span>
       </a>
 
-      <a href="assign-complaints.html" class="sb-link">
+      <a href="assign-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div>
         <span>Assign Complaints</span>
         <span class="sb-badge amber">5</span>
       </a>
 
       <div class="sb-section-label">Personnel</div>
-      <a href="manage-users.html" class="sb-link">
+      <a href="manage-users.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>
         <span>Manage Users</span>
       </a>
 
-      <a href="manage-officers.html" class="sb-link">
+      <a href="manage-officers.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
         <span>Manage Officers</span>
       </a>
 
       <div class="sb-section-label">System Masters</div>
-      <a href="manage-departments.html" class="sb-link">
+      <a href="manage-departments.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div>
         <span>Departments</span>
       </a>
 
-      <a href="manage-categories.html" class="sb-link">
+      <a href="manage-categories.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-tags"></i></div>
         <span>Categories</span>
       </a>
 
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.html" class="sb-link">
+      <a href="reports.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div>
         <span>Reports</span>
       </a>
 
-      <a href="analytics.html" class="sb-link">
+      <a href="analytics.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div>
         <span>Analytics</span>
       </a>
 
-      <a href="activity-logs.html" class="sb-link">
+      <a href="activity-logs.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div>
         <span>Activity Logs</span>
       </a>
@@ -172,7 +191,7 @@
             </div>
 
             <div class="divider"></div>
-            <a href="activity-logs.html" class="d-block text-center extra-small fw-bold" style="color:var(--indigo-500);">
+            <a href="activity-logs.php" class="d-block text-center extra-small fw-bold" style="color:var(--indigo-500);">
               View all activity logs →
             </a>
           </div>
@@ -188,10 +207,10 @@
             </div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
-            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
+            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="./login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -204,7 +223,7 @@
       <div class="page-header">
         <div>
           <div class="page-breadcrumb">
-            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <a href="index.php"><i class="fa-solid fa-house"></i></a>
             <i class="fa-solid fa-chevron-right"></i>
             <span>Executive Command Center</span>
           </div>
@@ -215,7 +234,7 @@
           <button class="btn btn-ghost btn-export-pdf" data-doc-name="Executive_Dashboard_Summary">
             <i class="fa-solid fa-file-pdf text-danger"></i> Export PDF Summary
           </button>
-          <a href="manage-complaints.html" class="btn btn-primary">
+          <a href="manage-complaints.php" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Lodge New Complaint
           </a>
         </div>
@@ -304,9 +323,16 @@
                 <div class="title-icon"><i class="fa-solid fa-chart-line"></i></div>
                 Complaint Volume &amp; Resolution Trends (2026)
               </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace" style="font-size:0.75rem;">
+                  <i class="fa-solid fa-circle text-success me-1" style="font-size:0.5rem;"></i> Live Ingestion
+                </span>
+              </div>
             </div>
-            <div class="card-box-body" style="padding-bottom:12px;">
-              <canvas id="trendChart" height="260"></canvas>
+            <div class="card-box-body" style="padding: 16px 20px 20px;">
+              <div class="chart-container-rel">
+                <canvas id="trendChart"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -318,9 +344,16 @@
                 <div class="title-icon"><i class="fa-solid fa-chart-pie"></i></div>
                 Severity Classification
               </div>
+              <span class="extra-small text-muted font-monospace fw-bold">1,482 Active</span>
             </div>
-            <div class="card-box-body d-flex flex-column align-items-center">
-              <canvas id="severityChart" height="220"></canvas>
+            <div class="card-box-body d-flex flex-column align-items-center justify-content-center" style="padding: 16px 20px 20px;">
+              <div class="chart-container-donut">
+                <canvas id="severityChart"></canvas>
+                <div class="donut-center-info">
+                  <div class="donut-center-num">1,482</div>
+                  <div class="donut-center-txt">Dockets</div>
+                </div>
+              </div>
               <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
                 <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f43f5e;display:inline-block;"></span> Critical (18%)</div>
                 <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block;"></span> High (32%)</div>
@@ -343,7 +376,7 @@
             <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Recent_Complaints_Export">
               <i class="fa-solid fa-file-pdf text-danger"></i> PDF Export
             </button>
-            <a href="manage-complaints.html" class="btn btn-primary btn-sm">View Full Ledger</a>
+            <a href="manage-complaints.php" class="btn btn-primary btn-sm">View Full Ledger</a>
           </div>
         </div>
 
@@ -366,7 +399,7 @@
               <tr>
                 <td><input type="checkbox" class="form-check-input row-checkbox"></td>
                 <td>
-                  <a href="manage-complaints.html" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9821</a>
+                  <a href="manage-complaints.php" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9821</a>
                   <div class="extra-small text-muted">Aug 07, 2026</div>
                 </td>
                 <td>
@@ -388,7 +421,7 @@
                 <td class="text-end">
                   <div class="d-inline-flex gap-1">
                     <button class="btn btn-ghost btn-icon btn-sm" onclick="showDashboardCaseModal('#CCMS-9821', 'Public Works & Transport', 'Bribery / Kickbacks', 'Critical', 'Whistleblower WB-9921', 'Demand of 15% kickback commission on highway bridge maintenance contract.')" title="View"><i class="fa-solid fa-eye text-primary"></i></button>
-                    <a href="assign-complaints.html" class="btn btn-primary btn-icon btn-sm" title="Assign"><i class="fa-solid fa-user-plus"></i></a>
+                    <a href="assign-complaints.php" class="btn btn-primary btn-icon btn-sm" title="Assign"><i class="fa-solid fa-user-plus"></i></a>
                   </div>
                 </td>
               </tr>
@@ -396,7 +429,7 @@
               <tr>
                 <td><input type="checkbox" class="form-check-input row-checkbox"></td>
                 <td>
-                  <a href="manage-complaints.html" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9820</a>
+                  <a href="manage-complaints.php" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9820</a>
                   <div class="extra-small text-muted">Aug 06, 2026</div>
                 </td>
                 <td>
@@ -416,7 +449,7 @@
                 <td class="text-end">
                   <div class="d-inline-flex gap-1">
                     <button class="btn btn-ghost btn-icon btn-sm" onclick="showDashboardCaseModal('#CCMS-9820', 'Land & Revenue Board', 'Embezzlement', 'High', 'Tariq Mahmood', 'Unauthorized land record modification and fraudulent deed issuance.')" title="View"><i class="fa-solid fa-eye text-primary"></i></button>
-                    <a href="assign-complaints.html" class="btn btn-ghost btn-icon btn-sm" title="Manage Assignment"><i class="fa-solid fa-user-shield text-info"></i></a>
+                    <a href="assign-complaints.php" class="btn btn-ghost btn-icon btn-sm" title="Manage Assignment"><i class="fa-solid fa-user-shield text-info"></i></a>
                   </div>
                 </td>
               </tr>
@@ -473,7 +506,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
-        <a href="assign-complaints.html" class="btn btn-primary"><i class="fa-solid fa-user-plus me-1"></i> Assign Officer</a>
+        <a href="assign-complaints.php" class="btn btn-primary"><i class="fa-solid fa-user-plus me-1"></i> Assign Officer</a>
       </div>
     </div>
   </div>
@@ -498,69 +531,87 @@ function showDashboardCaseModal(id, dept, cat, priority, complainant, desc) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const baseFont = { family: 'Plus Jakarta Sans', size: 12 };
+  const baseFont = { family: 'Plus Jakarta Sans', size: 12, weight: '600' };
   const trendCanvas = document.getElementById('trendChart');
   const severityCanvas = document.getElementById('severityChart');
 
   if (trendCanvas) {
-    new Chart(trendCanvas.getContext('2d'), {
+    const ctx = trendCanvas.getContext('2d');
+
+    // Create rich glowing gradients
+    const gradPrimary = ctx.createLinearGradient(0, 0, 0, 280);
+    gradPrimary.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
+    gradPrimary.addColorStop(0.6, 'rgba(99, 102, 241, 0.08)');
+    gradPrimary.addColorStop(1, 'rgba(99, 102, 241, 0.00)');
+
+    const gradSuccess = ctx.createLinearGradient(0, 0, 0, 280);
+    gradSuccess.addColorStop(0, 'rgba(16, 185, 129, 0.30)');
+    gradSuccess.addColorStop(0.6, 'rgba(16, 185, 129, 0.06)');
+    gradSuccess.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
+
+    new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug (Live)'],
         datasets: [
           {
             label: 'Complaints Ingested',
-            data: [120,145,190,175,210,240,280,122],
-            borderColor: '#4f46e5',
-            backgroundColor: 'rgba(79,70,229,0.12)',
-            borderWidth: 2.5,
+            data: [120, 145, 190, 175, 210, 240, 275, 298],
+            borderColor: '#6366f1',
+            backgroundColor: gradPrimary,
+            borderWidth: 3,
             fill: true,
-            tension: 0.4,
-            pointBackgroundColor: '#4f46e5',
-            pointBorderColor: '#fff',
+            tension: 0.38,
+            pointBackgroundColor: '#6366f1',
+            pointBorderColor: '#ffffff',
             pointBorderWidth: 2,
-            pointRadius: 5
+            pointRadius: 4.5,
+            pointHoverRadius: 7
           },
           {
             label: 'Cases Resolved',
-            data: [95,130,160,155,195,220,250,110],
+            data: [95, 130, 160, 155, 195, 220, 252, 270],
             borderColor: '#10b981',
-            backgroundColor: 'rgba(16,185,129,0.07)',
-            borderWidth: 2.5,
+            backgroundColor: gradSuccess,
+            borderWidth: 3,
             fill: true,
-            tension: 0.4,
+            tension: 0.38,
             pointBackgroundColor: '#10b981',
-            pointBorderColor: '#fff',
+            pointBorderColor: '#ffffff',
             pointBorderWidth: 2,
-            pointRadius: 5
+            pointRadius: 4.5,
+            pointHoverRadius: 7
           }
         ]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
             position: 'top',
             align: 'end',
             labels: {
-              boxWidth: 10,
-              boxHeight: 10,
-              borderRadius: 5,
+              boxWidth: 12,
+              boxHeight: 12,
+              borderRadius: 6,
               useBorderRadius: true,
               font: baseFont,
-              padding: 16
+              padding: 16,
+              color: '#94a3b8'
             }
           },
           tooltip: {
-            backgroundColor: 'rgba(15,21,36,.9)',
+            backgroundColor: 'rgba(12, 18, 34, 0.95)',
             titleColor: '#f8fafc',
-            bodyColor: '#94a3b8',
-            borderColor: 'rgba(255,255,255,.1)',
-            borderWidth: 1,
+            bodyColor: '#cbd5e1',
+            borderColor: 'rgba(99, 102, 241, 0.3)',
+            borderWidth: 1.5,
             padding: 12,
-            cornerRadius: 10
+            cornerRadius: 12,
+            titleFont: { family: 'Plus Jakarta Sans', size: 13, weight: '700' },
+            bodyFont: { family: 'Plus Jakarta Sans', size: 12 }
           }
         },
         scales: {
@@ -570,8 +621,8 @@ document.addEventListener('DOMContentLoaded', function() {
           },
           y: {
             beginAtZero: true,
-            grid: { color: 'rgba(100,116,139,0.1)' },
-            ticks: { font: baseFont, color: '#94a3b8' }
+            grid: { color: 'rgba(148, 163, 184, 0.1)' },
+            ticks: { font: baseFont, color: '#94a3b8', stepSize: 50 }
           }
         }
       }
@@ -582,28 +633,34 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(severityCanvas.getContext('2d'), {
       type: 'doughnut',
       data: {
-        labels: ['Critical','High','Medium','Low'],
+        labels: ['Critical', 'High', 'Medium', 'Low'],
         datasets: [{
-          data: [18,32,35,15],
-          backgroundColor: ['#f43f5e','#f59e0b','#0ea5e9','#10b981'],
+          data: [18, 32, 35, 15],
+          backgroundColor: ['#f43f5e', '#f59e0b', '#0ea5e9', '#10b981'],
           borderColor: 'transparent',
           borderWidth: 0,
-          hoverOffset: 6
+          hoverOffset: 8
         }]
       },
       options: {
         responsive: true,
-        cutout: '72%',
+        maintainAspectRatio: false,
+        cutout: '76%',
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(15,21,36,.9)',
+            backgroundColor: 'rgba(12, 18, 34, 0.95)',
             titleColor: '#f8fafc',
-            bodyColor: '#94a3b8',
-            borderColor: 'rgba(255,255,255,.1)',
-            borderWidth: 1,
+            bodyColor: '#cbd5e1',
+            borderColor: 'rgba(99, 102, 241, 0.3)',
+            borderWidth: 1.5,
             padding: 10,
-            cornerRadius: 10
+            cornerRadius: 10,
+            callbacks: {
+              label: function(context) {
+                return ` ${context.label}: ${context.raw}% of dockets`;
+              }
+            }
           }
         }
       }

@@ -21,28 +21,28 @@
     </div>
     <nav class="sb-nav">
       <div class="sb-section-label">Public Portal</div>
-      <a href="../index.html" class="sb-link">
+      <a href="../index.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
         <span>Citizen Portal</span>
       </a>
 
       <div class="sb-section-label">Main Overview</div>
-      <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
-      <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="manage-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
+      <a href="assign-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
       
       <div class="sb-section-label">Personnel</div>
-      <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
-      <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      <a href="manage-users.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
+      <a href="manage-officers.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
       
       <div class="sb-section-label">System Masters</div>
-      <a href="manage-departments.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
-      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      <a href="manage-departments.php" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
+      <a href="manage-categories.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
       
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
-      <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
+      <a href="reports.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="analytics.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
+      <a href="activity-logs.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
     <div class="sb-footer"><div class="sb-admin-card"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar"><div class="sb-admin-info"><div class="sb-admin-name">Insp. S. Rahman</div><div class="sb-admin-role">Super Administrator</div></div></div></div>
   </aside>
@@ -58,7 +58,7 @@
         <div class="online-chip d-none d-xl-flex"><span class="online-dot"></span>Oversight Active</div>
         <button class="nav-icon-btn" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         <div class="dropdown"><div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin"><div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div></div>
-          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li><li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
+          <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li><li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li><li><div class="dropdown-divider"></div></li><li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li></ul>
         </div>
       </div>
     </nav>
@@ -66,7 +66,7 @@
     <main class="content-body">
       <div class="page-header">
         <div>
-          <div class="page-breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Departments</span></div>
+          <div class="page-breadcrumb"><a href="index.php"><i class="fa-solid fa-house"></i></a><i class="fa-solid fa-chevron-right"></i><span>Departments</span></div>
           <h1 class="page-title">Monitored Government Departments</h1>
           <p class="page-subtitle">Directory of public institutions, corruption risk assessments, and focal officer contacts.</p>
         </div>
@@ -136,7 +136,7 @@
             </div>
             <div class="dept-card-footer d-flex justify-content-between align-items-center">
               <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>4 Officers Assigned</span>
-              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
+              <a href="manage-complaints.php" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
@@ -170,7 +170,7 @@
             </div>
             <div class="dept-card-footer d-flex justify-content-between align-items-center">
               <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>6 Officers Assigned</span>
-              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
+              <a href="manage-complaints.php" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@
             </div>
             <div class="dept-card-footer d-flex justify-content-between align-items-center">
               <span class="extra-small text-muted"><i class="fa-solid fa-user-shield me-1"></i>3 Officers Assigned</span>
-              <a href="manage-complaints.html" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
+              <a href="manage-complaints.php" class="btn btn-sm btn-ghost">View Cases <i class="fa-solid fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
@@ -228,21 +228,21 @@
             <label class="form-label">Department Name *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-landmark input-icon"></i>
-              <input type="text" class="form-control" required placeholder="e.g. Urban Development & Planning">
+              <input type="text" class="form-control" placeholder="e.g. Urban Development & Planning">
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label">Department Code *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-code input-icon"></i>
-              <input type="text" class="form-control" required placeholder="e.g. DEPT-UDP-04">
+              <input type="text" class="form-control" placeholder="e.g. DEPT-UDP-04">
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label">Head of Department (HOD) *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-user-tie input-icon"></i>
-              <input type="text" class="form-control" required placeholder="Official title & name">
+              <input type="text" class="form-control" placeholder="Official title & name">
             </div>
           </div>
           <div class="mb-0">

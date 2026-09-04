@@ -26,28 +26,28 @@
     
     <nav class="sb-nav">
       <div class="sb-section-label">Public Portal</div>
-      <a href="../index.html" class="sb-link">
+      <a href="../index.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
         <span>Citizen Portal</span>
       </a>
 
       <div class="sb-section-label">Main Overview</div>
-      <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
-      <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="manage-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
+      <a href="assign-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
       
       <div class="sb-section-label">Personnel</div>
-      <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
-      <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      <a href="manage-users.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
+      <a href="manage-officers.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
       
       <div class="sb-section-label">System Masters</div>
-      <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
-      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      <a href="manage-departments.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
+      <a href="manage-categories.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
       
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
-      <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
+      <a href="reports.php" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="analytics.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
+      <a href="activity-logs.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
     
     <div class="sb-footer">
@@ -85,10 +85,10 @@
             </div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
-            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
+            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -99,7 +99,7 @@
       <div class="page-header">
         <div>
           <div class="page-breadcrumb">
-            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <a href="index.php"><i class="fa-solid fa-house"></i></a>
             <i class="fa-solid fa-chevron-right"></i>
             <span>Intelligence</span>
             <i class="fa-solid fa-chevron-right"></i>
@@ -405,7 +405,7 @@
               <label class="form-label">Report Title *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-heading input-icon"></i>
-                <input type="text" class="form-control" placeholder="e.g. Q3 Procurement Fraud Audit" required>
+                <input type="text" class="form-control" placeholder="e.g. Q3 Procurement Fraud Audit">
               </div>
             </div>
 
@@ -413,7 +413,7 @@
               <label class="form-label">Dossier Classification *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-shield-halved input-icon"></i>
-                <select class="form-select" required>
+                <select class="form-select">
                   <option value="confidential">Confidential / Judicial Record</option>
                   <option value="internal">Internal Vigilance Memo</option>
                   <option value="public">Public Oversight Summary</option>
@@ -425,7 +425,7 @@
               <label class="form-label">Scope / Department *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-building-columns input-icon"></i>
-                <select class="form-select" required>
+                <select class="form-select">
                   <option value="">Select Target Department...</option>
                   <option value="all">All Combined Departments</option>
                   <option value="pw">Public Works & Highways</option>
@@ -440,7 +440,7 @@
               <label class="form-label">Date Range *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-calendar-range input-icon"></i>
-                <input type="date" class="form-control" required value="2026-08-01">
+                <input type="date" class="form-control" value="2026-08-01">
               </div>
             </div>
 
@@ -501,7 +501,7 @@
             <label class="form-label">Frequency *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-rotate input-icon"></i>
-              <select class="form-select" required>
+              <select class="form-select">
                 <option value="weekly">Every Monday 08:00 AM (Weekly)</option>
                 <option value="biweekly">Bi-Weekly (1st & 15th of month)</option>
                 <option value="monthly" selected>Monthly Comprehensive Close</option>
@@ -513,7 +513,7 @@
             <label class="form-label">Dispatch Recipients (Emails) *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-envelope input-icon"></i>
-              <input type="text" class="form-control" placeholder="director@acc.gov, legal@vigilance.gov" required>
+              <input type="text" class="form-control" placeholder="director@acc.gov, legal@vigilance.gov">
             </div>
             <span class="extra-small text-muted">Separate multiple authorized addresses with commas.</span>
           </div>

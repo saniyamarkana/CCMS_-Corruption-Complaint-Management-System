@@ -2,8 +2,29 @@
  * CCMS — Shared Main JS (Enhanced)
  * Works across all pages: sidebar, theme, search, forms, delete, PDF, email
  */
+
+// Admin Panel JS Utilities
 $(document).ready(function () {
   'use strict';
+
+  /* ── User Profile Sync & Logout ───────────────── */
+  const currentUserStr = localStorage.getItem('ccms_current_user');
+  if (currentUserStr) {
+    try {
+      const user = JSON.parse(currentUserStr);
+      if (user.name) {
+        $('.nav-profile-name').text(user.name);
+      }
+      if (user.clearance) {
+        $('.nav-profile-role').text(user.clearance);
+      }
+    } catch (e) {}
+  }
+
+  // Logout handler
+  $('a[href*="login.php"], .btn-logout, a.text-danger:contains("Logout")').on('click', function (e) {
+    localStorage.removeItem('ccms_current_user');
+  });
 
   /* ── THEME: restore on page load ───────────────── */
   const savedTheme = localStorage.getItem('ccms_theme') || 'light';
@@ -216,17 +237,36 @@ $(document).ready(function () {
     const form    = $(this);
     const modalEl = form.closest('.modal');
 
-    // Validate required fields
-    let valid = true;
-    form.find('[required]').each(function () {
-      if (!$(this).val().trim()) {
-        $(this).addClass('is-invalid').removeClass('is-valid');
-        valid = false;
+    // Inline Red Text Validation
+    let isValid = true;
+    form.find('.inline-error-text').remove();
+
+    form.find('input[type="text"], input[type="email"], input[type="password"], input[type="date"], select, textarea').each(function () {
+      const el = $(this);
+      const val = el.val();
+      if (!val || (typeof val === 'string' && !val.trim())) {
+        el.addClass('is-invalid');
+        el.css('border-color', '#ef4444');
+        isValid = false;
+
+        let parent = el.closest('.input-icon-group') || el.closest('.mb-3') || el.parent();
+        if (!parent.find('.inline-error-text').length) {
+          parent.append('<div class="inline-error-text" style="color:#ef4444;font-size:0.78rem;margin-top:4px;font-weight:600;display:flex;align-items:center;gap:4px;"><i class="fa-solid fa-circle-exclamation"></i> Please fill in this required field.</div>');
+        }
       } else {
-        $(this).addClass('is-valid').removeClass('is-invalid');
+        el.removeClass('is-invalid');
+        el.css('border-color', '');
       }
     });
-    if (!valid) return;
+
+    // Clear error on input
+    form.find('input, select, textarea').off('input.valErr change.valErr').on('input.valErr change.valErr', function () {
+      $(this).removeClass('is-invalid').css('border-color', '');
+      let parent = $(this).closest('.input-icon-group') || $(this).closest('.mb-3') || $(this).parent();
+      parent.find('.inline-error-text').remove();
+    });
+
+    if (!isValid) return false;
 
     Swal.fire({
       title: 'Saving Record…',

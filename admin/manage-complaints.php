@@ -22,29 +22,37 @@
       <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-section-label">Public Portal</div>
-      <a href="../index.html" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+      <div class="sb-section-label">External Portals</div>
+      <a href="../citizen/dashboard.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>
         <span>Citizen Portal</span>
+      </a>
+      <a href="../officer/index.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
+        <span>Officer Command</span>
+      </a>
+      <a href="../index.php" class="sb-link">
+        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
+        <span>Public Sentinel</span>
       </a>
 
       <div class="sb-section-label">Main Overview</div>
-      <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="manage-complaints.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
-      <a href="assign-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="manage-complaints.php" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
+      <a href="assign-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
       
       <div class="sb-section-label">Personnel</div>
-      <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
-      <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      <a href="manage-users.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
+      <a href="manage-officers.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
       
       <div class="sb-section-label">System Masters</div>
-      <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
-      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      <a href="manage-departments.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
+      <a href="manage-categories.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
       
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
-      <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
+      <a href="reports.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="analytics.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
+      <a href="activity-logs.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
     <div class="sb-footer">
       <div class="sb-admin-card">
@@ -73,10 +81,10 @@
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
-            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
+            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Audit Trail</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -86,7 +94,7 @@
       <div class="page-header">
         <div>
           <div class="page-breadcrumb">
-            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <a href="index.php"><i class="fa-solid fa-house"></i></a>
             <i class="fa-solid fa-chevron-right"></i><span>Complaints Master Docket</span>
           </div>
           <h1 class="page-title">Master Complaint Repository</h1>
@@ -287,7 +295,7 @@
                 <td class="text-end">
                   <div class="d-inline-flex gap-1">
                     <button class="btn btn-ghost btn-icon btn-sm" onclick="openViewComplaint('#CCMS-9819', 'Farhana Akhtar (Citizen #90123)', 'Customs & Excise', 'Procurement Fraud', 'Medium', 'Unassigned', 'Pending', 'Unauthorized container clearance without duty declaration.')"><i class="fa-solid fa-eye text-primary"></i></button>
-                    <a href="assign-complaints.html" class="btn btn-primary btn-icon btn-sm" title="Assign Officer"><i class="fa-solid fa-user-plus"></i></a>
+                    <a href="assign-complaints.php" class="btn btn-primary btn-icon btn-sm" title="Assign Officer"><i class="fa-solid fa-user-plus"></i></a>
                     <button class="btn btn-ghost btn-icon btn-sm btn-delete" data-item="complaint"><i class="fa-solid fa-trash text-danger"></i></button>
                   </div>
                 </td>
@@ -359,7 +367,7 @@
               <label class="form-label">Target Department *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-building-columns input-icon"></i>
-                <select class="form-select" required>
+                <select class="form-select">
                   <option value="">Select Department...</option>
                   <option>Public Works & Transport</option>
                   <option>Land & Revenue Board</option>
@@ -373,7 +381,7 @@
               <label class="form-label">Offense Category *</label>
               <div class="input-icon-group">
                 <i class="fa-solid fa-tags input-icon"></i>
-                <select class="form-select" required>
+                <select class="form-select">
                   <option value="">Select Category...</option>
                   <option>Bribery & Kickbacks</option>
                   <option>Public Fund Embezzlement</option>
@@ -411,7 +419,7 @@
 
           <div class="mb-3">
             <label class="form-label">Allegation Statement & Particulars *</label>
-            <textarea class="form-control" rows="4" required placeholder="Describe the corrupt transaction, involved official positions, requested amounts, exact locations, and timestamps..."></textarea>
+            <textarea class="form-control" rows="4" placeholder="Describe the corrupt transaction, involved official positions, requested amounts, exact locations, and timestamps..."></textarea>
             <div class="char-counter">0 / 2,000 characters</div>
           </div>
 
@@ -483,7 +491,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Close</button>
-        <a href="assign-complaints.html" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus"></i> Reassign</a>
+        <a href="assign-complaints.php" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus"></i> Reassign</a>
         <button class="btn btn-primary btn-export-pdf" data-doc-name="Complaint_Case_Dossier"><i class="fa-solid fa-file-pdf"></i> Download Official PDF</button>
       </div>
     </div>
@@ -508,7 +516,7 @@
             <label class="form-label">New Investigation State *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-arrows-spin input-icon"></i>
-              <select class="form-select" id="newStatus" required>
+              <select class="form-select" id="newStatus">
                 <option value="">Select New Status...</option>
                 <option value="Under Active Investigation">🔍 Under Active Investigation</option>
                 <option value="Evidence Verified & Trial Scheduled">⚖️ Evidence Verified / Action Initiated</option>
@@ -519,7 +527,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Investigator Findings & Disciplinary Directive *</label>
-            <textarea class="form-control" rows="4" required placeholder="Detail the official evidence findings, sanctions, or rationale for resolution..."></textarea>
+            <textarea class="form-control" rows="4" placeholder="Detail the official evidence findings, sanctions, or rationale for resolution..."></textarea>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="notifyCitizenCheck" checked>

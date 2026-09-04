@@ -21,28 +21,28 @@
     </div>
     <nav class="sb-nav">
       <div class="sb-section-label">Public Portal</div>
-      <a href="../index.html" class="sb-link">
+      <a href="../index.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
         <span>Citizen Portal</span>
       </a>
 
       <div class="sb-section-label">Main Overview</div>
-      <a href="index.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="manage-complaints.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
-      <a href="assign-complaints.html" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
+      <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="manage-complaints.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div><span>Manage Complaints</span><span class="sb-badge">12</span></a>
+      <a href="assign-complaints.php" class="sb-link active"><div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div><span>Assign Complaints</span><span class="sb-badge amber">5</span></a>
       
       <div class="sb-section-label">Personnel</div>
-      <a href="manage-users.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
-      <a href="manage-officers.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
+      <a href="manage-users.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-users"></i></div><span>Manage Users</span></a>
+      <a href="manage-officers.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div><span>Manage Officers</span></a>
       
       <div class="sb-section-label">System Masters</div>
-      <a href="manage-departments.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
-      <a href="manage-categories.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
+      <a href="manage-departments.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-building-columns"></i></div><span>Departments</span></a>
+      <a href="manage-categories.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
       
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="analytics.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
-      <a href="activity-logs.html" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
+      <a href="reports.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="analytics.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
+      <a href="activity-logs.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
     </nav>
     <div class="sb-footer">
       <div class="sb-admin-card">
@@ -71,10 +71,10 @@
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.html"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
-            <li><a class="dropdown-item" href="activity-logs.html"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
+            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item text-danger" href="../index.html"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -84,7 +84,7 @@
       <div class="page-header">
         <div>
           <div class="page-breadcrumb">
-            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <a href="index.php"><i class="fa-solid fa-house"></i></a>
             <i class="fa-solid fa-chevron-right"></i><span>Triage Dispatch</span>
           </div>
           <h1 class="page-title">Investigations Assignment Center</h1>
@@ -291,7 +291,7 @@
             <label class="form-label">Select Designated Field Officer *</label>
             <div class="input-icon-group">
               <i class="fa-solid fa-user-shield input-icon"></i>
-              <select class="form-select" id="assignOfficerSelect" required>
+              <select class="form-select" id="assignOfficerSelect">
                 <option value="">Choose Officer...</option>
                 <option value="1">Insp. Rafiqul Islam (0 Active Cases · 98% Clearance)</option>
                 <option value="2">Insp. Nusrat Jahan (1 Active Case · 96% Clearance)</option>
@@ -302,7 +302,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Statutory SLA Target Completion Date *</label>
-            <input type="date" class="form-control" value="2026-08-21" required>
+            <input type="date" class="form-control" value="2026-08-21">
           </div>
           <div class="mb-0">
             <label class="form-label">Assignment Directive / Triage Instructions</label>
