@@ -1,7 +1,14 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once '../db.php';
 
-$raw_query = trim($_GET['case'] ?? $_GET['id'] ?? $_GET['track'] ?? '');
+$citizen_name = htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Alex Doe');
+$initials = strtoupper(substr($citizen_name, 0, 2));
+
+// Search Query via GET (e.g. ?track=CCMS-2026-0004 or ?search=bribery or ?case=4)
+$raw_query = trim($_GET['track'] ?? $_GET['search'] ?? $_GET['case'] ?? $_GET['id'] ?? '');
 preg_match('/\d+/', $raw_query, $matches);
 $searched_id = isset($matches[0]) ? intval($matches[0]) : 0;
 
@@ -20,11 +27,35 @@ if ($searched_id > 0) {
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, "i", $searched_id);
         mysqli_stmt_execute($stmt);
-        $active_case = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+        $res = mysqli_stmt_get_result($stmt);
+        $active_case = mysqli_fetch_assoc($res);
         mysqli_stmt_close($stmt);
     }
 }
 
+// Fallback search by title or description if text keyword searched
+if (empty($active_case) && !empty($raw_query)) {
+    $term = "%{$raw_query}%";
+    $stmt = mysqli_prepare($conn, "
+        SELECT c.*, cat.category_name, o.name AS officer_name, o.designation AS officer_designation, d.department_name, u.name AS complainant_name
+        FROM complaints c
+        LEFT JOIN categories cat ON c.category_id = cat.category_id
+        LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+        LEFT JOIN departments d ON o.department_id = d.department_id
+        LEFT JOIN users u ON c.user_id = u.user_id
+        WHERE c.title LIKE ? OR c.description LIKE ?
+        LIMIT 1
+    ");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ss", $term, $term);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        $active_case = mysqli_fetch_assoc($res);
+        mysqli_stmt_close($stmt);
+    }
+}
+
+// Default to the latest complaint if none found or no search query
 if (empty($active_case)) {
     $def_res = mysqli_query($conn, "
         SELECT c.*, cat.category_name, o.name AS officer_name, o.designation AS officer_designation, d.department_name, u.name AS complainant_name
@@ -36,12 +67,20 @@ if (empty($active_case)) {
         ORDER BY c.complaint_id DESC
         LIMIT 1
     ");
-    $active_case = mysqli_fetch_assoc($def_res);
+    if ($def_res) {
+        $active_case = mysqli_fetch_assoc($def_res);
+    }
 }
 
 $cid = $active_case['complaint_id'] ?? 1;
 $token = "CCMS-2026-" . str_pad($cid, 4, '0', STR_PAD_LEFT);
 $status = $active_case['status'] ?? 'Submitted';
+$case_title = $active_case['title'] ?? 'Complaint Docket';
+$case_desc = $active_case['description'] ?? 'Whistleblower affidavit on record.';
+$department_name = $active_case['department_name'] ?? $active_case['category_name'] ?? 'Anti-Corruption Bureau';
+$complainant_name = $active_case['complainant_name'] ?? 'Anonymous Whistleblower';
+$officer_name = $active_case['officer_name'] ?? '';
+$officer_designation = $active_case['officer_designation'] ?? 'Lead Investigator';
 
 $step_active = match($status) {
     'Submitted' => 1,
@@ -52,19 +91,55 @@ $step_active = match($status) {
     'Rejected' => 1,
     default => 2
 };
+
 $progress_pct = match($status) {
     'Submitted' => 20,
     'Pending Verification' => 35,
     'Verified' => 45,
     'Assigned' => 55,
     'Under Investigation' => 70,
-    'Waiting for Evidence' => 75,
+    'Waiting for Evidence' => 80,
     'Investigation Completed' => 95,
     'Closed' => 100,
+    'Rejected' => 10,
     default => 20
 };
 
-// Fetch preset chips dynamically
+$phase_badge = match($status) {
+    'Submitted' => 'PHASE 1 LODGED',
+    'Pending Verification', 'Verified' => 'PHASE 2 TRIAGE',
+    'Assigned', 'Under Investigation' => 'PHASE 3 ACTIVE',
+    'Waiting for Evidence' => 'PHASE 4 CORROBORATION',
+    'Investigation Completed', 'Closed' => 'COMPLETED',
+    'Rejected' => 'REJECTED',
+    default => 'PHASE 2 ACTIVE'
+};
+
+$status_class = match($status) {
+    'Submitted' => 'status-triage',
+    'Pending Verification', 'Verified' => 'status-triage',
+    'Assigned', 'Under Investigation' => 'status-investigation',
+    'Waiting for Evidence' => 'status-triage',
+    'Investigation Completed', 'Closed' => 'status-resolved',
+    'Rejected' => 'badge bg-danger-subtle text-danger',
+    default => 'status-investigation'
+};
+
+$created_time = !empty($active_case['created_at']) ? strtotime($active_case['created_at']) : time();
+$created_date_formatted = date('M d, Y • h:i A', $created_time);
+$elapsed_hours = round((time() - $created_time) / 3600);
+
+if (in_array($status, ['Investigation Completed', 'Closed'])) {
+    $sla_text = 'Concluded & Transmitted';
+} else {
+    $remaining_hours = max(12, 72 - $elapsed_hours);
+    $sla_text = "{$remaining_hours}h Remaining";
+}
+
+$full_hash = hash('sha256', 'ccms_complaint_' . $cid . '_' . ($active_case['created_at'] ?? ''));
+$short_hash = '0x' . substr($full_hash, 0, 4) . '...' . substr($full_hash, -4);
+
+// Fetch dynamic preset chips from complaints table
 $presets_res = mysqli_query($conn, "SELECT complaint_id, status FROM complaints ORDER BY complaint_id DESC LIMIT 4");
 $preset_cases = [];
 if ($presets_res) {
@@ -667,9 +742,9 @@ if ($presets_res) {
 
     <div class="sb-footer">
       <div class="user-card">
-        <div class="user-avatar">AD</div>
+        <div class="user-avatar"><?= $initials ?></div>
         <div class="user-info">
-          <div class="user-name">Alex Doe</div>
+          <div class="user-name"><?= $citizen_name ?></div>
           <div class="user-role">Verified Whistleblower</div>
         </div>
       </div>
@@ -710,32 +785,43 @@ if ($presets_res) {
             </div>
             <div>
               <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                <h1 class="h4 mb-0 fw-bold font-monospace" style="color: var(--primary);" id="docketId">CCMS-2026-9082</h1>
-                <span class="badge-status status-investigation" id="docketStatus">Forensic Examination</span>
+                <h1 class="h4 mb-0 fw-bold font-monospace" style="color: var(--primary);" id="docketId"><?= htmlspecialchars($token) ?></h1>
+                <span class="badge-status <?= $status_class ?>" id="docketStatus"><?= htmlspecialchars($status) ?></span>
                 <span class="badge bg-success-subtle text-success border border-success-subtle font-monospace px-2 py-1" style="font-size: 0.72rem;">
                   <i class="fa-solid fa-shield-halved me-1"></i>256-BIT SEALED
                 </span>
               </div>
               <p class="text-muted mb-0" style="font-size: 0.88rem;">
-                Target: <strong style="color: var(--text-main);" id="docketDept">Revenue &amp; Customs — Port Assessment Cell</strong> • Lodged via Anonymous Token
+                Target: <strong style="color: var(--text-main);" id="docketDept"><?= htmlspecialchars($department_name) ?></strong> • <?= !empty($active_case['title']) ? '“' . htmlspecialchars($active_case['title']) . '” • ' : '' ?>Lodged via Anonymous Token
               </p>
             </div>
           </div>
 
           <!-- Right: Search Input + Presets -->
           <div class="d-flex flex-column align-items-end gap-2">
-            <div class="token-search-group">
+            <!-- Separate Search Box with Search Button using GET Method (Displayed at URL) -->
+            <form method="GET" action="track-complaint.php" class="token-search-group m-0">
               <i class="fa-solid fa-hashtag text-muted me-2" style="font-size: 0.85rem;"></i>
-              <input type="text" id="trackInput" class="token-search-input" placeholder="CCMS-2026-XXXX" value="CCMS-2026-9082">
-              <button class="token-search-btn" onclick="loadCaseTelemetry()">
+              <input type="text" name="track" id="trackInput" class="token-search-input" placeholder="CCMS-2026-XXXX" value="<?= htmlspecialchars($raw_query ?: $token) ?>">
+              <button type="submit" class="token-search-btn">
                 <i class="fa-solid fa-magnifying-glass"></i> Track
               </button>
-            </div>
+            </form>
             <div class="d-flex align-items-center gap-1 flex-wrap">
               <span class="text-muted" style="font-size: 0.72rem; font-weight: 600;">Presets:</span>
-              <span class="token-preset-chip active" onclick="selectPresetToken(this, 'CCMS-2026-9082')">#9082 (Active)</span>
-              <span class="token-preset-chip" onclick="selectPresetToken(this, 'CCMS-2026-4412')">#4412 (Triage)</span>
-              <span class="token-preset-chip" onclick="selectPresetToken(this, 'CCMS-2026-7890')">#7890 (Resolved)</span>
+              <?php if (!empty($preset_cases)): ?>
+                <?php foreach ($preset_cases as $p): ?>
+                  <?php 
+                    $p_token = "CCMS-2026-" . str_pad($p['complaint_id'], 4, '0', STR_PAD_LEFT);
+                    $is_active = ($p['complaint_id'] == $cid);
+                  ?>
+                  <a href="track-complaint.php?track=<?= $p_token ?>" class="token-preset-chip <?= $is_active ? 'active' : '' ?>" style="text-decoration:none;">
+                    #<?= $p['complaint_id'] ?> (<?= htmlspecialchars($p['status']) ?>)
+                  </a>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <a href="track-complaint.php?track=<?= $token ?>" class="token-preset-chip active" style="text-decoration:none;">#<?= $cid ?> (Active)</a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -747,9 +833,9 @@ if ($presets_res) {
               <div class="tele-kpi-title">Investigation Progress</div>
               <div class="d-flex align-items-center gap-2">
                 <div class="progress flex-grow-1" style="height: 8px; background: var(--bg-surface); border-radius: 9999px;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" id="kpiProgressBar" style="width: 60%; background: linear-gradient(90deg, var(--cyan), var(--primary)); border-radius: 9999px;"></div>
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" id="kpiProgressBar" style="width: <?= $progress_pct ?>%; background: linear-gradient(90deg, var(--cyan), var(--primary)); border-radius: 9999px;"></div>
                 </div>
-                <span class="font-monospace fw-bold" style="color: var(--cyan); font-size: 0.88rem;" id="kpiProgressText">60%</span>
+                <span class="font-monospace fw-bold" style="color: var(--cyan); font-size: 0.88rem;" id="kpiProgressText"><?= $progress_pct ?>%</span>
               </div>
             </div>
           </div>
@@ -759,7 +845,7 @@ if ($presets_res) {
               <div class="tele-kpi-title">Statutory SLA Clock</div>
               <div class="tele-kpi-val" style="color: var(--amber);">
                 <i class="fa-solid fa-hourglass-half"></i>
-                <span id="kpiSlaText">35h 42m Remaining</span>
+                <span id="kpiSlaText"><?= htmlspecialchars($sla_text) ?></span>
               </div>
             </div>
           </div>
@@ -769,7 +855,7 @@ if ($presets_res) {
               <div class="tele-kpi-title">Assigned Lead Investigator</div>
               <div class="tele-kpi-val">
                 <i class="fa-solid fa-user-shield text-primary"></i>
-                <span id="kpiOfficerText">Insp. K. Vance (#AC-819)</span>
+                <span id="kpiOfficerText"><?= !empty($officer_name) ? htmlspecialchars($officer_name . " ({$officer_designation})") : 'Awaiting Officer Allocation' ?></span>
               </div>
             </div>
           </div>
@@ -778,9 +864,9 @@ if ($presets_res) {
             <div class="tele-kpi-card">
               <div class="tele-kpi-title">Cryptographic SHA-256 Seal</div>
               <div class="d-flex align-items-center">
-                <span class="hash-copy-chip" onclick="copyLedgerHash()">
+                <span class="hash-copy-chip" onclick="copyLedgerHash('<?= $full_hash ?>')">
                   <i class="fa-solid fa-fingerprint"></i>
-                  <span>0x9a8f...312e</span>
+                  <span><?= htmlspecialchars($short_hash) ?></span>
                   <i class="fa-solid fa-copy ms-1" style="font-size: 0.72rem; opacity: 0.7;"></i>
                 </span>
               </div>
@@ -796,38 +882,38 @@ if ($presets_res) {
             <i class="fa-solid fa-diagram-project text-cyan"></i> Statutory Investigation Pipeline
           </div>
           <span class="badge bg-warning-subtle text-warning font-monospace" id="pipelinePhaseBadge">
-            <i class="fa-solid fa-spinner fa-spin me-1"></i> PHASE 3 ACTIVE
+            <i class="fa-solid fa-spinner fa-spin me-1"></i> <?= $phase_badge ?>
           </span>
         </div>
 
         <div class="pipeline-steps-track" id="pipelineTrack">
-          <!-- Step 1: Done -->
-          <div class="pipeline-step step-done">
-            <div class="step-indicator"><i class="fa-solid fa-check"></i></div>
+          <!-- Step 1: Complaint Lodged -->
+          <div class="pipeline-step <?= ($step_active > 1) ? 'step-done' : (($step_active == 1) ? 'step-active' : '') ?>">
+            <div class="step-indicator"><?= ($step_active > 1) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-file-shield"></i>' ?></div>
             <div class="step-title-text">Complaint Lodged</div>
           </div>
 
-          <!-- Step 2: Done -->
-          <div class="pipeline-step step-done">
-            <div class="step-indicator"><i class="fa-solid fa-check"></i></div>
+          <!-- Step 2: Jurisdiction Triage -->
+          <div class="pipeline-step <?= ($step_active > 2) ? 'step-done' : (($step_active == 2) ? 'step-active' : '') ?>">
+            <div class="step-indicator"><?= ($step_active > 2) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-clipboard-check"></i>' ?></div>
             <div class="step-title-text">Jurisdiction Triage</div>
           </div>
 
-          <!-- Step 3: Active -->
-          <div class="pipeline-step step-active">
-            <div class="step-indicator"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <!-- Step 3: Forensic Exam -->
+          <div class="pipeline-step <?= ($step_active > 3) ? 'step-done' : (($step_active == 3) ? 'step-active' : '') ?>">
+            <div class="step-indicator"><?= ($step_active > 3) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-magnifying-glass"></i>' ?></div>
             <div class="step-title-text">Forensic Exam</div>
           </div>
 
-          <!-- Step 4: Upcoming -->
-          <div class="pipeline-step">
-            <div class="step-indicator"><i class="fa-solid fa-gavel"></i></div>
+          <!-- Step 4: Tribunal Summons -->
+          <div class="pipeline-step <?= ($step_active > 4) ? 'step-done' : (($step_active == 4) ? 'step-active' : '') ?>">
+            <div class="step-indicator"><?= ($step_active > 4) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-gavel"></i>' ?></div>
             <div class="step-title-text">Tribunal Summons</div>
           </div>
 
-          <!-- Step 5: Final -->
-          <div class="pipeline-step">
-            <div class="step-indicator"><i class="fa-solid fa-scale-balanced"></i></div>
+          <!-- Step 5: Final Sanctions -->
+          <div class="pipeline-step <?= ($step_active == 5) ? 'step-done' : '' ?>">
+            <div class="step-indicator"><?= ($step_active == 5) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-scale-balanced"></i>' ?></div>
             <div class="step-title-text">Final Sanctions</div>
           </div>
         </div>
@@ -862,91 +948,94 @@ if ($presets_res) {
                 </div>
                 <div class="timeline-inner-card">
                   <div class="d-flex justify-content-between align-items-start mb-1 flex-wrap gap-2">
-                    <strong style="font-size: 0.95rem; color: var(--text-main);">1. Complaint Registered & Cryptographically Sealed</strong>
+                    <strong style="font-size: 0.95rem; color: var(--text-main);">1. Complaint Registered &amp; Cryptographically Sealed</strong>
                     <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.72rem;">COMPLETED</span>
                   </div>
                   <p class="text-muted mb-2" style="font-size: 0.84rem; line-height: 1.6;">
-                    Whistleblower report secured with zero-knowledge scrub. Raw evidence files ingested into cold-storage vault.
+                    Whistleblower report secured for docket <strong><?= htmlspecialchars($token) ?></strong> under category <strong><?= htmlspecialchars($active_case['category_name'] ?? 'Anti-Corruption') ?></strong>. Raw evidence files ingested into cold-storage vault.
                   </p>
                   <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.75rem;">
-                    <span class="badge bg-secondary-subtle text-muted font-monospace"><i class="fa-solid fa-clock me-1"></i>Aug 14, 2026 • 10:23 AM</span>
-                    <span class="badge bg-primary-subtle text-primary font-monospace"><i class="fa-solid fa-file-audio me-1"></i>1 Audio (.WAV)</span>
-                    <span class="badge bg-primary-subtle text-primary font-monospace"><i class="fa-solid fa-file-pdf me-1"></i>2 Invoices (.PDF)</span>
+                    <span class="badge bg-secondary-subtle text-muted font-monospace"><i class="fa-solid fa-clock me-1"></i><?= $created_date_formatted ?></span>
+                    <span class="badge bg-primary-subtle text-primary font-monospace"><i class="fa-solid fa-user-shield me-1"></i>Lodged by: <?= htmlspecialchars($complainant_name) ?></span>
                   </div>
                 </div>
               </div>
 
-              <!-- Node 2: Completed -->
+              <!-- Node 2: Triage -->
               <div class="timeline-card-node">
-                <div class="timeline-node-dot done">
-                  <i class="fa-solid fa-check"></i>
+                <div class="timeline-node-dot <?= ($step_active >= 2) ? 'done' : '' ?>">
+                  <i class="fa-solid <?= ($step_active >= 2) ? 'fa-check' : 'fa-clipboard-check' ?>"></i>
                 </div>
                 <div class="timeline-inner-card">
                   <div class="d-flex justify-content-between align-items-start mb-1 flex-wrap gap-2">
                     <strong style="font-size: 0.95rem; color: var(--text-main);">2. Independent Jurisdictional Triage</strong>
-                    <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.72rem;">COMPLETED</span>
+                    <span class="badge <?= ($step_active >= 2) ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-muted' ?> font-monospace" style="font-size: 0.72rem;">
+                      <?= ($step_active >= 2) ? 'COMPLETED' : 'PENDING' ?>
+                    </span>
                   </div>
                   <p class="text-muted mb-2" style="font-size: 0.84rem; line-height: 1.6;">
-                    Senior Vigilance Commissioner validated anti-corruption statutes (Sec 7/13 PC Act) and allocated docket to Bureau Cell #04.
+                    Vigilance Commission triage validated anti-corruption statutes and allocated docket to department <strong><?= htmlspecialchars($department_name) ?></strong>.
                   </p>
                   <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.75rem;">
-                    <span class="badge bg-secondary-subtle text-muted font-monospace"><i class="fa-solid fa-clock me-1"></i>Aug 14, 2026 • 02:40 PM</span>
-                    <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-user-check me-1"></i>Lead Insp. K. Vance Assigned</span>
+                    <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-user-check me-1"></i><?= !empty($officer_name) ? 'Lead ' . htmlspecialchars($officer_name) . ' Assigned' : 'Awaiting Officer Allocation' ?></span>
                   </div>
                 </div>
               </div>
 
-              <!-- Node 3: Active -->
+              <!-- Node 3: Active Investigation -->
               <div class="timeline-card-node">
-                <div class="timeline-node-dot active">
-                  <i class="fa-solid fa-magnifying-glass"></i>
+                <div class="timeline-node-dot <?= ($step_active > 3) ? 'done' : (($step_active == 3) ? 'active' : '') ?>">
+                  <i class="fa-solid <?= ($step_active > 3) ? 'fa-check' : 'fa-magnifying-glass' ?>"></i>
                 </div>
-                <div class="timeline-inner-card active-card">
+                <div class="timeline-inner-card <?= ($step_active == 3) ? 'active-card' : '' ?>">
                   <div class="d-flex justify-content-between align-items-start mb-1 flex-wrap gap-2">
-                    <strong class="text-cyan fw-bold" style="font-size: 0.96rem;">3. Forensic & Evidence Examination (Active Phase)</strong>
-                    <span class="badge bg-warning text-dark font-monospace fw-bold" style="font-size: 0.72rem;">IN PROGRESS</span>
+                    <strong class="<?= ($step_active == 3) ? 'text-cyan fw-bold' : '' ?>" style="font-size: 0.96rem;">3. Forensic &amp; Evidence Examination</strong>
+                    <span class="badge <?= ($step_active > 3) ? 'bg-success-subtle text-success' : (($step_active == 3) ? 'bg-warning text-dark fw-bold' : 'bg-secondary text-light') ?> font-monospace" style="font-size: 0.72rem;">
+                      <?= ($step_active > 3) ? 'COMPLETED' : (($step_active == 3) ? 'IN PROGRESS' : 'SCHEDULED') ?>
+                    </span>
                   </div>
                   <p class="text-muted mb-2" style="font-size: 0.85rem; line-height: 1.6;">
-                    Audio recordings and electronic gate pass registers from Port Terminal #02 are being corroborated against bank demand timestamps.
+                    Case facts and records: <em>“<?= htmlspecialchars(mb_strimwidth($case_desc, 0, 150, '...')) ?>”</em> are being corroborated against departmental registers.
                   </p>
                   <div class="p-2.5 rounded-3 mb-2" style="background: var(--bg-surface); border: 1px solid var(--border); font-size: 0.8rem;">
                     <i class="fa-solid fa-circle-info text-cyan me-1"></i>
-                    <strong>Investigator Note:</strong> Falcon Shipping logistics records requested via statutory subpoena.
-                  </div>
-                  <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.75rem;">
-                    <span class="badge bg-cyan-subtle text-cyan font-monospace"><i class="fa-solid fa-wave-square me-1"></i>Voiceprint: 94.8% Match</span>
+                    <strong>Investigator Note:</strong> <?= !empty($officer_name) ? 'Assigned to ' . htmlspecialchars($officer_name) . '. Records requested under statutory subpoena.' : 'Triage officer examining initial affidavit and digital trail.' ?>
                   </div>
                 </div>
               </div>
 
-              <!-- Node 4: Scheduled -->
-              <div class="timeline-card-node opacity-75">
-                <div class="timeline-node-dot">
-                  <i class="fa-solid fa-gavel"></i>
+              <!-- Node 4: Scheduled / Summons -->
+              <div class="timeline-card-node <?= ($step_active < 4) ? 'opacity-75' : '' ?>">
+                <div class="timeline-node-dot <?= ($step_active > 4) ? 'done' : (($step_active == 4) ? 'active' : '') ?>">
+                  <i class="fa-solid <?= ($step_active > 4) ? 'fa-check' : 'fa-gavel' ?>"></i>
                 </div>
-                <div class="timeline-inner-card">
+                <div class="timeline-inner-card <?= ($step_active == 4) ? 'active-card' : '' ?>">
                   <div class="d-flex justify-content-between align-items-start mb-1 flex-wrap gap-2">
-                    <strong style="font-size: 0.95rem; color: var(--text-muted);">4. Tribunal Summons & Accused Deposition</strong>
-                    <span class="badge bg-secondary text-light font-monospace" style="font-size: 0.72rem;">SCHEDULED</span>
+                    <strong style="font-size: 0.95rem; color: var(--text-main);">4. Tribunal Summons &amp; Accused Deposition</strong>
+                    <span class="badge <?= ($step_active > 4) ? 'bg-success-subtle text-success' : (($step_active == 4) ? 'bg-warning text-dark' : 'bg-secondary text-light') ?> font-monospace" style="font-size: 0.72rem;">
+                      <?= ($step_active > 4) ? 'COMPLETED' : (($step_active == 4) ? 'IN PROGRESS' : 'SCHEDULED') ?>
+                    </span>
                   </div>
                   <p class="text-muted mb-0" style="font-size: 0.84rem; line-height: 1.6;">
-                    Formal deposition notice issued to accused Assistant Examiner to present official clearance logs before the vigilance tribunal on Aug 18, 2026.
+                    Formal deposition notice issued to accused department personnel to present official clearance logs before vigilance inquiry panel.
                   </p>
                 </div>
               </div>
 
-              <!-- Node 5: Pending -->
-              <div class="timeline-card-node opacity-50 mb-0">
-                <div class="timeline-node-dot">
-                  <i class="fa-solid fa-scale-balanced"></i>
+              <!-- Node 5: Final Sanction -->
+              <div class="timeline-card-node <?= ($step_active < 5) ? 'opacity-50' : '' ?> mb-0">
+                <div class="timeline-node-dot <?= ($step_active == 5) ? 'done' : '' ?>">
+                  <i class="fa-solid <?= ($step_active == 5) ? 'fa-check' : 'fa-scale-balanced' ?>"></i>
                 </div>
-                <div class="timeline-inner-card">
+                <div class="timeline-inner-card <?= ($step_active == 5) ? 'active-card' : '' ?>">
                   <div class="d-flex justify-content-between align-items-start mb-1 flex-wrap gap-2">
-                    <strong style="font-size: 0.95rem; color: var(--text-muted);">5. Final Prosecution Sanction & Asset Restitution</strong>
-                    <span class="badge bg-secondary text-light font-monospace" style="font-size: 0.72rem;">PENDING</span>
+                    <strong style="font-size: 0.95rem; color: var(--text-main);">5. Final Prosecution Sanction &amp; Closure</strong>
+                    <span class="badge <?= ($step_active == 5) ? 'bg-success-subtle text-success' : 'bg-secondary text-light' ?> font-monospace" style="font-size: 0.72rem;">
+                      <?= ($step_active == 5) ? 'COMPLETED' : 'PENDING' ?>
+                    </span>
                   </div>
                   <p class="text-muted mb-0" style="font-size: 0.84rem; line-height: 1.6;">
-                    Filing of statutory chargesheet with Special Anti-Corruption Court and disciplinary service action recommendation.
+                    Filing of statutory investigation closure report with Special Anti-Corruption Authority and disciplinary recommendation.
                   </p>
                 </div>
               </div>
@@ -965,7 +1054,7 @@ if ($presets_res) {
                   <i class="fa-solid fa-lock text-cyan"></i>
                   <span>Encrypted Officer Channel</span>
                 </div>
-                <div class="text-muted" style="font-size: 0.76rem;">Direct connection to Insp. K. Vance</div>
+                <div class="text-muted" style="font-size: 0.76rem;">Direct connection to <?= htmlspecialchars(!empty($officer_name) ? $officer_name : 'Special Investigation Cell') ?></div>
               </div>
               <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.72rem; border: 1px solid rgba(16,185,129,0.3); padding: 0.35rem 0.65rem;">
                 <i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i> LIVE SYNC
@@ -979,12 +1068,12 @@ if ($presets_res) {
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <div class="officer-bubble-sender">
                     <i class="fa-solid fa-user-shield"></i>
-                    <span>Insp. K. Vance (Lead)</span>
+                    <span><?= htmlspecialchars(!empty($officer_name) ? $officer_name . ' (Lead)' : 'CCMS Investigation Desk') ?></span>
                   </div>
                   <span class="text-muted font-monospace" style="font-size: 0.7rem;">Today • 09:12 AM</span>
                 </div>
                 <p class="mb-0" style="font-size: 0.86rem; line-height: 1.6; color: var(--text-main);">
-                  Whistleblower integrity confirmed. We have retrieved the audio file and verified the port gate logs. Can you confirm if you noticed any other clearing agents present during the bribe demand?
+                  Whistleblower integrity confirmed for docket <strong>#<?= htmlspecialchars($token) ?></strong>. Case summary logged: <em>“<?= htmlspecialchars(mb_strimwidth($case_desc, 0, 110, '...')) ?>”</em>. Priority corroboration protocol active.
                 </p>
               </div>
 
@@ -993,12 +1082,12 @@ if ($presets_res) {
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <div class="citizen-bubble-sender">
                     <i class="fa-solid fa-user-ninja"></i>
-                    <span>Whistleblower (#9082)</span>
+                    <span>Whistleblower (#<?= $cid ?>)</span>
                   </div>
                   <span style="font-size: 0.7rem; opacity: 0.8; font-family: var(--font-mono);">Today • 10:05 AM</span>
                 </div>
                 <p class="mb-0" style="font-size: 0.86rem; line-height: 1.6; color: #ffffff;">
-                  Yes, two representatives from Falcon Shipping Logistics were outside Room 402 and witnessed the clerk demanding the cash envelope.
+                  Affidavit and details submitted for target department <strong><?= htmlspecialchars($department_name) ?></strong>. Standing by to provide further testimony.
                 </p>
               </div>
 
@@ -1007,12 +1096,12 @@ if ($presets_res) {
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <div class="officer-bubble-sender">
                     <i class="fa-solid fa-user-shield"></i>
-                    <span>Insp. K. Vance</span>
+                    <span><?= htmlspecialchars(!empty($officer_name) ? $officer_name : 'Lead Officer') ?></span>
                   </div>
                   <span class="text-muted font-monospace" style="font-size: 0.7rem;">Today • 10:14 AM</span>
                 </div>
                 <p class="mb-0" style="font-size: 0.86rem; line-height: 1.6; color: var(--text-main);">
-                  Understood. Summons notices are being served to Falcon Logistics management today. Your identity remains 100% sealed under the Whistleblower Act.
+                  Understood. Statutory review for <strong><?= htmlspecialchars($case_title) ?></strong> is underway. Your identity remains 100% sealed under the Whistleblower Protection Act.
                 </p>
               </div>
             </div>
@@ -1068,7 +1157,7 @@ if ($presets_res) {
       </div>
       <div class="modal-body">
         <p class="text-muted" style="font-size: 0.84rem;">
-          Attach additional documents, audio recordings, or transaction slips to docket <strong class="text-primary font-monospace">CCMS-2026-9082</strong>.
+          Attach additional documents, audio recordings, or transaction slips to docket <strong class="text-primary font-monospace"><?= htmlspecialchars($token) ?></strong>.
         </p>
         <div class="mb-3">
           <label class="form-label text-muted" style="font-size: 0.8rem; font-weight: 600;">Evidence Type</label>
@@ -1102,87 +1191,8 @@ if ($presets_res) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/citizen.js"></script>
 <script>
-  /* ── Presets & Telemetry Data ── */
-  const telemetryData = {
-    'CCMS-2026-9082': {
-      token: 'CCMS-2026-9082',
-      dept: 'Revenue & Customs — Port Assessment Cell',
-      status: 'Forensic Examination',
-      statusClass: 'status-investigation',
-      phaseBadge: '<i class="fa-solid fa-spinner fa-spin me-1"></i> PHASE 3 ACTIVE',
-      progress: 60,
-      sla: '35h 42m Remaining',
-      officer: 'Insp. K. Vance (#AC-819)',
-      stepActive: 3
-    },
-    'CCMS-2026-4412': {
-      token: 'CCMS-2026-4412',
-      dept: 'Municipal Corporation — Urban Planning Dept',
-      status: 'Triage & Jurisdiction',
-      statusClass: 'status-triage',
-      phaseBadge: '<i class="fa-solid fa-spinner fa-spin me-1"></i> PHASE 2 ACTIVE',
-      progress: 25,
-      sla: '72h 00m Remaining',
-      officer: 'Insp. M. Sharma (#AC-205)',
-      stepActive: 2
-    },
-    'CCMS-2026-7890': {
-      token: 'CCMS-2026-7890',
-      dept: 'Public Works Dept — Highway Division',
-      status: 'Charges Filed & Sanctioned',
-      statusClass: 'status-resolved',
-      phaseBadge: '<i class="fa-solid fa-check-double me-1"></i> COMPLETED',
-      progress: 100,
-      sla: 'Concluded & Transmitted',
-      officer: 'Insp. P. Kumar (#AC-341)',
-      stepActive: 5
-    }
-  };
-
-  function selectPresetToken(chipEl, token) {
-    document.querySelectorAll('.token-preset-chip').forEach(c => c.classList.remove('active'));
-    chipEl.classList.add('active');
-    document.getElementById('trackInput').value = token;
-    loadCaseTelemetry();
-  }
-
-  function loadCaseTelemetry() {
-    const token = document.getElementById('trackInput').value.trim().toUpperCase();
-    if (!token) return;
-
-    let matched = telemetryData[token] || telemetryData['CCMS-2026-9082'];
-    if (!telemetryData[token]) {
-      if (token.includes('4412')) matched = telemetryData['CCMS-2026-4412'];
-      else if (token.includes('7890')) matched = telemetryData['CCMS-2026-7890'];
-    }
-
-    document.getElementById('docketId').innerText = token;
-    document.getElementById('docketDept').innerText = matched.dept;
-
-    const sEl = document.getElementById('docketStatus');
-    sEl.className = 'badge-status ' + matched.statusClass;
-    sEl.innerText = matched.status;
-
-    document.getElementById('kpiProgressBar').style.width = matched.progress + '%';
-    document.getElementById('kpiProgressText').innerText = matched.progress + '%';
-    document.getElementById('kpiSlaText').innerText = matched.sla;
-    document.getElementById('kpiOfficerText').innerText = matched.officer;
-    document.getElementById('pipelinePhaseBadge').innerHTML = matched.phaseBadge;
-
-    // Update pipeline indicators
-    const steps = document.querySelectorAll('#pipelineTrack .pipeline-step');
-    steps.forEach((step, idx) => {
-      const stepNum = idx + 1;
-      step.classList.remove('step-done', 'step-active');
-      if (stepNum < matched.stepActive) {
-        step.classList.add('step-done');
-        step.querySelector('.step-indicator').innerHTML = '<i class="fa-solid fa-check"></i>';
-      } else if (stepNum === matched.stepActive) {
-        step.classList.add('step-active');
-      }
-    });
-
-    showCitizenToast(`Telemetry updated for ${token}`, 'info');
+  function selectPresetToken(token) {
+    window.location.href = 'track-complaint.php?track=' + encodeURIComponent(token);
   }
 
   /* ── Interactive Encrypted Chat ── */
@@ -1202,7 +1212,7 @@ if ($presets_res) {
       <div class="d-flex justify-content-between align-items-center mb-1">
         <div class="citizen-bubble-sender">
           <i class="fa-solid fa-user-ninja"></i>
-          <span>Whistleblower (#9082)</span>
+          <span>Whistleblower (#<?= $cid ?>)</span>
         </div>
         <span style="font-size:0.7rem;opacity:0.8;font-family:var(--font-mono);">${timeStr}</span>
       </div>
@@ -1211,7 +1221,7 @@ if ($presets_res) {
     container.appendChild(citizenBubble);
     container.scrollTop = container.scrollHeight;
     input.value = '';
-    showCitizenToast('Encrypted dispatch sent to Investigator Vance!', 'success');
+    showCitizenToast('Encrypted dispatch sent to assigned investigator!', 'success');
 
     // Simulated Officer Reply
     setTimeout(() => {
@@ -1221,12 +1231,12 @@ if ($presets_res) {
         <div class="d-flex justify-content-between align-items-center mb-1">
           <div class="officer-bubble-sender">
             <i class="fa-solid fa-user-shield"></i>
-            <span>Insp. K. Vance</span>
+            <span><?= htmlspecialchars(!empty($officer_name) ? $officer_name : 'Lead Officer') ?></span>
           </div>
           <span class="text-muted font-monospace" style="font-size:0.7rem;">Just now</span>
         </div>
         <p class="mb-0" style="font-size:0.86rem;line-height:1.6;color:var(--text-main);">
-          Received and appended to official case docket. Corroboration is proceeding under priority protocol.
+          Received and appended to official case docket #<?= htmlspecialchars($token) ?>. Corroboration is proceeding under priority protocol.
         </p>
       `;
       container.appendChild(officerBubble);
@@ -1241,8 +1251,9 @@ if ($presets_res) {
   }
 
   /* ── Copy Hash ── */
-  function copyLedgerHash() {
-    navigator.clipboard.writeText('0x9a8fe10b48c90382d56ef19a823b12e');
+  function copyLedgerHash(hashVal) {
+    const val = hashVal || '<?= $full_hash ?>';
+    navigator.clipboard.writeText(val);
     showCitizenToast('SHA-256 Checksum copied to clipboard!', 'info');
   }
 
@@ -1258,7 +1269,7 @@ if ($presets_res) {
       icon: 'success',
       title: 'Supplementary Evidence Ingested',
       html: `
-        <p style="font-size:0.88rem;color:var(--text-muted);">EXIF metadata scrubbed. File assigned SHA-256 seal <code>0x77c2...f81a</code> and linked to docket <strong>CCMS-2026-9082</strong>.</p>
+        <p style="font-size:0.88rem;color:var(--text-muted);">EXIF metadata scrubbed. File assigned SHA-256 seal <code><?= htmlspecialchars($short_hash) ?></code> and linked to docket <strong><?= htmlspecialchars($token) ?></strong>.</p>
       `,
       confirmButtonColor: '#6366f1'
     });
@@ -1270,10 +1281,12 @@ if ($presets_res) {
       icon: 'success',
       title: 'Certified Judicial Dossier Compiled',
       html: `
-        <p style="font-size:0.88rem;color:var(--text-muted);">The official encrypted investigation docket for <strong>CCMS-2026-9082</strong> has been generated with cryptographic integrity stamps.</p>
+        <p style="font-size:0.88rem;color:var(--text-muted);">The official encrypted investigation docket for <strong><?= htmlspecialchars($token) ?></strong> has been generated with cryptographic integrity stamps.</p>
         <div class="font-monospace text-info p-2 rounded mt-2 text-start" style="font-size:0.75rem; background: var(--bg-surface-2); border: 1px solid var(--border);">
-          <div>• DOCKET: CCMS-2026-9082</div>
-          <div>• LEDGER HASH: 0x9a8fe10b48c90382d56ef19a823b12e</div>
+          <div>• DOCKET: <?= htmlspecialchars($token) ?></div>
+          <div>• TARGET: <?= htmlspecialchars($department_name) ?></div>
+          <div>• STATUS: <?= htmlspecialchars($status) ?></div>
+          <div>• LEDGER HASH: <?= htmlspecialchars($full_hash) ?></div>
           <div>• CERTIFYING AUTHORITY: CCMS Sentinel Investigation Bureau</div>
         </div>
       `,

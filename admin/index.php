@@ -100,19 +100,6 @@ if ($recent_res) {
     </div>
 
     <nav class="sb-nav">
-      <div class="sb-section-label">External Portals</div>
-      <a href="../citizen/dashboard.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>
-        <span>Citizen Portal</span>
-      </a>
-      <a href="../officer/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Officer Command</span>
-      </a>
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
 
       <div class="sb-section-label">Main Overview</div>
       <a href="index.php" class="sb-link active">
@@ -219,7 +206,6 @@ if ($recent_res) {
             </div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Public Sentinel</a></li>
             <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
             <li><a class="dropdown-item text-danger" href="./login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>

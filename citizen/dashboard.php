@@ -1,7 +1,43 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once '../db.php';
+$citizen_id = $_SESSION['user_id'] ?? 0;
 $citizen_name = htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Verified Citizen');
 $initials = strtoupper(substr($citizen_name, 0, 2));
+
+// KPI counters
+$total_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM complaints");
+$total_count = $total_q ? intval(mysqli_fetch_assoc($total_q)['total']) : 0;
+
+$probe_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM complaints WHERE status = 'Under Investigation' OR status = 'Assigned' OR status = 'Pending'");
+$probe_count = $probe_q ? intval(mysqli_fetch_assoc($probe_q)['total']) : 0;
+
+$resolved_q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM complaints WHERE status = 'Resolved' OR status = 'Closed'");
+$resolved_count = $resolved_q ? intval(mysqli_fetch_assoc($resolved_q)['total']) : 0;
+
+// Latest complaint for alert banner
+$latest_alert_q = mysqli_query($conn, "
+    SELECT c.*, d.department_name 
+    FROM complaints c
+    LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+    LEFT JOIN departments d ON o.department_id = d.department_id
+    ORDER BY c.complaint_id DESC
+    LIMIT 1
+");
+$latest_alert = $latest_alert_q ? mysqli_fetch_assoc($latest_alert_q) : null;
+
+// Recent complaints
+$recent_complaints_res = mysqli_query($conn, "
+    SELECT c.*, cat.category_name, o.name AS officer_name, d.department_name 
+    FROM complaints c
+    LEFT JOIN categories cat ON c.category_id = cat.category_id
+    LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+    LEFT JOIN departments d ON o.department_id = d.department_id
+    ORDER BY c.complaint_id DESC
+    LIMIT 5
+");
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -53,7 +89,7 @@ $initials = strtoupper(substr($citizen_name, 0, 2));
       <a href="my-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div>
         <span>My Complaints</span>
-        <span class="sb-badge">3</span>
+        <span class="sb-badge"><?= $total_count ?></span>
       </a>
 
       <a href="track-complaint.php" class="sb-link">
@@ -153,36 +189,43 @@ $initials = strtoupper(substr($citizen_name, 0, 2));
       </div>
 
       <!-- Quick Alert Notification -->
+      <?php if ($latest_alert): 
+        $alert_cid = $latest_alert['complaint_id'];
+        $alert_token = "CCMS-2026-" . str_pad($alert_cid, 4, '0', STR_PAD_LEFT);
+        $alert_dept = htmlspecialchars($latest_alert['department_name'] ?? 'Anti-Corruption Bureau');
+        $alert_status = htmlspecialchars($latest_alert['status'] ?? 'Under Review');
+      ?>
       <div class="alert alert-primary d-flex align-items-center justify-content-between p-3 rounded-4 mb-4" style="background: rgba(99, 102, 241, 0.1); border: 1px solid var(--border-glow);">
         <div class="d-flex align-items-center gap-3">
           <div style="font-size: 1.5rem; color: var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
           <div>
-            <strong style="color: var(--text-main); font-size: 0.95rem;">Case #CCMS-2026-9082 Updated</strong>
-            <p class="mb-0 text-muted" style="font-size: 0.82rem;">Assigned Officer uploaded a Preliminary Verification finding. Response requested within 48 hours.</p>
+            <strong style="color: var(--text-main); font-size: 0.95rem;">Case #<?= $alert_token ?> &bull; <?= $alert_dept ?></strong>
+            <p class="mb-0 text-muted" style="font-size: 0.82rem;">Current docket status: <strong><?= $alert_status ?></strong>. Official records encrypted under secure judicial protocol.</p>
           </div>
         </div>
-        <a href="track-complaint.php?case=CCMS-2026-9082" class="btn-ccms btn-ccms-primary btn-sm" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+        <a href="track-complaint.php?track=<?= $alert_token ?>" class="btn-ccms btn-ccms-primary btn-sm" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
           View Update
         </a>
       </div>
+      <?php endif; ?>
 
       <!-- KPI Summary Cards -->
       <div class="kpi-grid">
         <div class="kpi-card indigo">
           <div class="kpi-icon"><i class="fa-solid fa-file-shield"></i></div>
-          <div class="kpi-value counter-val" data-target="3">3</div>
+          <div class="kpi-value counter-val" data-target="<?= $total_count ?>"><?= $total_count ?></div>
           <div class="kpi-label">Total Filed Complaints</div>
         </div>
 
         <div class="kpi-card cyan">
           <div class="kpi-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
-          <div class="kpi-value counter-val" data-target="1">1</div>
+          <div class="kpi-value counter-val" data-target="<?= $probe_count ?>"><?= $probe_count ?></div>
           <div class="kpi-label">Under Active Probe</div>
         </div>
 
         <div class="kpi-card emerald">
           <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="kpi-value counter-val" data-target="2">2</div>
+          <div class="kpi-value counter-val" data-target="<?= $resolved_count ?>"><?= $resolved_count ?></div>
           <div class="kpi-label">Resolved / Action Taken</div>
         </div>
 
@@ -200,7 +243,7 @@ $initials = strtoupper(substr($citizen_name, 0, 2));
             <i class="fa-solid fa-clock-rotate-left text-primary"></i> Active & Recent Complaints
           </div>
           <a href="my-complaints.php" class="btn-ccms btn-ccms-secondary btn-sm" style="font-size: 0.8rem;">
-            View All (3)
+            View All (<?= $total_count ?>)
           </a>
         </div>
 
@@ -218,65 +261,63 @@ $initials = strtoupper(substr($citizen_name, 0, 2));
               </tr>
             </thead>
             <tbody style="font-size: 0.9rem;">
-              <tr>
-                <td style="padding: 1rem;">
-                  <span class="font-monospace fw-bold text-primary">CCMS-2026-9082</span>
-                  <span class="badge bg-secondary-subtle text-secondary ms-1" style="font-size: 0.7rem;">Anonymous</span>
-                </td>
-                <td>
-                  <strong>Revenue & Customs</strong>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Port Assessment Cell</div>
-                </td>
-                <td>Bribery demand for clearance certificate</td>
-                <td>Aug 14, 2026</td>
-                <td><span class="badge-status status-investigation"><i class="fa-solid fa-spinner fa-spin"></i> Investigation Active</span></td>
-                <td><span class="text-warning fw-bold font-monospace"><i class="fa-solid fa-hourglass-half me-1"></i> 36h Left</span></td>
-                <td class="text-end" style="padding-right: 1rem;">
-                  <a href="track-complaint.php?case=CCMS-2026-9082" class="btn-cyber-action btn-cyber-primary">
-                    <i class="fa-solid fa-location-crosshairs"></i> Track Live
-                  </a>
-                </td>
-              </tr>
+              <?php if ($recent_complaints_res && mysqli_num_rows($recent_complaints_res) > 0): ?>
+                <?php while ($row = mysqli_fetch_assoc($recent_complaints_res)): 
+                  $r_cid = $row['complaint_id'];
+                  $r_token = "CCMS-2026-" . str_pad($r_cid, 4, '0', STR_PAD_LEFT);
+                  $r_dept = htmlspecialchars($row['department_name'] ?? 'Anti-Corruption Bureau');
+                  $r_title = htmlspecialchars($row['title']);
+                  $r_date = !empty($row['created_at']) ? date('M d, Y', strtotime($row['created_at'])) : 'Recent';
+                  $r_status = $row['status'] ?? 'Pending';
+                  $r_anon = !empty($row['is_anonymous']);
 
-              <tr>
-                <td style="padding: 1rem;">
-                  <span class="font-monospace fw-bold text-primary">CCMS-2026-4150</span>
-                  <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.7rem;">Verified ID</span>
-                </td>
-                <td>
-                  <strong>Public Works Dept (PWD)</strong>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Highway Tender Division</div>
-                </td>
-                <td>Kickbacks in asphalt supply contract</td>
-                <td>Jul 28, 2026</td>
-                <td><span class="badge-status status-resolved"><i class="fa-solid fa-check"></i> Action Taken</span></td>
-                <td><span class="text-success fw-bold"><i class="fa-solid fa-check-double me-1"></i> Completed</span></td>
-                <td class="text-end" style="padding-right: 1rem;">
-                  <a href="track-complaint.php?case=CCMS-2026-4150" class="btn-cyber-action btn-cyber-secondary">
-                    <i class="fa-solid fa-file-lines"></i> View Docket
-                  </a>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding: 1rem;">
-                  <span class="font-monospace fw-bold text-primary">CCMS-2026-1189</span>
-                  <span class="badge bg-secondary-subtle text-secondary ms-1" style="font-size: 0.7rem;">Anonymous</span>
-                </td>
-                <td>
-                  <strong>Municipal Corporation</strong>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Zoning & Building Permissions</div>
-                </td>
-                <td>Illegal sanction fee extortion</td>
-                <td>Jun 12, 2026</td>
-                <td><span class="badge-status status-resolved"><i class="fa-solid fa-check"></i> Suspended Officer</span></td>
-                <td><span class="text-success fw-bold"><i class="fa-solid fa-check-double me-1"></i> Completed</span></td>
-                <td class="text-end" style="padding-right: 1rem;">
-                  <a href="track-complaint.php?case=CCMS-2026-1189" class="btn-cyber-action btn-cyber-secondary">
-                    <i class="fa-solid fa-file-lines"></i> View Docket
-                  </a>
-                </td>
-              </tr>
+                  $badge_class = 'status-investigation';
+                  $badge_icon = 'fa-spinner fa-spin';
+                  if ($r_status === 'Resolved' || $r_status === 'Closed') {
+                      $badge_class = 'status-resolved';
+                      $badge_icon = 'fa-check';
+                  } elseif ($r_status === 'Rejected') {
+                      $badge_class = 'status-rejected';
+                      $badge_icon = 'fa-xmark';
+                  }
+                ?>
+                <tr>
+                  <td style="padding: 1rem;">
+                    <span class="font-monospace fw-bold text-primary"><?= $r_token ?></span>
+                    <?php if ($r_anon): ?>
+                      <span class="badge bg-secondary-subtle text-secondary ms-1" style="font-size: 0.7rem;">Anonymous</span>
+                    <?php else: ?>
+                      <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.7rem;">Verified ID</span>
+                    <?php endif; ?>
+                  </td>
+                  <td>
+                    <strong><?= $r_dept ?></strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);"><?= htmlspecialchars($row['category_name'] ?? 'General') ?></div>
+                  </td>
+                  <td><?= $r_title ?></td>
+                  <td><?= $r_date ?></td>
+                  <td><span class="badge-status <?= $badge_class ?>"><i class="fa-solid <?= $badge_icon ?>"></i> <?= htmlspecialchars($r_status) ?></span></td>
+                  <td>
+                    <?php if ($r_status === 'Resolved' || $r_status === 'Closed'): ?>
+                      <span class="text-success fw-bold"><i class="fa-solid fa-check-double me-1"></i> Completed</span>
+                    <?php else: ?>
+                      <span class="text-warning fw-bold font-monospace"><i class="fa-solid fa-hourglass-half me-1"></i> Active</span>
+                    <?php endif; ?>
+                  </td>
+                  <td class="text-end" style="padding-right: 1rem;">
+                    <a href="track-complaint.php?track=<?= $r_token ?>" class="btn-cyber-action btn-cyber-primary">
+                      <i class="fa-solid fa-location-crosshairs"></i> Track Live
+                    </a>
+                  </td>
+                </tr>
+                <?php endwhile; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">
+                    <i class="fa-solid fa-inbox fs-3 mb-2 d-block"></i> No complaints recorded yet.
+                  </td>
+                </tr>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>

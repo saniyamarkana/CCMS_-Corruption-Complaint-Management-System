@@ -257,7 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <!-- Brand Header -->
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <a href="../index.php" class="d-flex align-items-center gap-2 text-decoration-none">
+        <a href="login.php" class="d-flex align-items-center gap-2 text-decoration-none">
           <div style="width:38px;height:38px;font-size:1.15rem;border-radius:12px;background:linear-gradient(135deg,#0284c7,#0369a1);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 12px rgba(2,132,199,0.3);">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
@@ -331,15 +331,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </form>
 
       <!-- Footer links -->
-      <div class="pt-3 border-top mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2" style="font-size:.8rem;">
-        <a href="../login.php" class="text-primary text-decoration-none fw-bold d-flex align-items-center gap-1">
+      <div class="pt-3 border-top mt-4 text-center" style="font-size:.8rem;">
+        <a href="../login.php" class="text-primary text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
           <i class="fa-solid fa-layer-group"></i> All-Panel Login Hub
-        </a>
-        <a href="../officer/login.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="fa-solid fa-user-shield"></i> Officer Portal
-        </a>
-        <a href="../index.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="fa-solid fa-users"></i> Citizen Portal
         </a>
       </div>
 

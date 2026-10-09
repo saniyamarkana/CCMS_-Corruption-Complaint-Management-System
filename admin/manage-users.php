@@ -168,11 +168,6 @@ $total_complaints = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM c
       <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-section-label">Public Portal</div>
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Citizen Portal</span>
-      </a>
 
       <div class="sb-section-label">Main Overview</div>
       <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
@@ -223,7 +218,6 @@ $total_complaints = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM c
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Public Sentinel</a></li>
             <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
             <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>

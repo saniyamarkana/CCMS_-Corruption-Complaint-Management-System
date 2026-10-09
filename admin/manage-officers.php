@@ -206,19 +206,6 @@ $kpi_dept_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(DISTINCT de
       <div><div class="sb-title">CCMS</div><div class="sb-sub">Anti-Corruption</div></div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-section-label">External Portals</div>
-      <a href="../citizen/dashboard.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>
-        <span>Citizen Portal</span>
-      </a>
-      <a href="../officer/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Officer Command</span>
-      </a>
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
 
       <div class="sb-section-label">Main Overview</div>
       <a href="index.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
@@ -264,7 +251,6 @@ $kpi_dept_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(DISTINCT de
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Public Sentinel</a></li>
             <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
             <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
