@@ -1,3 +1,78 @@
+<?php
+require_once '../db.php';
+
+$raw_query = trim($_GET['case'] ?? $_GET['id'] ?? $_GET['track'] ?? '');
+preg_match('/\d+/', $raw_query, $matches);
+$searched_id = isset($matches[0]) ? intval($matches[0]) : 0;
+
+$active_case = null;
+if ($searched_id > 0) {
+    $stmt = mysqli_prepare($conn, "
+        SELECT c.*, cat.category_name, o.name AS officer_name, o.designation AS officer_designation, d.department_name, u.name AS complainant_name
+        FROM complaints c
+        LEFT JOIN categories cat ON c.category_id = cat.category_id
+        LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+        LEFT JOIN departments d ON o.department_id = d.department_id
+        LEFT JOIN users u ON c.user_id = u.user_id
+        WHERE c.complaint_id = ?
+        LIMIT 1
+    ");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $searched_id);
+        mysqli_stmt_execute($stmt);
+        $active_case = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+        mysqli_stmt_close($stmt);
+    }
+}
+
+if (empty($active_case)) {
+    $def_res = mysqli_query($conn, "
+        SELECT c.*, cat.category_name, o.name AS officer_name, o.designation AS officer_designation, d.department_name, u.name AS complainant_name
+        FROM complaints c
+        LEFT JOIN categories cat ON c.category_id = cat.category_id
+        LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+        LEFT JOIN departments d ON o.department_id = d.department_id
+        LEFT JOIN users u ON c.user_id = u.user_id
+        ORDER BY c.complaint_id DESC
+        LIMIT 1
+    ");
+    $active_case = mysqli_fetch_assoc($def_res);
+}
+
+$cid = $active_case['complaint_id'] ?? 1;
+$token = "CCMS-2026-" . str_pad($cid, 4, '0', STR_PAD_LEFT);
+$status = $active_case['status'] ?? 'Submitted';
+
+$step_active = match($status) {
+    'Submitted' => 1,
+    'Pending Verification', 'Verified' => 2,
+    'Assigned', 'Under Investigation' => 3,
+    'Waiting for Evidence' => 4,
+    'Investigation Completed', 'Closed' => 5,
+    'Rejected' => 1,
+    default => 2
+};
+$progress_pct = match($status) {
+    'Submitted' => 20,
+    'Pending Verification' => 35,
+    'Verified' => 45,
+    'Assigned' => 55,
+    'Under Investigation' => 70,
+    'Waiting for Evidence' => 75,
+    'Investigation Completed' => 95,
+    'Closed' => 100,
+    default => 20
+};
+
+// Fetch preset chips dynamically
+$presets_res = mysqli_query($conn, "SELECT complaint_id, status FROM complaints ORDER BY complaint_id DESC LIMIT 4");
+$preset_cases = [];
+if ($presets_res) {
+    while ($pr = mysqli_fetch_assoc($presets_res)) {
+        $preset_cases[] = $pr;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>

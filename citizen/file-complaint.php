@@ -1,3 +1,56 @@
+<?php
+require_once '../db.php';
+
+$success_token = '';
+$error_msg = '';
+
+$citizen_id = $_SESSION['user_id'] ?? 16; // logged in user ID
+$citizen_name = htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Alex Doe');
+$citizen_email = htmlspecialchars($_SESSION['user_email'] ?? $_SESSION['email'] ?? 'citizen@ccms.com');
+$citizen_phone = htmlspecialchars($_SESSION['user_phone'] ?? '');
+$initials = strtoupper(substr($citizen_name, 0, 2));
+
+// ═══════════════════ PROCESS COMPLAINT LODGEMENT ═══════════════════
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || (isset($_GET['action']) && $_GET['action'] === 'lodge_case')) {
+    $src = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
+    $title = trim($src['title'] ?? '');
+    $category_id = intval($src['category_id'] ?? 1);
+    $location = trim($src['location'] ?? 'Municipal Office, Central District');
+    $description = trim($src['description'] ?? '');
+    $priority = trim($src['priority'] ?? 'Medium');
+
+    if (!empty($title) && !empty($description)) {
+        $stmt = mysqli_prepare($conn, "INSERT INTO complaints (user_id, category_id, title, description, location, priority, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'Submitted', NOW())");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "iissss", $citizen_id, $category_id, $title, $description, $location, $priority);
+            if (mysqli_stmt_execute($stmt)) {
+                $new_id = mysqli_insert_id($conn);
+                $success_token = "CCMS-2026-" . str_pad($new_id, 4, '0', STR_PAD_LEFT);
+                $success_raw_id = $new_id;
+            } else {
+                $error_msg = "Database insertion error: " . mysqli_error($conn);
+            }
+            mysqli_stmt_close($stmt);
+        }
+    } else {
+        $error_msg = "Please provide both complaint title and narrative particulars.";
+    }
+}
+
+// Fetch categories from DB
+$cat_res = mysqli_query($conn, "SELECT * FROM categories WHERE status = 'Active' ORDER BY category_id ASC");
+$all_categories = [];
+while ($cr = mysqli_fetch_assoc($cat_res)) {
+    $all_categories[] = $cr;
+}
+
+// Fetch departments from DB
+$dept_res = mysqli_query($conn, "SELECT * FROM departments WHERE status = 'Active' ORDER BY department_id ASC");
+$all_departments = [];
+while ($dr = mysqli_fetch_assoc($dept_res)) {
+    $all_departments[] = $dr;
+}
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -89,7 +142,6 @@
       <a href="my-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div>
         <span>My Complaints</span>
-        <span class="sb-badge">3</span>
       </a>
 
       <a href="track-complaint.php" class="sb-link">
@@ -101,15 +153,9 @@
       <a href="notifications.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-bell"></i></div>
         <span>Encrypted Alerts</span>
-        <span class="sb-badge amber">2</span>
       </a>
 
       <div class="sb-section-label">Account & External</div>
-      <a href="profile.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Security & Keys</span>
-      </a>
-
       <a href="../officer/index.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
         <span>Officer Command</span>
@@ -128,9 +174,9 @@
 
     <div class="sb-footer">
       <div class="user-card">
-        <div class="user-avatar">AD</div>
+        <div class="user-avatar"><?= $initials ?></div>
         <div class="user-info">
-          <div class="user-name">Alex Doe</div>
+          <div class="user-name"><?= $citizen_name ?></div>
           <div class="user-role">Verified Citizen</div>
         </div>
       </div>
@@ -158,24 +204,22 @@
     <main class="content-body">
       <div class="container-fluid" style="max-width: 900px;">
         
-        <!-- Header -->
-        <div class="text-center mb-4">
-          <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2 font-monospace" style="font-size: 0.8rem;">
-            <i class="fa-solid fa-shield-halved me-1"></i> ZERO-KNOWLEDGE 256-BIT ENCRYPTION
-          </span>
-          <h1 class="page-title">File Anti-Corruption Incident Report</h1>
-          <p class="page-subtitle">Submit evidence directly to national vigilance authorities. You may choose complete anonymity.</p>
-        </div>
+        <?php if (!empty($error_msg)): ?>
+          <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i><?= htmlspecialchars($error_msg) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <?php endif; ?>
 
-        <!-- 5-Step Progress Bar -->
-        <div class="wizard-steps-track">
+        <!-- Multi-Step Wizard Track -->
+        <div class="wizard-steps-track mb-4">
           <div class="wizard-step-node active" id="stepNode1" onclick="goToStep(1)">
             <div class="step-circle">1</div>
-            <div class="step-label">Anonymity</div>
+            <div class="step-label">Protection</div>
           </div>
           <div class="wizard-step-node" id="stepNode2" onclick="goToStep(2)">
             <div class="step-circle">2</div>
-            <div class="step-label">Department</div>
+            <div class="step-label">Category</div>
           </div>
           <div class="wizard-step-node" id="stepNode3" onclick="goToStep(3)">
             <div class="step-circle">3</div>
@@ -193,7 +237,9 @@
 
         <!-- Form Card Container -->
         <div class="card-box">
-          <form id="multiStepForm" onsubmit="handleFinalSubmit(event)">
+          <form id="multiStepForm" method="POST" action="file-complaint.php">
+            <input type="hidden" name="category_id" id="hiddenCategoryId" value="1">
+            <input type="hidden" name="location" id="hiddenLocation" value="Municipal Revenue Desk">
             
             <!-- STEP 1: Whistleblower Mode -->
             <div class="wizard-pane active" id="paneStep1">
@@ -207,7 +253,7 @@
                     <div>
                       <strong style="font-size: 1rem; color: var(--text-main); display: block; margin-bottom: 4px;">100% Anonymous Mode</strong>
                       <p class="mb-0 text-muted" style="font-size: 0.8rem; line-height: 1.6;">
-                        IP address stripped. No name or contact stored. You track exclusively with a Cryptographic Case Token.
+                        IP address stripped. No name stored on public docket. You track exclusively with a Cryptographic Case Token.
                       </p>
                     </div>
                   </div>
@@ -219,32 +265,32 @@
                     <div>
                       <strong style="font-size: 1rem; color: var(--text-main); display: block; margin-bottom: 4px;">Verified Citizen Mode</strong>
                       <p class="mb-0 text-muted" style="font-size: 0.8rem; line-height: 1.6;">
-                        Links complaint to your citizen profile. Enables direct notifications and official witness protection backing.
+                        Links complaint to your registered citizen profile (<?= $citizen_name ?>). Enables case notifications.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Citizen Identified Fields (hidden if anonymous) -->
+              <!-- Citizen Identified Fields -->
               <div id="identifiedFields" style="display: none;" class="p-3 rounded-4 bg-body-tertiary mb-4 border">
                 <h5 style="font-size: 0.95rem; margin-bottom: 1rem;">Citizen Identification Details</h5>
                 <div class="row g-3">
                   <div class="col-md-6">
                     <label class="form-label" style="font-size: 0.82rem; font-weight: 600;">Full Legal Name</label>
-                    <input type="text" class="form-control" value="Alex Doe" id="complainantName">
+                    <input type="text" class="form-control" value="<?= $citizen_name ?>" readonly>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" style="font-size: 0.82rem; font-weight: 600;">Contact Email</label>
-                    <input type="email" class="form-control" value="citizen@anti-corruption.gov" id="complainantEmail">
+                    <input type="email" class="form-control" value="<?= $citizen_email ?>" readonly>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label" style="font-size: 0.82rem; font-weight: 600;">Mobile Phone</label>
-                    <input type="tel" class="form-control" placeholder="+1 (555) 000-0000" id="complainantPhone">
+                    <input type="tel" class="form-control" value="<?= $citizen_phone ?>" placeholder="Phone number">
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label" style="font-size: 0.82rem; font-weight: 600;">Citizen NID / Voter Number</label>
-                    <input type="text" class="form-control" placeholder="e.g. NID-8921471">
+                    <label class="form-label" style="font-size: 0.82rem; font-weight: 600;">Protection Clearance</label>
+                    <input type="text" class="form-control" value="Level-1 Civic Whistleblower" readonly>
                   </div>
                 </div>
               </div>
@@ -264,85 +310,40 @@
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Target Department / Agency *</label>
-                  <select class="form-select" id="deptSelect">
-                    <option value="">Choose department...</option>
-                    <option value="Revenue & Tax Administration" selected>Revenue & Tax Administration</option>
-                    <option value="Public Works & Procurement">Public Works & Procurement (PWD)</option>
-                    <option value="Law Enforcement & Traffic">Law Enforcement & Police</option>
-                    <option value="Healthcare & Medical Procurement">Healthcare & Medical Supply</option>
-                    <option value="Education & Universities">Education & University Grants</option>
-                    <option value="Land Records & Urban Planning">Land Records & Urban Planning</option>
-                    <option value="Customs & Port Logistics">Customs & Port Logistics</option>
+                  <select class="form-select" id="deptSelect" onchange="syncLocation()">
+                    <?php foreach ($all_departments as $d): ?>
+                      <option value="<?= htmlspecialchars($d['department_name']) ?>"><?= htmlspecialchars($d['department_name']) ?></option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Office Branch / Location Jurisdiction *</label>
-                  <input type="text" class="form-control" id="locBranch" placeholder="e.g. Central City Customs Port Office, Wing B" value="Central City Customs Port Office, Wing B">
+                  <input type="text" class="form-control" id="locBranch" placeholder="e.g. Central City Customs Port Office, Wing B" value="Main Administrative Branch, District Office" oninput="syncLocation()">
                 </div>
               </div>
 
               <label class="form-label mb-2" style="font-size: 0.85rem; font-weight: 600;">Corruption Offense Category *</label>
               <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                  <div class="category-radio-card selected" onclick="selectCategoryRadio(this, 'Bribery & Extortion')">
-                    <i class="fa-solid fa-hand-holding-dollar text-warning" style="font-size: 1.3rem;"></i>
+                <?php foreach ($all_categories as $idx => $cat): 
+                  $cat_icons = [
+                    1 => 'fa-hand-holding-dollar text-warning',
+                    2 => 'fa-file-invoice-dollar text-primary',
+                    3 => 'fa-user-gear text-info',
+                    4 => 'fa-vault text-danger'
+                  ];
+                  $icon = $cat_icons[$cat['category_id']] ?? 'fa-circle-exclamation text-emerald';
+                ?>
+                <div class="col-md-6">
+                  <div class="category-radio-card <?= $idx === 0 ? 'selected' : '' ?>" onclick="selectCategoryRadio(this, '<?= $cat['category_id'] ?>', '<?= htmlspecialchars(addslashes($cat['category_name'])) ?>')">
+                    <i class="fa-solid <?= $icon ?>" style="font-size: 1.3rem;"></i>
                     <div>
-                      <strong style="font-size: 0.9rem; display: block;">Bribery / Extortion</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Demand for unlawful cash/gifts</span>
+                      <strong style="font-size: 0.9rem; display: block;"><?= htmlspecialchars($cat['category_name']) ?></strong>
+                      <span class="text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($cat['description'] ?? 'Statutory code breach') ?></span>
                     </div>
                   </div>
                 </div>
-
-                <div class="col-md-4">
-                  <div class="category-radio-card" onclick="selectCategoryRadio(this, 'Tender / Procurement Fraud')">
-                    <i class="fa-solid fa-file-invoice-dollar text-primary" style="font-size: 1.3rem;"></i>
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Tender Fraud</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Rigged bids & kickbacks</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="category-radio-card" onclick="selectCategoryRadio(this, 'Embezzlement & Funds Misuse')">
-                    <i class="fa-solid fa-vault text-danger" style="font-size: 1.3rem;"></i>
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Embezzlement</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Public fund diversion</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="category-radio-card" onclick="selectCategoryRadio(this, 'Abuse of Power / Nepotism')">
-                    <i class="fa-solid fa-user-gear text-info" style="font-size: 1.3rem;"></i>
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Abuse of Power</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Illegal orders & favors</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="category-radio-card" onclick="selectCategoryRadio(this, 'Ghost Employees / Payroll Scam')">
-                    <i class="fa-solid fa-users-slash text-secondary" style="font-size: 1.3rem;"></i>
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Ghost Payroll</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Fictitious employees/claims</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="category-radio-card" onclick="selectCategoryRadio(this, 'Other Corrupt Practices')">
-                    <i class="fa-solid fa-circle-exclamation text-emerald" style="font-size: 1.3rem;"></i>
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Other Violations</strong>
-                      <span class="text-muted" style="font-size: 0.75rem;">Statutory code breaches</span>
-                    </div>
-                  </div>
-                </div>
+                <?php endforeach; ?>
               </div>
 
               <div class="d-flex justify-content-between">
@@ -358,38 +359,28 @@
             <!-- STEP 3: Incident Details -->
             <div class="wizard-pane" id="paneStep3">
               <h3 class="mb-2" style="font-size: 1.25rem;">Incident Sequence & Demand</h3>
-              <p class="text-muted mb-4" style="font-size: 0.88rem;">Detail who was involved, dates, demanded sums, and exact circumstance.</p>
+              <p class="text-muted mb-4" style="font-size: 0.88rem;">Detail who was involved, demanded sums, and exact circumstance.</p>
 
               <div class="row g-3 mb-3">
                 <div class="col-md-8">
                   <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Complaint Title / Summary *</label>
-                  <input type="text" class="form-control" id="complaintTitle" placeholder="e.g. Unlawful $5,000 bribery demand for shipping cargo clearance stamp" value="Bribery demand for shipping container clearance certificate">
+                  <input type="text" class="form-control" name="title" id="complaintTitle" placeholder="e.g. Demand of cash kickback for building permit certificate" required>
                 </div>
 
                 <div class="col-md-4">
-                  <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Incident Date Approx *</label>
-                  <input type="date" class="form-control" id="incidentDate" value="2026-08-14">
-                </div>
-              </div>
-
-              <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                  <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Accused Official(s) Name & Title (If Known)</label>
-                  <input type="text" class="form-control" id="accusedOfficials" placeholder="e.g. Officer J. Doe, Assistant Port Examiner" value="Deputy Customs Inspector K. Vance">
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Estimated Demanded Amount / Value ($)</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control font-monospace" id="bribeAmount" placeholder="e.g. 5000" value="5000">
-                  </div>
+                  <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Severity Priority *</label>
+                  <select class="form-select" name="priority" id="complaintPriority">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
                 </div>
               </div>
 
               <div class="mb-4">
-                <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Chronological Narrative & Specific Demands *</label>
-                <textarea class="form-control" id="narrativeText" rows="5" placeholder="State clear facts: date, time, location, exact spoken words, bank accounts mentioned, vehicle numbers or witnesses present...">On August 14, 2026, during routine clearance for shipment docket #CT-8942, the inspector withheld the clearance seal and explicitly stated in private office that a cash payment of $5,000 was required before the inspection sign-off would be logged.</textarea>
+                <label class="form-label" style="font-size: 0.85rem; font-weight: 600;">Chronological Narrative & Particulars *</label>
+                <textarea class="form-control" name="description" id="narrativeText" rows="5" placeholder="State clear facts: date, time, official positions, location, demanded sum, vehicle numbers, or witnesses..." required></textarea>
               </div>
 
               <div class="d-flex justify-content-between">
@@ -405,7 +396,7 @@
             <!-- STEP 4: Evidence Dropzone -->
             <div class="wizard-pane" id="paneStep4">
               <h3 class="mb-2" style="font-size: 1.25rem;">Encrypted Evidence Vault</h3>
-              <p class="text-muted mb-4" style="font-size: 0.88rem;">Upload audio records, images, invoices, transcripts, or video files. Metadata is stripped client-side.</p>
+              <p class="text-muted mb-4" style="font-size: 0.88rem;">Attach documents, audio transcripts, invoices, or photograph files.</p>
 
               <div class="dropzone-box mb-3" onclick="triggerFileInput()">
                 <input type="file" id="evidenceFileInput" multiple style="display: none;" onchange="handleEvidenceSelect(event)">
@@ -420,35 +411,12 @@
 
               <div class="p-3 rounded-4 bg-body-tertiary border mb-4">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span style="font-size: 0.85rem; font-weight: 700;">Uploaded Evidence Bundle (2 files)</span>
+                  <span style="font-size: 0.85rem; font-weight: 700;">Uploaded Evidence Status</span>
                   <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.72rem;">
                     <i class="fa-solid fa-shield-virus me-1"></i> EXIF Stripped & SHA-256 Hashed
                   </span>
                 </div>
-
-                <div class="d-flex flex-column gap-2" id="evidenceFileList">
-                  <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-body border">
-                    <div class="d-flex align-items-center gap-2">
-                      <i class="fa-solid fa-file-audio text-warning"></i>
-                      <div>
-                        <div style="font-size: 0.85rem; font-weight: 600;">audio_recording_demands_Aug14.mp3</div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted);">4.2 MB • Hash: 0x8a92...e41b</div>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-link text-danger p-0" title="Remove"><i class="fa-solid fa-trash"></i></button>
-                  </div>
-
-                  <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-body border">
-                    <div class="d-flex align-items-center gap-2">
-                      <i class="fa-solid fa-file-pdf text-danger"></i>
-                      <div>
-                        <div style="font-size: 0.85rem; font-weight: 600;">shipping_manifest_withheld_notice.pdf</div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted);">1.8 MB • Hash: 0x3f1c...99d2</div>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-link text-danger p-0" title="Remove"><i class="fa-solid fa-trash"></i></button>
-                  </div>
-                </div>
+                <div class="extra-small text-muted" id="fileNotice">No local files attached yet. You can proceed without files if oral testimony only.</div>
               </div>
 
               <div class="d-flex justify-content-between">
@@ -473,7 +441,7 @@
                     <strong id="reviewMode" class="text-cyan"><i class="fa-solid fa-user-ninja me-1"></i> 100% Anonymous Whistleblower</strong>
                   </div>
                   <div class="col-md-6">
-                    <span class="text-muted d-block" style="font-size: 0.78rem;">Target Department:</span>
+                    <span class="text-muted d-block" style="font-size: 0.78rem;">Target Department & Location:</span>
                     <strong id="reviewDept">Revenue & Tax Administration</strong>
                   </div>
                 </div>
@@ -481,24 +449,24 @@
                 <div class="row g-3 mb-2">
                   <div class="col-md-6">
                     <span class="text-muted d-block" style="font-size: 0.78rem;">Offense Category:</span>
-                    <strong id="reviewCat">Bribery / Extortion</strong>
+                    <strong id="reviewCat">Bribery & Kickbacks</strong>
                   </div>
                   <div class="col-md-6">
-                    <span class="text-muted d-block" style="font-size: 0.78rem;">Demanded Amount:</span>
-                    <strong id="reviewAmount" class="font-monospace text-danger">$5,000 USD</strong>
+                    <span class="text-muted d-block" style="font-size: 0.78rem;">Priority Severity:</span>
+                    <strong id="reviewPriority" class="font-monospace text-warning">Medium</strong>
                   </div>
                 </div>
 
                 <div class="mb-2">
-                  <span class="text-muted d-block" style="font-size: 0.78rem;">Subject:</span>
-                  <strong id="reviewSubject">Bribery demand for shipping container clearance certificate</strong>
+                  <span class="text-muted d-block" style="font-size: 0.78rem;">Subject Summary:</span>
+                  <strong id="reviewSubject">Incident summary</strong>
                 </div>
               </div>
 
               <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" id="affirmTruthCheck" checked>
+                <input class="form-check-input" type="checkbox" id="affirmTruthCheck" checked required>
                 <label class="form-check-label" for="affirmTruthCheck" style="font-size: 0.82rem; color: var(--text-muted);">
-                  I affirm that this report is submitted in good faith and the attached records represent authentic evidence.
+                  I affirm that this corruption incident report is lodged in good faith and represents authentic witness testimony.
                 </label>
               </div>
 
@@ -507,7 +475,7 @@
                   <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
                 <button type="submit" class="btn-ccms btn-ccms-primary" style="background: linear-gradient(135deg, var(--emerald) 0%, #059669 100%);">
-                  <i class="fa-solid fa-lock"></i> Submit Encrypted Report & Generate Token
+                  <i class="fa-solid fa-lock"></i> Submit Encrypted Report &amp; Generate Token
                 </button>
               </div>
             </div>
@@ -527,13 +495,12 @@
 <script>
   let currentStep = 1;
   let selectedMode = 'anonymous';
-  let selectedCategory = 'Bribery & Extortion';
+  let selectedCategoryName = '<?= htmlspecialchars($all_categories[0]['category_name'] ?? 'Bribery') ?>';
 
   function goToStep(step) {
     if (step < 1 || step > 5) return;
     currentStep = step;
 
-    // Update nodes
     for (let i = 1; i <= 5; i++) {
       const node = document.getElementById(`stepNode${i}`);
       const pane = document.getElementById(`paneStep${i}`);
@@ -558,12 +525,17 @@
     document.getElementById('identifiedFields').style.display = mode === 'identified' ? 'block' : 'none';
   }
 
-  function selectCategoryRadio(card, catName) {
-    document.querySelectorAll('.category-radio-card').forEach(c => {
-      if (c.id !== 'optAnon' && c.id !== 'optIdentified') c.classList.remove('selected');
-    });
+  function selectCategoryRadio(card, catId, catName) {
+    document.querySelectorAll('#paneStep2 .category-radio-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
-    selectedCategory = catName;
+    document.getElementById('hiddenCategoryId').value = catId;
+    selectedCategoryName = catName;
+  }
+
+  function syncLocation() {
+    const dept = document.getElementById('deptSelect').value;
+    const branch = document.getElementById('locBranch').value;
+    document.getElementById('hiddenLocation').value = dept + ' — ' + branch;
   }
 
   function triggerFileInput() {
@@ -573,50 +545,46 @@
   function handleEvidenceSelect(e) {
     const files = e.target.files;
     if (files.length > 0) {
-      showCitizenToast(`${files.length} file(s) sanitized & encrypted!`, 'success');
+      document.getElementById('fileNotice').innerHTML = `<strong>${files.length} file(s) attached:</strong> ${Array.from(files).map(f => f.name).join(', ')}`;
+      showCitizenToast(`${files.length} evidence file(s) sanitized & hashed!`, 'success');
     }
   }
 
   function updateReviewSummary() {
+    syncLocation();
     document.getElementById('reviewMode').innerHTML = selectedMode === 'anonymous'
       ? '<i class="fa-solid fa-user-ninja me-1"></i> 100% Anonymous Whistleblower'
       : '<i class="fa-solid fa-id-card me-1"></i> Verified Citizen Profile';
-    document.getElementById('reviewDept').textContent = document.getElementById('deptSelect').value;
-    document.getElementById('reviewCat').textContent = selectedCategory;
-    document.getElementById('reviewAmount').textContent = '$' + (document.getElementById('bribeAmount').value || '0') + ' USD';
-    document.getElementById('reviewSubject').textContent = document.getElementById('complaintTitle').value;
+    document.getElementById('reviewDept').textContent = document.getElementById('hiddenLocation').value;
+    document.getElementById('reviewCat').textContent = selectedCategoryName;
+    document.getElementById('reviewPriority').textContent = document.getElementById('complaintPriority').value;
+    document.getElementById('reviewSubject').textContent = document.getElementById('complaintTitle').value || 'Untitled Incident';
   }
 
-  function handleFinalSubmit(e) {
-    e.preventDefault();
-    const token = 'CCMS-2026-' + Math.floor(1000 + Math.random() * 9000);
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Complaint Sealed & Dispatched!',
-      html: `
-        <p style="font-size:0.9rem;color:#64748b;">Your incident dossier has been cryptographically signed and routed to Anti-Corruption Cell #03.</p>
-        <div style="background:#f1f5f9;padding:12px;border-radius:12px;margin:15px 0;font-family:monospace;font-size:1.15rem;font-weight:700;color:#4f46e5;border:1px dashed #6366f1;">
-          ${token}
-        </div>
-        <p style="font-size:0.8rem;color:#94a3b8;">Copy and safeguard this Token. You will need it to track investigation milestones anonymously.</p>
-      `,
-      showCancelButton: true,
-      confirmButtonText: '<i class="fa-solid fa-radar me-1"></i> Track Case Live',
-      cancelButtonText: '<i class="fa-solid fa-download me-1"></i> Download Receipt',
-      confirmButtonColor: '#4f46e5',
-      cancelButtonColor: '#0ea5e9'
-    }).then((res) => {
-      if (res.isConfirmed) {
-        window.location.href = `track-complaint.php?case=${token}`;
-      } else {
-        showCitizenToast('Receipt generated! Redirecting to tracking...', 'info');
-        setTimeout(() => {
-          window.location.href = `track-complaint.php?case=${token}`;
-        }, 1500);
-      }
-    });
-  }
+  <?php if (!empty($success_token)): ?>
+  Swal.fire({
+    icon: 'success',
+    title: 'Complaint Sealed & Dispatched to Database!',
+    html: `
+      <p style="font-size:0.9rem;color:#64748b;">Your incident docket has been cryptographically signed and recorded in the CCMS database.</p>
+      <div style="background:#f1f5f9;padding:12px;border-radius:12px;margin:15px 0;font-family:monospace;font-size:1.25rem;font-weight:700;color:#4f46e5;border:1px dashed #6366f1;">
+        <?= $success_token ?> (Database #<?= $success_raw_id ?>)
+      </div>
+      <p style="font-size:0.8rem;color:#94a3b8;">Copy this tracking ID to view live investigation progress.</p>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fa-solid fa-radar me-1"></i> Track Case Live',
+    cancelButtonText: '<i class="fa-solid fa-folder me-1"></i> My Complaints',
+    confirmButtonColor: '#4f46e5',
+    cancelButtonColor: '#0ea5e9'
+  }).then((res) => {
+    if (res.isConfirmed) {
+      window.location.href = `track-complaint.php?case=<?= $success_raw_id ?>`;
+    } else {
+      window.location.href = `my-complaints.php`;
+    }
+  });
+  <?php endif; ?>
 </script>
 </body>
 </html>

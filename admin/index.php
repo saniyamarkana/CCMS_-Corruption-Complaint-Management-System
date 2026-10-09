@@ -1,6 +1,60 @@
 <?php
 require_once '../db.php';
 $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? 'Super Administrator');
+
+$success_msg = '';
+$error_msg = '';
+
+// ═══════════════════ 1. DELETE ACTION (GET METHOD) ═══════════════════
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+    $del_id = intval($_GET['id']);
+    if ($del_id > 0) {
+        $del_stmt = mysqli_prepare($conn, "DELETE FROM complaints WHERE complaint_id = ?");
+        if ($del_stmt) {
+            mysqli_stmt_bind_param($del_stmt, "i", $del_id);
+            if (mysqli_stmt_execute($del_stmt)) {
+                $success_msg = "Complaint #CCMS-{$del_id} deleted successfully via GET request.";
+            } else {
+                $error_msg = "Failed to delete complaint: " . mysqli_error($conn);
+            }
+            mysqli_stmt_close($del_stmt);
+        }
+    }
+}
+
+// ═══════════════════ 2. DYNAMIC KPIS & METRICS FROM DB ═══════════════════
+$count_all = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints"))[0] ?? 0;
+$count_pending = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE status IN ('Submitted', 'Pending Verification')"))[0] ?? 0;
+$count_active = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE status = 'Under Investigation'"))[0] ?? 0;
+$count_resolved = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE status IN ('Investigation Completed', 'Closed')"))[0] ?? 0;
+
+$count_officers = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM officers"))[0] ?? 0;
+$count_officers_active = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM officers WHERE status = 'Active'"))[0] ?? 0;
+$count_depts = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM departments"))[0] ?? 0;
+$count_citizens = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM users WHERE role = 'Citizen'"))[0] ?? 0;
+
+// Query priority breakdown for donut chart
+$crit_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE priority = 'Critical'"))[0] ?? 0;
+$high_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE priority = 'High'"))[0] ?? 0;
+$med_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE priority = 'Medium'"))[0] ?? 0;
+$low_count = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM complaints WHERE priority = 'Low'"))[0] ?? 0;
+
+// Query recent complaints
+$recent_res = mysqli_query($conn, "
+    SELECT c.*, u.name AS complainant_name, cat.category_name, o.name AS officer_name, d.department_name
+    FROM complaints c
+    LEFT JOIN users u ON c.user_id = u.user_id
+    LEFT JOIN categories cat ON c.category_id = cat.category_id
+    LEFT JOIN officers o ON c.assigned_officer = o.officer_id
+    LEFT JOIN departments d ON o.department_id = d.department_id
+    ORDER BY c.complaint_id DESC LIMIT 8
+");
+$recent_complaints = [];
+if ($recent_res) {
+    while ($r = mysqli_fetch_assoc($recent_res)) {
+        $recent_complaints[] = $r;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -69,13 +123,13 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
       <a href="manage-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-folder-open"></i></div>
         <span>Manage Complaints</span>
-        <span class="sb-badge">12</span>
+        <span class="sb-badge"><?= $count_all ?></span>
       </a>
 
       <a href="assign-complaints.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-user-tag"></i></div>
         <span>Assign Complaints</span>
-        <span class="sb-badge amber">5</span>
+        <span class="sb-badge amber"><?= $count_pending ?></span>
       </a>
 
       <div class="sb-section-label">Personnel</div>
@@ -105,12 +159,10 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
         <div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div>
         <span>Reports</span>
       </a>
-
       <a href="analytics.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div>
         <span>Analytics</span>
       </a>
-
       <a href="activity-logs.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div>
         <span>Activity Logs</span>
@@ -121,7 +173,7 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
       <div class="sb-admin-card">
         <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" alt="Admin" class="sb-avatar">
         <div class="sb-admin-info">
-          <div class="sb-admin-name">Insp. S. Rahman</div>
+          <div class="sb-admin-name"><?= $admin_name ?></div>
           <div class="sb-admin-role">Super Administrator</div>
         </div>
       </div>
@@ -138,10 +190,11 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
           <i class="fa-solid fa-bars-staggered"></i>
         </button>
 
-        <div class="search-wrap d-none d-md-block">
+        <!-- SEARCH VIA GET METHOD -->
+        <form method="GET" action="manage-complaints.php" class="search-wrap d-none d-md-flex align-items-center m-0">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="tableSearch" placeholder="Search case ID, target dept, or category…">
-        </div>
+          <input type="text" name="search" id="tableSearch" placeholder="Search case ID, target dept, or category…">
+        </form>
       </div>
 
       <div class="nav-actions">
@@ -156,58 +209,17 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
 
-        <!-- Notifications -->
-        <div class="dropdown">
-          <button class="nav-icon-btn" data-bs-toggle="dropdown" aria-expanded="false" id="notifBtn">
-            <i class="fa-regular fa-bell"></i>
-            <span class="nav-dot"></span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end" style="width:320px; padding:12px;">
-            <div class="d-flex align-items-center justify-content-between mb-3 px-1">
-              <span style="font-weight:800;font-size:.9rem;">Notifications</span>
-              <span class="pill pill-new">3 New</span>
-            </div>
-
-            <div class="notif-item">
-              <div class="notif-icon" style="background:rgba(244,63,94,.15);color:#f43f5e;">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-              </div>
-              <div>
-                <div style="font-weight:700;font-size:.8rem;">Critical: Bribery Case Escalated</div>
-                <div class="extra-small text-muted">Ref #CCMS-9821 · Public Works Dept</div>
-                <div class="extra-small text-muted" style="margin-top:2px;">5 minutes ago</div>
-              </div>
-            </div>
-
-            <div class="notif-item mt-1">
-              <div class="notif-icon" style="background:rgba(245,158,11,.15);color:#f59e0b;">
-                <i class="fa-solid fa-user-check"></i>
-              </div>
-              <div>
-                <div style="font-weight:700;font-size:.8rem;">SLA Deadline Approaching</div>
-                <div class="extra-small text-muted">2 complaints approaching SLA cutoff</div>
-                <div class="extra-small text-muted" style="margin-top:2px;">22 minutes ago</div>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-            <a href="activity-logs.php" class="d-block text-center extra-small fw-bold" style="color:var(--indigo-500);">
-              View all activity logs →
-            </a>
-          </div>
-        </div>
-
         <!-- Profile -->
         <div class="dropdown">
           <div class="nav-profile-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=80&q=80" class="nav-avatar" alt="Admin">
             <div class="d-none d-md-block">
-              <div class="nav-profile-name">Inspector Admin</div>
+              <div class="nav-profile-name"><?= $admin_name ?></div>
               <div class="nav-profile-role">Super Administrator</div>
             </div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Citizen Portal</a></li>
+            <li><a class="dropdown-item" href="../index.php"><i class="fa-solid fa-globe"></i> View Public Sentinel</a></li>
             <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
             <li><a class="dropdown-item text-danger" href="./login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
@@ -218,6 +230,21 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
 
     <!-- ═══════════════════ CONTENT BODY ═══════════════════ -->
     <main class="content-body">
+      <?php if (!empty($success_msg)): ?>
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+          <i class="fa-solid fa-circle-check fs-5"></i>
+          <div><?= htmlspecialchars($success_msg) ?></div>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+      <?php endif; ?>
+
+      <?php if (!empty($error_msg)): ?>
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+          <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+          <div><?= htmlspecialchars($error_msg) ?></div>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+      <?php endif; ?>
 
       <!-- Page Header -->
       <div class="page-header">
@@ -228,7 +255,7 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
             <span>Executive Command Center</span>
           </div>
           <h1 class="page-title">Anti-Corruption Command Center</h1>
-          <p class="page-subtitle">Real-time case tracking, officer workloads, SLA enforcement, and automated threat triage.</p>
+          <p class="page-subtitle">Fully dynamic oversight, real-time case triage, GET-based operations, and live database metrics.</p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
           <button class="btn btn-ghost btn-export-pdf" data-doc-name="Executive_Dashboard_Summary">
@@ -240,34 +267,34 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
         </div>
       </div>
 
-      <!-- KPI CARDS -->
+      <!-- DYNAMIC KPI CARDS FROM DATABASE -->
       <div class="kpi-grid">
         <div class="kpi-card indigo">
           <div class="kpi-icon"><i class="fa-solid fa-folder-open"></i></div>
-          <div class="kpi-value counter-value">1482</div>
+          <div class="kpi-value counter-value"><?= $count_all ?></div>
           <div class="kpi-label">Total Dockets Ingested</div>
-          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4% this month</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-database"></i> Live Database</div>
         </div>
 
         <div class="kpi-card amber">
           <div class="kpi-icon"><i class="fa-solid fa-hourglass-half"></i></div>
-          <div class="kpi-value counter-value">245</div>
+          <div class="kpi-value counter-value"><?= $count_pending ?></div>
           <div class="kpi-label">Pending / Triage Queue</div>
-          <div class="kpi-trend down"><i class="fa-solid fa-arrow-trend-down"></i> -4.1% vs last week</div>
+          <div class="kpi-trend down"><i class="fa-solid fa-clock"></i> Action Needed</div>
         </div>
 
         <div class="kpi-card rose">
           <div class="kpi-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-          <div class="kpi-value counter-value">89</div>
+          <div class="kpi-value counter-value"><?= $count_active ?></div>
           <div class="kpi-label">Active Field Probes</div>
-          <div class="kpi-trend up"><i class="fa-solid fa-bolt"></i> High Priority Focus</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-bolt"></i> High Priority</div>
         </div>
 
         <div class="kpi-card emerald">
           <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="kpi-value counter-value">1078</div>
+          <div class="kpi-value counter-value"><?= $count_resolved ?></div>
           <div class="kpi-label">Successfully Resolved</div>
-          <div class="kpi-trend up"><i class="fa-solid fa-shield-halved"></i> 84.6% Resolution Rate</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-shield-halved"></i> Closed Cases</div>
         </div>
       </div>
 
@@ -280,8 +307,8 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
                 <i class="fa-solid fa-user-shield"></i>
               </div>
               <div>
-                <div class="kpi-value" style="font-size:1.5rem;">64 Officers</div>
-                <div class="kpi-label">58 Active On Duty</div>
+                <div class="kpi-value" style="font-size:1.5rem;"><?= $count_officers ?> Officers</div>
+                <div class="kpi-label"><?= $count_officers_active ?> Active On Duty</div>
               </div>
             </div>
           </div>
@@ -293,8 +320,8 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
                 <i class="fa-solid fa-building-flag"></i>
               </div>
               <div>
-                <div class="kpi-value" style="font-size:1.5rem;">18 Departments</div>
-                <div class="kpi-label">4 Critical Watch Zones</div>
+                <div class="kpi-value" style="font-size:1.5rem;"><?= $count_depts ?> Departments</div>
+                <div class="kpi-label">Monitored Sectors</div>
               </div>
             </div>
           </div>
@@ -306,7 +333,7 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
                 <i class="fa-solid fa-users"></i>
               </div>
               <div>
-                <div class="kpi-value counter-value" style="font-size:1.5rem;">12450</div>
+                <div class="kpi-value counter-value" style="font-size:1.5rem;"><?= $count_citizens ?></div>
                 <div class="kpi-label">Registered Citizens</div>
               </div>
             </div>
@@ -325,7 +352,7 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
               </div>
               <div class="d-flex align-items-center gap-2">
                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace" style="font-size:0.75rem;">
-                  <i class="fa-solid fa-circle text-success me-1" style="font-size:0.5rem;"></i> Live Ingestion
+                  <i class="fa-solid fa-circle text-success me-1" style="font-size:0.5rem;"></i> Live DB
                 </span>
               </div>
             </div>
@@ -342,40 +369,37 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
             <div class="card-box-head">
               <div class="card-box-title">
                 <div class="title-icon"><i class="fa-solid fa-chart-pie"></i></div>
-                Severity Classification
+                Severity Classification (DB)
               </div>
-              <span class="extra-small text-muted font-monospace fw-bold">1,482 Active</span>
+              <span class="extra-small text-muted font-monospace fw-bold"><?= $count_all ?> Total</span>
             </div>
             <div class="card-box-body d-flex flex-column align-items-center justify-content-center" style="padding: 16px 20px 20px;">
               <div class="chart-container-donut">
                 <canvas id="severityChart"></canvas>
                 <div class="donut-center-info">
-                  <div class="donut-center-num">1,482</div>
+                  <div class="donut-center-num"><?= $count_all ?></div>
                   <div class="donut-center-txt">Dockets</div>
                 </div>
               </div>
               <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f43f5e;display:inline-block;"></span> Critical (18%)</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block;"></span> High (32%)</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#0ea5e9;display:inline-block;"></span> Medium (35%)</div>
-                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#10b981;display:inline-block;"></span> Low (15%)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f43f5e;display:inline-block;"></span> Critical (<?= $crit_count ?>)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block;"></span> High (<?= $high_count ?>)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#0ea5e9;display:inline-block;"></span> Medium (<?= $med_count ?>)</div>
+                <div class="d-flex align-items-center gap-1 extra-small fw-bold"><span style="width:10px;height:10px;border-radius:3px;background:#10b981;display:inline-block;"></span> Low (<?= $low_count ?>)</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Recent Complaints Table -->
+      <!-- DYNAMIC RECENT COMPLAINTS TABLE (FROM DB) -->
       <div class="card-box">
         <div class="card-box-head">
           <div class="card-box-title">
             <div class="title-icon"><i class="fa-solid fa-list-check"></i></div>
-            High-Priority Triage Queue
+            Live Complaints Triage Queue (Recent Cases)
           </div>
           <div class="d-flex gap-2">
-            <button class="btn btn-ghost btn-sm btn-export-pdf" data-doc-name="Recent_Complaints_Export">
-              <i class="fa-solid fa-file-pdf text-danger"></i> PDF Export
-            </button>
             <a href="manage-complaints.php" class="btn btn-primary btn-sm">View Full Ledger</a>
           </div>
         </div>
@@ -384,75 +408,70 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
           <table class="tbl" id="complaintsTable">
             <thead>
               <tr>
-                <th style="width:40px;" class="no-sort"><input type="checkbox" class="form-check-input select-all-checkbox" id="selectAllRows"></th>
                 <th>Tracking ID</th>
                 <th>Complainant</th>
-                <th>Target Department</th>
+                <th>Title &amp; Location</th>
                 <th>Category</th>
                 <th>Priority</th>
-                <th>SLA Clock</th>
+                <th>Assigned Officer</th>
                 <th>Status</th>
-                <th class="text-end no-sort">Action</th>
+                <th class="text-end no-sort">Action (GET Method)</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
-                <td>
-                  <a href="manage-complaints.php" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9821</a>
-                  <div class="extra-small text-muted">Aug 07, 2026</div>
-                </td>
-                <td>
-                  <span class="d-flex align-items-center gap-2">
-                    <span style="background:var(--g-dark);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;">
-                      <i class="fa-solid fa-user-secret"></i>
-                    </span>
-                    <div>
-                      <div class="fw-semibold" style="font-size:.82rem;">Whistleblower WB-9921</div>
-                      <div class="extra-small text-muted">Encrypted Token</div>
+              <?php if (!empty($recent_complaints)): ?>
+                <?php foreach ($recent_complaints as $c): 
+                  $cid = $c['complaint_id'];
+                  $badge_p = match($c['priority']) {
+                    'Critical' => 'chip-critical',
+                    'High' => 'chip-high',
+                    'Medium' => 'chip-medium',
+                    default => 'chip-low'
+                  };
+                  $badge_s = match($c['status']) {
+                    'Submitted' => 'pill-new',
+                    'Pending Verification' => 'pill-pending',
+                    'Assigned' => 'pill-assigned',
+                    'Under Investigation' => 'pill-investigating',
+                    'Investigation Completed', 'Closed' => 'pill-active',
+                    default => 'pill-new'
+                  };
+                ?>
+                <tr>
+                  <td>
+                    <a href="manage-complaints.php?search=<?= $cid ?>" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-<?= $cid ?></a>
+                    <div class="extra-small text-muted"><?= date('M d, Y', strtotime($c['created_at'])) ?></div>
+                  </td>
+                  <td>
+                    <div class="fw-semibold" style="font-size:.82rem;"><?= htmlspecialchars($c['complainant_name'] ?? 'Anonymous') ?></div>
+                    <div class="extra-small text-muted"><?= htmlspecialchars($c['location'] ?? 'N/A') ?></div>
+                  </td>
+                  <td style="max-width: 220px;">
+                    <div class="fw-semibold text-truncate" style="font-size:.82rem;" title="<?= htmlspecialchars($c['title']) ?>">
+                      <?= htmlspecialchars($c['title']) ?>
                     </div>
-                  </span>
-                </td>
-                <td style="font-size:.82rem;">Public Works &amp; Transport</td>
-                <td style="font-size:.82rem;">Bribery / Kickbacks</td>
-                <td><span class="chip-critical">Critical</span></td>
-                <td><span class="sla sla-critical"><i class="fa-solid fa-hourglass-half"></i> 12h Left</span></td>
-                <td><span class="pill pill-new pill-live">New Case</span></td>
-                <td class="text-end">
-                  <div class="d-inline-flex gap-1">
-                    <button class="btn btn-ghost btn-icon btn-sm" onclick="showDashboardCaseModal('#CCMS-9821', 'Public Works & Transport', 'Bribery / Kickbacks', 'Critical', 'Whistleblower WB-9921', 'Demand of 15% kickback commission on highway bridge maintenance contract.')" title="View"><i class="fa-solid fa-eye text-primary"></i></button>
-                    <a href="assign-complaints.php" class="btn btn-primary btn-icon btn-sm" title="Assign"><i class="fa-solid fa-user-plus"></i></a>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td><input type="checkbox" class="form-check-input row-checkbox"></td>
-                <td>
-                  <a href="manage-complaints.php" class="fw-bold" style="color:var(--indigo-600); font-family:var(--font-mono);">#CCMS-9820</a>
-                  <div class="extra-small text-muted">Aug 06, 2026</div>
-                </td>
-                <td>
-                  <span class="d-flex align-items-center gap-2">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="">
-                    <div>
-                      <div class="fw-semibold" style="font-size:.82rem;">Tariq Mahmood</div>
-                      <div class="extra-small text-muted">Citizen #88412</div>
+                  </td>
+                  <td style="font-size:.82rem;"><span class="badge bg-light text-dark border"><?= htmlspecialchars($c['category_name'] ?? 'General') ?></span></td>
+                  <td><span class="<?= $badge_p ?>"><?= htmlspecialchars($c['priority']) ?></span></td>
+                  <td>
+                    <div class="fw-semibold" style="font-size:.82rem;"><?= htmlspecialchars($c['officer_name'] ?? 'Unallocated') ?></div>
+                  </td>
+                  <td><span class="pill <?= $badge_s ?> pill-live"><?= htmlspecialchars($c['status']) ?></span></td>
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-1">
+                      <button class="btn btn-ghost btn-icon btn-sm" onclick="showDashboardCaseModal('#CCMS-<?= $cid ?>', '<?= addslashes($c['location'] ?? 'N/A') ?>', '<?= addslashes($c['category_name'] ?? '') ?>', '<?= $c['priority'] ?>', '<?= addslashes($c['complainant_name'] ?? 'Anonymous') ?>', '<?= addslashes($c['description']) ?>')" title="View Case"><i class="fa-solid fa-eye text-primary"></i></button>
+                      <a href="assign-complaints.php?search=<?= $cid ?>" class="btn btn-primary btn-icon btn-sm" title="Assign Officer"><i class="fa-solid fa-user-plus"></i></a>
+                      <!-- DELETE VIA GET METHOD -->
+                      <a href="index.php?action=delete&id=<?= $cid ?>" onclick="return confirm('Delete complaint #CCMS-<?= $cid ?> via GET?');" class="btn btn-ghost btn-icon btn-sm text-danger" title="Delete via GET"><i class="fa-solid fa-trash"></i></a>
                     </div>
-                  </span>
-                </td>
-                <td style="font-size:.82rem;">Land &amp; Revenue Board</td>
-                <td style="font-size:.82rem;">Embezzlement</td>
-                <td><span class="chip-high">High</span></td>
-                <td><span class="sla sla-warn"><i class="fa-solid fa-hourglass-half"></i> 2 Days</span></td>
-                <td><span class="pill pill-investigating pill-live">Investigating</span></td>
-                <td class="text-end">
-                  <div class="d-inline-flex gap-1">
-                    <button class="btn btn-ghost btn-icon btn-sm" onclick="showDashboardCaseModal('#CCMS-9820', 'Land & Revenue Board', 'Embezzlement', 'High', 'Tariq Mahmood', 'Unauthorized land record modification and fraudulent deed issuance.')" title="View"><i class="fa-solid fa-eye text-primary"></i></button>
-                    <a href="assign-complaints.php" class="btn btn-ghost btn-icon btn-sm" title="Manage Assignment"><i class="fa-solid fa-user-shield text-info"></i></a>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="8" class="text-center py-4 text-muted">No complaints currently in database</td>
+                </tr>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>
@@ -468,39 +487,30 @@ $admin_name = htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['name'] ?? '
       <div class="modal-header">
         <div>
           <div class="d-flex align-items-center gap-2 mb-1">
-            <span class="pill pill-new" id="modalCaseStatus">New Case</span>
             <span class="chip-critical" id="modalCasePriority">Critical</span>
           </div>
-          <h5 class="modal-title" id="modalCaseTitle">#CCMS-9821 — Bribery Case File</h5>
+          <h5 class="modal-title" id="modalCaseTitle">#CCMS-0000 — Case File</h5>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" style="padding:24px;">
-        <div style="background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-          <i class="fa-solid fa-triangle-exclamation" style="color:#f43f5e;font-size:1.1rem;"></i>
-          <div>
-            <div style="font-weight:700;font-size:.9rem;color:#f43f5e;">CRITICAL SLA WINDOW ACTIVE</div>
-            <div class="extra-small text-muted">Immediate officer action and evidence preservation required.</div>
-          </div>
-        </div>
-
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;">
               <div class="extra-small fw-bold text-muted mb-1">Complainant</div>
-              <div class="fw-bold" id="modalCaseComplainant">Whistleblower WB-9921</div>
+              <div class="fw-bold" id="modalCaseComplainant">Citizen</div>
             </div>
           </div>
           <div class="col-md-6">
             <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;">
-              <div class="extra-small fw-bold text-muted mb-1">Target Department</div>
-              <div class="fw-bold" id="modalCaseDept">Public Works &amp; Transport Board</div>
+              <div class="extra-small fw-bold text-muted mb-1">Jurisdiction / Location</div>
+              <div class="fw-bold" id="modalCaseDept">Location</div>
             </div>
           </div>
         </div>
 
         <div class="mb-3">
-          <div class="extra-small fw-bold text-muted mb-1">Allegation Summary</div>
+          <div class="extra-small fw-bold text-muted mb-1">Allegation Statement</div>
           <p class="extra-small text-muted" id="modalCaseDesc" style="line-height:1.6;"></p>
         </div>
       </div>
@@ -537,93 +547,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (trendCanvas) {
     const ctx = trendCanvas.getContext('2d');
-
-    // Create rich glowing gradients
     const gradPrimary = ctx.createLinearGradient(0, 0, 0, 280);
     gradPrimary.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
-    gradPrimary.addColorStop(0.6, 'rgba(99, 102, 241, 0.08)');
     gradPrimary.addColorStop(1, 'rgba(99, 102, 241, 0.00)');
-
-    const gradSuccess = ctx.createLinearGradient(0, 0, 0, 280);
-    gradSuccess.addColorStop(0, 'rgba(16, 185, 129, 0.30)');
-    gradSuccess.addColorStop(0.6, 'rgba(16, 185, 129, 0.06)');
-    gradSuccess.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
 
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug (Live)'],
-        datasets: [
-          {
-            label: 'Complaints Ingested',
-            data: [120, 145, 190, 175, 210, 240, 275, 298],
-            borderColor: '#6366f1',
-            backgroundColor: gradPrimary,
-            borderWidth: 3,
-            fill: true,
-            tension: 0.38,
-            pointBackgroundColor: '#6366f1',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 2,
-            pointRadius: 4.5,
-            pointHoverRadius: 7
-          },
-          {
-            label: 'Cases Resolved',
-            data: [95, 130, 160, 155, 195, 220, 252, 270],
-            borderColor: '#10b981',
-            backgroundColor: gradSuccess,
-            borderWidth: 3,
-            fill: true,
-            tension: 0.38,
-            pointBackgroundColor: '#10b981',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 2,
-            pointRadius: 4.5,
-            pointHoverRadius: 7
-          }
-        ]
+        labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep (Live)'],
+        datasets: [{
+          label: 'Complaints Ingested',
+          data: [2, 3, 5, 8, <?= $count_all ?>],
+          borderColor: '#6366f1',
+          backgroundColor: gradPrimary,
+          borderWidth: 3,
+          fill: true,
+          tension: 0.38,
+          pointBackgroundColor: '#6366f1'
+        }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'top',
-            align: 'end',
-            labels: {
-              boxWidth: 12,
-              boxHeight: 12,
-              borderRadius: 6,
-              useBorderRadius: true,
-              font: baseFont,
-              padding: 16,
-              color: '#94a3b8'
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(12, 18, 34, 0.95)',
-            titleColor: '#f8fafc',
-            bodyColor: '#cbd5e1',
-            borderColor: 'rgba(99, 102, 241, 0.3)',
-            borderWidth: 1.5,
-            padding: 12,
-            cornerRadius: 12,
-            titleFont: { family: 'Plus Jakarta Sans', size: 13, weight: '700' },
-            bodyFont: { family: 'Plus Jakarta Sans', size: 12 }
-          }
-        },
+        plugins: { legend: { display: false } },
         scales: {
-          x: {
-            grid: { display: false },
-            ticks: { font: baseFont, color: '#94a3b8' }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { color: 'rgba(148, 163, 184, 0.1)' },
-            ticks: { font: baseFont, color: '#94a3b8', stepSize: 50 }
-          }
+          x: { grid: { display: false } },
+          y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.1)' } }
         }
       }
     });
@@ -635,34 +584,16 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
         labels: ['Critical', 'High', 'Medium', 'Low'],
         datasets: [{
-          data: [18, 32, 35, 15],
+          data: [<?= max(1, $crit_count) ?>, <?= max(1, $high_count) ?>, <?= max(1, $med_count) ?>, <?= max(1, $low_count) ?>],
           backgroundColor: ['#f43f5e', '#f59e0b', '#0ea5e9', '#10b981'],
-          borderColor: 'transparent',
-          borderWidth: 0,
-          hoverOffset: 8
+          borderWidth: 0
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '76%',
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(12, 18, 34, 0.95)',
-            titleColor: '#f8fafc',
-            bodyColor: '#cbd5e1',
-            borderColor: 'rgba(99, 102, 241, 0.3)',
-            borderWidth: 1.5,
-            padding: 10,
-            cornerRadius: 10,
-            callbacks: {
-              label: function(context) {
-                return ` ${context.label}: ${context.raw}% of dockets`;
-              }
-            }
-          }
-        }
+        cutout: '74%',
+        plugins: { legend: { display: false } }
       }
     });
   }
