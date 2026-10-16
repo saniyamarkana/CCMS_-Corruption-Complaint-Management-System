@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once '../auth.php';
+require_role('officer', 'login.php');
 require_once '../db.php';
 $officer_name = htmlspecialchars($_SESSION['officer_name'] ?? $_SESSION['name'] ?? 'Investigating Officer');
 $officer_desig = htmlspecialchars($_SESSION['designation'] ?? 'Anti-Corruption Inspector');
@@ -86,15 +88,6 @@ $initials = strtoupper(substr($officer_name, 0, 2));
         <span>Citizen Portal</span>
       </a>
 
-      <a href="../admin/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-lock"></i></div>
-        <span>Admin Headquarters</span>
-      </a>
-
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
     </nav>
 
     <div class="sb-footer">
@@ -134,7 +127,7 @@ $initials = strtoupper(substr($officer_name, 0, 2));
             <li><a class="dropdown-item" href="register.php"><i class="fa-solid fa-user-plus me-2"></i> Register New Officer</a></li>
             <li><a class="dropdown-item" href="my-cases.php"><i class="fa-solid fa-folder-tree me-2"></i> Active Queue</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off me-2"></i> Secure Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="../logout.php"><i class="fa-solid fa-power-off me-2"></i> Secure Logout</a></li>
           </ul>
         </div>
       </div>

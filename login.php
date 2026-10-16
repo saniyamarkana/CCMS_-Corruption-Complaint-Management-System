@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = 'admin@ccms.com';
                 $_SESSION['role'] = 'admin';
 
-                $success_msg = 'Admin authorization successful! Opening Command Center...';
-                $redirect_url = './admin/index.php';
+                session_regenerate_id(true);
+                header('Location: admin/index.php');
+                exit;
             } else {
                 $error_msg = 'Invalid Admin credentials. Access denied.';
             }
@@ -53,8 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['department_id'] = $officer['department_id'] ?? 1;
                         $_SESSION['role'] = 'officer';
 
-                        $success_msg = "Welcome back, {$officer['name']}! Opening Officer Command...";
-                        $redirect_url = 'officer/index.php';
+                        session_regenerate_id(true);
+                        header('Location: officer/index.php');
+                        exit;
                     }
                 } else {
                     $error_msg = 'Invalid Officer email or password.';
@@ -84,8 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'Citizen';
                     $_SESSION['role'] = 'citizen';
 
-                    $success_msg = "Welcome back, {$user['name']}! Opening Citizen Portal...";
-                    $redirect_url = 'citizen/dashboard.php';
+                    session_regenerate_id(true);
+                    header('Location: citizen/dashboard.php');
+                    exit;
                 } else {
                     $error_msg = 'Invalid Citizen email or password.';
                 }

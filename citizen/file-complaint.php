@@ -1,40 +1,203 @@
 <?php
+require_once '../auth.php';
+require_role('citizen', 'login.php');
 require_once '../db.php';
 
 $success_token = '';
 $error_msg = '';
 
-$citizen_id = $_SESSION['user_id'] ?? 16; // logged in user ID
+$citizen_id = (int) $_SESSION['user_id'];
 $citizen_name = htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Alex Doe');
 $citizen_email = htmlspecialchars($_SESSION['user_email'] ?? $_SESSION['email'] ?? 'citizen@ccms.com');
 $citizen_phone = htmlspecialchars($_SESSION['user_phone'] ?? '');
 $initials = strtoupper(substr($citizen_name, 0, 2));
 
 // ═══════════════════ PROCESS COMPLAINT LODGEMENT ═══════════════════
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || (isset($_GET['action']) && $_GET['action'] === 'lodge_case')) {
-    $src = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
-    $title = trim($src['title'] ?? '');
-    $category_id = intval($src['category_id'] ?? 1);
-    $location = trim($src['location'] ?? 'Municipal Office, Central District');
-    $description = trim($src['description'] ?? '');
-    $priority = trim($src['priority'] ?? 'Medium');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lodge_complaint'])) {
+    $title = trim($_POST['title'] ?? '');
+    $category_id = (int) ($_POST['category_id'] ?? 1);
+    $location = trim($_POST['location'] ?? 'Municipal Office, Central District');
+    $description = trim($_POST['description'] ?? '');
+    $priority = trim($_POST['priority'] ?? 'Medium');
+    $evidenceFiles = [];
+    $movedFiles = [];
+    $uploadDirectory = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'evidence';
+    $allowedMimeTypes = [
+        'pdf' => ['application/pdf'],
+        'jpg' => ['image/jpeg'],
+        'jpeg' => ['image/jpeg'],
+        'png' => ['image/png'],
+        'mp3' => ['audio/mpeg', 'audio/mp3', 'audio/x-mpeg'],
+        'mp4' => ['video/mp4', 'application/mp4'],
+        'docx' => [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/zip',
+            'application/x-zip',
+        ],
+    ];
+    $uploadErrors = [
+        UPLOAD_ERR_INI_SIZE => 'exceeds the server upload size limit.',
+        UPLOAD_ERR_FORM_SIZE => 'exceeds the allowed file size.',
+        UPLOAD_ERR_PARTIAL => 'was only partially uploaded. Please try again.',
+        UPLOAD_ERR_NO_TMP_DIR => 'could not be uploaded because the server temporary folder is missing.',
+        UPLOAD_ERR_CANT_WRITE => 'could not be written by the server.',
+        UPLOAD_ERR_EXTENSION => 'was rejected by a server extension.',
+    ];
 
-    if (!empty($title) && !empty($description)) {
-        $stmt = mysqli_prepare($conn, "INSERT INTO complaints (user_id, category_id, title, description, location, priority, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'Submitted', NOW())");
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "iissss", $citizen_id, $category_id, $title, $description, $location, $priority);
-            if (mysqli_stmt_execute($stmt)) {
-                $new_id = mysqli_insert_id($conn);
-                $success_token = "CCMS-2026-" . str_pad($new_id, 4, '0', STR_PAD_LEFT);
-                $success_raw_id = $new_id;
-            } else {
-                $error_msg = "Database insertion error: " . mysqli_error($conn);
-            }
-            mysqli_stmt_close($stmt);
-        }
+    if ($title === '' || $description === '') {
+        $error_msg = 'Please provide both complaint title and narrative particulars.';
+    } elseif (empty($_FILES['evidence_files'])) {
+        $error_msg = 'The form data was not received. Please retry your submission; check the server post_max_size setting if this continues.';
     } else {
-        $error_msg = "Please provide both complaint title and narrative particulars.";
+        $files = $_FILES['evidence_files'];
+        $fileCount = is_array($files['name'] ?? null) ? count($files['name']) : 0;
+
+        for ($i = 0; $i < $fileCount; $i++) {
+            $uploadError = (int) ($files['error'][$i] ?? UPLOAD_ERR_NO_FILE);
+            if ($uploadError === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            if ($uploadError !== UPLOAD_ERR_OK) {
+                $fileName = basename(str_replace('\\', '/', (string) ($files['name'][$i] ?? 'Selected file')));
+                $error_msg = $fileName . ' ' . ($uploadErrors[$uploadError] ?? 'could not be uploaded.');
+                break;
+            }
+
+            $temporaryPath = (string) ($files['tmp_name'][$i] ?? '');
+            $fileSize = (int) ($files['size'][$i] ?? 0);
+            $originalName = basename(str_replace('\\', '/', (string) ($files['name'][$i] ?? '')));
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+            if ($fileSize <= 0 || $fileSize > 40 * 1024 * 1024) {
+                $error_msg = $originalName . ' must be no larger than 40 MB.';
+                break;
+            }
+            if (!isset($allowedMimeTypes[$extension]) || !is_uploaded_file($temporaryPath)) {
+                $error_msg = $originalName . ' has an unsupported or invalid file type.';
+                break;
+            }
+
+            $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+            if ($fileInfo === false) {
+                $error_msg = 'The server could not validate uploaded file types.';
+                break;
+            }
+            $mimeType = finfo_file($fileInfo, $temporaryPath);
+            finfo_close($fileInfo);
+
+            if (!is_string($mimeType) || !in_array($mimeType, $allowedMimeTypes[$extension], true)) {
+                $error_msg = $originalName . ' does not match its file extension.';
+                break;
+            }
+
+            $storedName = bin2hex(random_bytes(16)) . '.' . $extension;
+            $evidenceFiles[] = [
+                'temporary_path' => $temporaryPath,
+                'file_name' => substr(preg_replace('/[^A-Za-z0-9._ -]/', '_', $originalName), 0, 255),
+                'file_path' => 'uploads/evidence/' . $storedName,
+                'destination' => $uploadDirectory . DIRECTORY_SEPARATOR . $storedName,
+                'file_size' => $fileSize,
+                'file_type' => $mimeType,
+            ];
+        }
+
+        if ($error_msg === '' && $evidenceFiles !== [] && !is_dir($uploadDirectory)
+            && !mkdir($uploadDirectory, 0750, true) && !is_dir($uploadDirectory)) {
+            $error_msg = 'The evidence storage folder could not be created.';
+        }
+
+        if ($error_msg === '') {
+            if (!mysqli_begin_transaction($conn)) {
+                $error_msg = 'Could not start complaint storage transaction: ' . mysqli_error($conn);
+            } else {
+                $complaintEvidencePath = $evidenceFiles[0]['file_path'] ?? null;
+                $complaintStatement = mysqli_prepare(
+                    $conn,
+                    "INSERT INTO complaints (user_id, category_id, title, description, location, priority, status, evidence, created_at) VALUES (?, ?, ?, ?, ?, ?, 'Submitted', ?, NOW())"
+                );
+
+                if (!$complaintStatement) {
+                    $error_msg = 'Could not prepare complaint storage: ' . mysqli_error($conn);
+                } else {
+                    mysqli_stmt_bind_param(
+                        $complaintStatement,
+                        'iisssss',
+                        $citizen_id,
+                        $category_id,
+                        $title,
+                        $description,
+                        $location,
+                        $priority,
+                        $complaintEvidencePath
+                    );
+                    if (!mysqli_stmt_execute($complaintStatement)) {
+                        $error_msg = 'Could not save complaint: ' . mysqli_stmt_error($complaintStatement);
+                    }
+                    mysqli_stmt_close($complaintStatement);
+                }
+
+                $new_id = $error_msg === '' ? (int) mysqli_insert_id($conn) : 0;
+                $evidenceStatement = null;
+                if ($error_msg === '' && $evidenceFiles !== []) {
+                    $evidenceStatement = mysqli_prepare(
+                        $conn,
+                        'INSERT INTO complaint_evidence (complaint_id, file_name, file_path, file_size, file_type) VALUES (?, ?, ?, ?, ?)'
+                    );
+                    if (!$evidenceStatement) {
+                        $error_msg = 'Could not prepare evidence storage: ' . mysqli_error($conn);
+                    }
+                }
+
+                if ($error_msg === '') {
+                    foreach ($evidenceFiles as $evidenceFile) {
+                        if (!move_uploaded_file($evidenceFile['temporary_path'], $evidenceFile['destination'])) {
+                            $error_msg = 'Could not move uploaded evidence into secure storage.';
+                            break;
+                        }
+                        $movedFiles[] = $evidenceFile['destination'];
+
+                        if ($evidenceStatement) {
+                            mysqli_stmt_bind_param(
+                                $evidenceStatement,
+                                'issis',
+                                $new_id,
+                                $evidenceFile['file_name'],
+                                $evidenceFile['file_path'],
+                                $evidenceFile['file_size'],
+                                $evidenceFile['file_type']
+                            );
+                            if (!mysqli_stmt_execute($evidenceStatement)) {
+                                $error_msg = 'Could not save evidence details: ' . mysqli_stmt_error($evidenceStatement);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ($evidenceStatement) {
+                    mysqli_stmt_close($evidenceStatement);
+                }
+
+                if ($error_msg === '' && mysqli_commit($conn)) {
+                    $success_token = 'CCMS-2026-' . str_pad((string) $new_id, 4, '0', STR_PAD_LEFT);
+                    $success_raw_id = $new_id;
+                } else {
+                    if ($error_msg === '') {
+                        $error_msg = 'Could not commit complaint and evidence to the database: ' . mysqli_error($conn);
+                    }
+                    mysqli_rollback($conn);
+                    foreach ($movedFiles as $movedFile) {
+                        if (file_exists($movedFile) && !unlink($movedFile)) {
+                            error_log('Failed to remove uncommitted complaint evidence file: ' . $movedFile);
+                        }
+                    }
+                }
+            }
+        }
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST)
+    && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+    $error_msg = 'The submitted form exceeded the server request size limit. Please reduce the upload size or ask the administrator to increase post_max_size.';
 }
 
 // Fetch categories from DB
@@ -155,21 +318,6 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
         <span>Encrypted Alerts</span>
       </a>
 
-      <div class="sb-section-label">Account & External</div>
-      <a href="../officer/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Officer Command</span>
-      </a>
-
-      <a href="../admin/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-lock"></i></div>
-        <span>Admin Headquarters</span>
-      </a>
-
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
     </nav>
 
     <div class="sb-footer">
@@ -237,7 +385,8 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
 
         <!-- Form Card Container -->
         <div class="card-box">
-          <form id="multiStepForm" method="POST" action="file-complaint.php">
+          <form id="multiStepForm" method="POST" action="file-complaint.php" enctype="multipart/form-data">
+            <input type="hidden" name="lodge_complaint" value="1">
             <input type="hidden" name="category_id" id="hiddenCategoryId" value="1">
             <input type="hidden" name="location" id="hiddenLocation" value="Municipal Revenue Desk">
             
@@ -395,17 +544,17 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
 
             <!-- STEP 4: Evidence Dropzone -->
             <div class="wizard-pane" id="paneStep4">
-              <h3 class="mb-2" style="font-size: 1.25rem;">Encrypted Evidence Vault</h3>
+              <h3 class="mb-2" style="font-size: 1.25rem;">Secure Evidence Storage</h3>
               <p class="text-muted mb-4" style="font-size: 0.88rem;">Attach documents, audio transcripts, invoices, or photograph files.</p>
 
-              <div class="dropzone-box mb-3" onclick="triggerFileInput()">
-                <input type="file" id="evidenceFileInput" multiple style="display: none;" onchange="handleEvidenceSelect(event)">
+              <div class="dropzone-box mb-3" id="evidenceDropzone" onclick="triggerFileInput()">
+                <input type="file" id="evidenceFileInput" name="evidence_files[]" accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4,.docx" multiple style="display: none;" onchange="handleEvidenceSelect(event)">
                 <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;">
                   <i class="fa-solid fa-cloud-arrow-up"></i>
                 </div>
                 <h5 style="font-size: 1.05rem; margin-bottom: 0.25rem;">Click to browse or Drag & Drop evidence files</h5>
                 <p class="text-muted mb-0" style="font-size: 0.8rem;">
-                  Supported: PDF, JPG, PNG, MP3, MP4, DOCX up to 50MB each.
+                  Supported: PDF, JPG, PNG, MP3, MP4, DOCX up to 40 MB each. Total upload size is subject to server limits.
                 </p>
               </div>
 
@@ -413,7 +562,7 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
                 <div class="d-flex align-items-center justify-content-between mb-2">
                   <span style="font-size: 0.85rem; font-weight: 700;">Uploaded Evidence Status</span>
                   <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.72rem;">
-                    <i class="fa-solid fa-shield-virus me-1"></i> EXIF Stripped & SHA-256 Hashed
+                    <i class="fa-solid fa-shield-virus me-1"></i> File type validated & stored securely
                   </span>
                 </div>
                 <div class="extra-small text-muted" id="fileNotice">No local files attached yet. You can proceed without files if oral testimony only.</div>
@@ -424,15 +573,15 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
                   <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
                 <button type="button" class="btn-ccms btn-ccms-primary" onclick="goToStep(5)">
-                  Review & Cryptographic Seal <i class="fa-solid fa-arrow-right"></i>
+                  Review & Submit <i class="fa-solid fa-arrow-right"></i>
                 </button>
               </div>
             </div>
 
             <!-- STEP 5: Review & Seal -->
             <div class="wizard-pane" id="paneStep5">
-              <h3 class="mb-2" style="font-size: 1.25rem;">Final Review & Cryptographic Seal</h3>
-              <p class="text-muted mb-4" style="font-size: 0.88rem;">Confirm report accuracy before irreversible transmission to vigilance cold-storage nodes.</p>
+              <h3 class="mb-2" style="font-size: 1.25rem;">Review & Submit</h3>
+              <p class="text-muted mb-4" style="font-size: 0.88rem;">Confirm your report before it is saved to the complaint database.</p>
 
               <div class="p-3 rounded-4 bg-body-tertiary border mb-4" style="font-size: 0.88rem;">
                 <div class="row g-3 mb-2">
@@ -475,7 +624,7 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
                   <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
                 <button type="submit" class="btn-ccms btn-ccms-primary" style="background: linear-gradient(135deg, var(--emerald) 0%, #059669 100%);">
-                  <i class="fa-solid fa-lock"></i> Submit Encrypted Report &amp; Generate Token
+                  <i class="fa-solid fa-lock"></i> Submit Report &amp; Generate Tracking Token
                 </button>
               </div>
             </div>
@@ -543,12 +692,28 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
   }
 
   function handleEvidenceSelect(e) {
-    const files = e.target.files;
+    const files = Array.from(e.target.files);
+    const fileNotice = document.getElementById('fileNotice');
     if (files.length > 0) {
-      document.getElementById('fileNotice').innerHTML = `<strong>${files.length} file(s) attached:</strong> ${Array.from(files).map(f => f.name).join(', ')}`;
-      showCitizenToast(`${files.length} evidence file(s) sanitized & hashed!`, 'success');
+      fileNotice.textContent = `${files.length} file(s) attached: ${files.map(file => file.name).join(', ')}`;
+      showCitizenToast(`${files.length} evidence file(s) ready to upload.`, 'success');
+    } else {
+      fileNotice.textContent = 'No local files attached yet. You can proceed without files if oral testimony only.';
     }
   }
+
+  const evidenceDropzone = document.getElementById('evidenceDropzone');
+  evidenceDropzone.addEventListener('dragover', event => {
+    event.preventDefault();
+  });
+  evidenceDropzone.addEventListener('drop', event => {
+    event.preventDefault();
+    const transfer = new DataTransfer();
+    Array.from(event.dataTransfer.files).forEach(file => transfer.items.add(file));
+    const fileInput = document.getElementById('evidenceFileInput');
+    fileInput.files = transfer.files;
+    handleEvidenceSelect({ target: fileInput });
+  });
 
   function updateReviewSummary() {
     syncLocation();
@@ -564,9 +729,9 @@ while ($dr = mysqli_fetch_assoc($dept_res)) {
   <?php if (!empty($success_token)): ?>
   Swal.fire({
     icon: 'success',
-    title: 'Complaint Sealed & Dispatched to Database!',
+    title: 'Complaint Submitted Successfully',
     html: `
-      <p style="font-size:0.9rem;color:#64748b;">Your incident docket has been cryptographically signed and recorded in the CCMS database.</p>
+      <p style="font-size:0.9rem;color:#64748b;">Your complaint and attached evidence have been saved in the CCMS database.</p>
       <div style="background:#f1f5f9;padding:12px;border-radius:12px;margin:15px 0;font-family:monospace;font-size:1.25rem;font-weight:700;color:#4f46e5;border:1px dashed #6366f1;">
         <?= $success_token ?> (Database #<?= $success_raw_id ?>)
       </div>

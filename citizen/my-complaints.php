@@ -1,4 +1,6 @@
 <?php
+require_once '../auth.php';
+require_role('citizen', 'login.php');
 require_once '../db.php';
 
 $success_msg = '';
@@ -145,21 +147,6 @@ $resolved_cases = count(array_filter($complaints, fn($c) => in_array($c['status'
         <span>Encrypted Alerts</span>
       </a>
 
-      <div class="sb-section-label">Account & External</div>
-      <a href="../officer/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Officer Command</span>
-      </a>
-
-      <a href="../admin/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-lock"></i></div>
-        <span>Admin Headquarters</span>
-      </a>
-
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
     </nav>
 
     <div class="sb-footer">

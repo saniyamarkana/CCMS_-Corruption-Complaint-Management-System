@@ -1,4 +1,6 @@
 <?php
+require_once '../auth.php';
+require_role('admin', 'login.php');
 require_once '../db.php';
 
 $success_msg = '';
@@ -209,7 +211,7 @@ $kpi_total_cases = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM co
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
             <li><div class="dropdown-divider"></div></li>
-            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="../logout.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
         </div>
       </div>

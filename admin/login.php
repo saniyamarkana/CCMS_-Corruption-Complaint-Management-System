@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once '../auth.php';
+redirect_authenticated_user('admin', 'index.php');
 require_once '../db.php';
 
 $error_msg = '';
@@ -20,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['admin_email'] = 'admin@ccms.com';
         $_SESSION['role'] = 'admin';
 
-        $success_msg = 'Master clearance authorized. Welcome Administrator!';
+        session_regenerate_id(true);
+        header('Location: index.php');
+        exit;
     } else {
         $error_msg = 'Invalid administrator credentials or unauthorized access.';
     }

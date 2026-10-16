@@ -399,9 +399,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="../citizen/login.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
           <i class="fa-solid fa-users"></i> Citizen Portal
         </a>
-        <a href="../admin/login.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="fa-solid fa-lock"></i> Super Admin Panel
-        </a>
       </div>
 
     </div>

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+<?php
+require_once '../auth.php';
+require_role('officer', 'login.php');
+?>
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -72,15 +76,6 @@
         <span>Citizen Portal</span>
       </a>
 
-      <a href="../admin/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-lock"></i></div>
-        <span>Admin Headquarters</span>
-      </a>
-
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
     </nav>
 
     <div class="sb-footer">

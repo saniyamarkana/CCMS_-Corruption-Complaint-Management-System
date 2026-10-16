@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once '../auth.php';
+require_role('citizen', 'login.php');
 require_once '../db.php';
 $citizen_id = $_SESSION['user_id'] ?? 0;
 $citizen_name = htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Verified Citizen');
@@ -104,26 +106,6 @@ $recent_complaints_res = mysqli_query($conn, "
         <span class="sb-badge amber">2</span>
       </a>
 
-      <!-- <div class="sb-section-label">Account & External</div>
-      <a href="profile.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Security & Keys</span>
-      </a>
-
-      <a href="../officer/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-user-shield"></i></div>
-        <span>Officer Command</span>
-      </a>
-
-      <a href="../admin/index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-lock"></i></div>
-        <span>Admin Headquarters</span>
-      </a> -->
-
-      <a href="../index.php" class="sb-link">
-        <div class="icon-wrap"><i class="fa-solid fa-globe"></i></div>
-        <span>Public Sentinel</span>
-      </a>
     </nav>
 
     <div class="sb-footer">
@@ -169,7 +151,7 @@ $recent_complaints_res = mysqli_query($conn, "
             <li><a class="dropdown-item" href="profile.php"><i class="fa-solid fa-key me-2"></i> Security Profile</a></li>
             <li><a class="dropdown-item" href="my-complaints.php"><i class="fa-solid fa-folder me-2"></i> My Records</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.php"><i class="fa-solid fa-power-off me-2"></i> Sign Out</a></li>
+            <li><a class="dropdown-item text-danger" href="../logout.php"><i class="fa-solid fa-power-off me-2"></i> Sign Out</a></li>
           </ul>
         </div>
       </div>

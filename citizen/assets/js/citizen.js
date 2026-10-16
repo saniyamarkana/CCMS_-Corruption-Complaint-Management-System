@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Handle logout links
-  document.querySelectorAll('a[href*="login.php"]').forEach(btn => {
+  document.querySelectorAll('a[href*="login.php"], a[href*="logout.php"]').forEach(btn => {
     btn.addEventListener('click', () => {
       localStorage.removeItem('ccms_current_user');
     });

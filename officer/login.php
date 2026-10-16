@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once '../auth.php';
+redirect_authenticated_user('officer', 'index.php');
 require_once '../db.php';
 
 $error_msg = '';
@@ -35,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['department_id'] = $officer['department_id'] ?? 1;
                     $_SESSION['role'] = 'officer';
 
-                    $success_msg = "Credentials verified. Welcome Inspector {$officer['name']}!";
+                    session_regenerate_id(true);
+                    header('Location: index.php');
+                    exit;
                 }
             } else {
                 $error_msg = 'Invalid officer email or access key.';
@@ -257,9 +261,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </a>
         <a href="../citizen/login.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
           <i class="fa-solid fa-users"></i> Citizen Portal
-        </a>
-        <a href="../admin/login.php" class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="fa-solid fa-lock"></i> Super Admin Panel
         </a>
       </div>
 

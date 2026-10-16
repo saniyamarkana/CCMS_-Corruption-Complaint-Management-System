@@ -2502,8 +2502,6 @@
                         <a href="login.php"><i class="fa-solid fa-arrow-right-to-bracket"></i> Unified Portal Sign In</a>
                         <a href="register.php"><i class="fa-solid fa-user-plus"></i> Create New Account</a>
                         <a href="citizen/dashboard.php"><i class="fa-solid fa-users"></i> Citizen Dashboard</a>
-                        <a href="officer/index.php"><i class="fa-solid fa-user-shield"></i> Officer Command</a>
-                        <a href="admin/index.php"><i class="fa-solid fa-lock"></i> Admin Oversight</a>
                     </div>
                 </div>
 
