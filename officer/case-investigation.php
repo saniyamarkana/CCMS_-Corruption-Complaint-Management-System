@@ -444,7 +444,7 @@ require_role('officer', 'login.php');
         <span>Active Case Console</span>
       </a>
 
-      <div class="sb-section-label">Judicial & Forensics</div>
+      <!-- <div class="sb-section-label">Judicial & Forensics</div>
       <a href="hearings.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-gavel"></i></div>
         <span>Hearings & Summons</span>
@@ -454,7 +454,7 @@ require_role('officer', 'login.php');
       <a href="evidence-vault.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-vault"></i></div>
         <span>Evidence Vault</span>
-      </a>
+      </a> -->
 
       <div class="sb-section-label">Portals & Oversight</div>
       <a href="profile.php" class="sb-link">

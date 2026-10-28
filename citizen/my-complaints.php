@@ -167,10 +167,10 @@ $resolved_cases = count(array_filter($complaints, fn($c) => in_array($c['status'
         <button class="btn-toggle" id="sidebarToggle"><i class="fa-solid fa-bars-staggered"></i></button>
         <!-- SEARCH VIA GET METHOD -->
         <form method="GET" action="my-complaints.php" class="search-wrap d-none d-md-flex align-items-center m-0">
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
           <input type="text" name="search" id="myComplaintSearch" placeholder="Search my complaints by ID, title, department..." value="<?= htmlspecialchars($search) ?>">
           <?php if (!empty($search)): ?>
-            <a href="my-complaints.php" class="text-muted ms-2 me-1" title="Clear Search"><i class="fa-solid fa-xmark"></i></a>
+            <a href="my-complaints.php" class="search-clear-btn" title="Clear Search"><i class="fa-solid fa-xmark"></i></a>
           <?php endif; ?>
         </form>
       </div>
@@ -220,27 +220,33 @@ $resolved_cases = count(array_filter($complaints, fn($c) => in_array($c['status'
         <div class="row g-3 align-items-end">
           <div class="col-md-6">
             <label class="form-label" style="font-size:0.82rem;font-weight:600;">Keyword Search</label>
-            <div class="input-group">
-              <span class="input-group-text bg-body-tertiary border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-              <input type="text" name="search" class="form-control border-start-0" placeholder="Search by docket #, title, or office..." value="<?= htmlspecialchars($search) ?>">
+            <div class="input-icon-group">
+              <i class="fa-solid fa-magnifying-glass input-icon"></i>
+              <input type="text" name="search" class="form-control" placeholder="Search by docket #, title, or office..." value="<?= htmlspecialchars($search) ?>">
+              <?php if (!empty($search)): ?>
+                <a href="my-complaints.php" class="input-clear-btn" title="Clear Keyword"><i class="fa-solid fa-xmark"></i></a>
+              <?php endif; ?>
             </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" style="font-size:0.82rem;font-weight:600;">Investigation Status</label>
-            <select class="form-select" name="status_filter">
-              <option value="all">All Statuses</option>
-              <option value="Submitted" <?= $status_filter === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
-              <option value="Pending Verification" <?= $status_filter === 'Pending Verification' ? 'selected' : '' ?>>Pending Verification</option>
-              <option value="Assigned" <?= $status_filter === 'Assigned' ? 'selected' : '' ?>>Assigned to Officer</option>
-              <option value="Under Investigation" <?= $status_filter === 'Under Investigation' ? 'selected' : '' ?>>Under Investigation</option>
-              <option value="Investigation Completed" <?= $status_filter === 'Investigation Completed' ? 'selected' : '' ?>>Investigation Completed</option>
-              <option value="Closed" <?= $status_filter === 'Closed' ? 'selected' : '' ?>>Closed</option>
-              <option value="Rejected" <?= $status_filter === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
-            </select>
+            <div class="input-icon-group">
+              <i class="fa-solid fa-filter input-icon"></i>
+              <select class="form-select" name="status_filter">
+                <option value="all">All Statuses</option>
+                <option value="Submitted" <?= $status_filter === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
+                <option value="Pending Verification" <?= $status_filter === 'Pending Verification' ? 'selected' : '' ?>>Pending Verification</option>
+                <option value="Assigned" <?= $status_filter === 'Assigned' ? 'selected' : '' ?>>Assigned to Officer</option>
+                <option value="Under Investigation" <?= $status_filter === 'Under Investigation' ? 'selected' : '' ?>>Under Investigation</option>
+                <option value="Investigation Completed" <?= $status_filter === 'Investigation Completed' ? 'selected' : '' ?>>Investigation Completed</option>
+                <option value="Closed" <?= $status_filter === 'Closed' ? 'selected' : '' ?>>Closed</option>
+                <option value="Rejected" <?= $status_filter === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
+              </select>
+            </div>
           </div>
           <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn-ccms btn-ccms-primary w-100"><i class="fa-solid fa-filter"></i> Apply</button>
-            <a href="my-complaints.php" class="btn-ccms btn-ccms-secondary" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i></a>
+            <button type="submit" class="btn-ccms btn-ccms-primary w-100" style="height:46px;"><i class="fa-solid fa-filter"></i> Apply</button>
+            <a href="my-complaints.php" class="btn-ccms btn-ccms-secondary d-flex align-items-center justify-content-center" style="height:46px; width:46px; flex-shrink:0;" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i></a>
           </div>
         </div>
       </form>

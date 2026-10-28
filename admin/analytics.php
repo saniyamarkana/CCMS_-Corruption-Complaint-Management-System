@@ -1,6 +1,8 @@
 <?php
 require_once '../auth.php';
 require_role('admin', 'login.php');
+header("Location: reports.php");
+exit;
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">

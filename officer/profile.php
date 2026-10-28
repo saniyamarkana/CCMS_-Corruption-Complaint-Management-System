@@ -53,7 +53,7 @@ require_role('officer', 'login.php');
         <span>Active Case Console</span>
       </a>
 
-      <div class="sb-section-label">Judicial & Forensics</div>
+      <!-- <div class="sb-section-label">Judicial & Forensics</div>
       <a href="hearings.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-gavel"></i></div>
         <span>Hearings & Summons</span>
@@ -69,7 +69,7 @@ require_role('officer', 'login.php');
       <a href="profile.php" class="sb-link active">
         <div class="icon-wrap"><i class="fa-solid fa-id-badge"></i></div>
         <span>Officer Clearance</span>
-      </a>
+      </a> -->
 
       <a href="../citizen/dashboard.php" class="sb-link">
         <div class="icon-wrap"><i class="fa-solid fa-users"></i></div>

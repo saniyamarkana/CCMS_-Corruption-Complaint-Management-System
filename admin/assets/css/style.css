@@ -386,12 +386,12 @@ html, body, div, main, aside, nav, ul, table, textarea, .table-responsive, * {
 /* Search */
 .search-wrap {
   position: relative;
-  width: 300px;
+  width: 310px;
 }
 
 .search-wrap input {
   width: 100%;
-  padding: .55rem 1rem .55rem 2.5rem;
+  padding: .55rem 2.2rem .55rem 2.5rem;
   border-radius: 12px;
   border: 1.5px solid var(--border);
   background: var(--bg);
@@ -408,10 +408,32 @@ html, body, div, main, aside, nav, ul, table, textarea, .table-responsive, * {
   box-shadow: 0 0 0 4px rgba(79,70,229,.12);
 }
 
-.search-wrap i {
+.search-wrap i.fa-magnifying-glass {
   position: absolute; left: .9rem; top: 50%;
   transform: translateY(-50%);
   color: var(--text-3); font-size: .9rem;
+  pointer-events: none;
+  transition: var(--tx);
+}
+
+.search-wrap:focus-within i.fa-magnifying-glass {
+  color: var(--indigo-500);
+}
+
+.search-wrap a.text-muted,
+.search-wrap .search-clear-btn {
+  position: absolute; right: .85rem; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3) !important;
+  font-size: .85rem;
+  text-decoration: none;
+  transition: var(--tx);
+  z-index: 2;
+}
+
+.search-wrap a.text-muted:hover,
+.search-wrap .search-clear-btn:hover {
+  color: var(--rose-500) !important;
 }
 
 /* Nav actions */
@@ -1030,6 +1052,7 @@ html, body, div, main, aside, nav, ul, table, textarea, .table-responsive, * {
 .text-gradient {
   background: var(--g-primary);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -1434,6 +1457,32 @@ textarea.form-control { min-height: 100px; resize: vertical; }
   box-shadow: 0 4px 14px rgba(99,102,241,0.15) !important;
 }
 
+[data-bs-theme="light"] .btn-ghost.btn-export-pdf {
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+  color: #3730a3 !important;
+}
+
+[data-bs-theme="light"] .btn-ghost.btn-export-pdf:hover,
+[data-bs-theme="light"] .btn-ghost.btn-export-pdf:focus-visible {
+  background: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+  color: #fff !important;
+}
+
+[data-bs-theme="dark"] .btn-ghost.btn-export-pdf {
+  background: #312e81 !important;
+  border-color: #6366f1 !important;
+  color: #e0e7ff !important;
+}
+
+[data-bs-theme="dark"] .btn-ghost.btn-export-pdf:hover,
+[data-bs-theme="dark"] .btn-ghost.btn-export-pdf:focus-visible {
+  background: #4f46e5 !important;
+  border-color: #818cf8 !important;
+  color: #fff !important;
+}
+
 /* Round icon action buttons */
 .btn-icon-round {
   width: 36px; height: 36px; border-radius: 50%;
@@ -1569,4 +1618,3 @@ textarea.form-control { min-height: 100px; resize: vertical; }
   letter-spacing: 0.08em;
   margin-top: 4px;
 }
-

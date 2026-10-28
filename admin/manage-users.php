@@ -185,9 +185,7 @@ $total_complaints = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM c
       <a href="manage-categories.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-tags"></i></div><span>Categories</span></a>
       
       <div class="sb-section-label">Intelligence</div>
-      <a href="reports.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="analytics.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div><span>Analytics</span></a>
-      <a href="activity-logs.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Activity Logs</span></a>
+      <a href="reports.php" class="sb-link"><div class="icon-wrap"><i class="fa-solid fa-file-chart-column"></i></div><span>Intelligence Reports</span></a>
     </nav>
     <div class="sb-footer">
       <div class="sb-admin-card">
@@ -220,7 +218,7 @@ $total_complaints = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM c
             <div class="d-none d-md-block"><div class="nav-profile-name">Inspector Admin</div><div class="nav-profile-role">Super Administrator</div></div>
           </div>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="activity-logs.php"><i class="fa-solid fa-clock-rotate-left"></i> My Logs</a></li>
+            <li><a class="dropdown-item" href="reports.php"><i class="fa-solid fa-file-chart-column"></i> System Intelligence Reports</a></li>
             <li><div class="dropdown-divider"></div></li>
             <li><a class="dropdown-item text-danger" href="../logout.php"><i class="fa-solid fa-power-off"></i> Logout</a></li>
           </ul>
