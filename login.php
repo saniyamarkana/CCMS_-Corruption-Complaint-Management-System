@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,6 +121,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <style>
     :root {
+      --bg-base: #edf2f9;
+      --bg-surface: #ffffff;
+      --bg-surface-2: #f4f7fc;
+      --bg-glass: rgba(255, 255, 255, 0.94);
+      --border: rgba(99, 102, 241, 0.14);
+      --border-glow: rgba(99, 102, 241, 0.3);
+
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-dark: #3730a3;
+      --primary-glow: rgba(79, 70, 229, 0.18);
+
+      --cyan: #0891b2;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --sky: #0284c7;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #94a3b8;
+
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --card-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.14);
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
       --bg-base: #050711;
       --bg-surface: #0a0f20;
       --bg-surface-2: #0f1730;
@@ -143,31 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       --text-muted: #94a3b8;
       --text-subtle: #64748b;
 
-      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-heading: 'Space Grotesk', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-
       --card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8);
-      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    [data-theme="light"] {
-      --bg-base: #edf2f9;
-      --bg-surface: #ffffff;
-      --bg-surface-2: #f4f7fc;
-      --bg-glass: rgba(255, 255, 255, 0.92);
-      --border: rgba(99, 102, 241, 0.14);
-      --border-glow: rgba(99, 102, 241, 0.3);
-
-      --primary: #4f46e5;
-      --primary-light: #6366f1;
-      --primary-dark: #3730a3;
-      --primary-glow: rgba(79, 70, 229, 0.18);
-
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --text-subtle: #94a3b8;
-      --card-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.14);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -251,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* Left Hero Side */
     .hero-side-panel {
-      background: linear-gradient(145deg, rgba(14, 22, 48, 0.65), rgba(8, 12, 28, 0.85));
+      background: linear-gradient(145deg, #f0f4ff, #e6edfd);
       border-right: 1px solid var(--border);
       padding: 3rem 2.25rem;
       display: flex;
@@ -259,8 +266,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       justify-content: space-between;
       position: relative;
     }
-    [data-theme="light"] .hero-side-panel {
-      background: linear-gradient(145deg, #f0f4ff, #e6edfd);
+    [data-theme="dark"] .hero-side-panel {
+      background: linear-gradient(145deg, rgba(14, 22, 48, 0.65), rgba(8, 12, 28, 0.85));
     }
 
     .brand-header-box {
@@ -296,15 +303,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       color: var(--cyan);
     }
 
-    /* Role Showcase Visual Card */
+    /* Role Showcase Visual Card - White Theme by Default */
     .role-showcase-box {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95));
-      border: 1px solid var(--border-glow);
+      background: #ffffff;
+      border: 1.5px solid rgba(99, 102, 241, 0.16);
       border-radius: 20px;
       padding: 1.5rem;
       margin: 1.5rem 0;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 15px 35px -10px rgba(99, 102, 241, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+      transition: var(--transition);
+    }
+    [data-theme="dark"] .role-showcase-box {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95));
+      border: 1px solid var(--border-glow);
       box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
     }
     .role-showcase-header {
@@ -314,22 +327,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-bottom: 0.75rem;
     }
     .role-showcase-icon {
-      width: 42px; height: 42px;
+      width: 44px; height: 44px;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(79, 70, 229, 0.18);
+      transition: var(--transition);
+    }
+    [data-theme="dark"] .role-showcase-icon {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary-light);
+      border: none;
     }
     .role-showcase-title {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       font-family: var(--font-heading);
+      color: var(--text-main);
+    }
+    .role-showcase-status {
+      font-size: 0.75rem;
+      color: #059669;
+      font-weight: 700;
+    }
+    [data-theme="dark"] .role-showcase-status {
+      color: var(--emerald);
     }
     .role-showcase-desc {
-      font-size: 0.8rem;
+      font-size: 0.84rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     /* Right Form Side */
@@ -560,16 +591,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               Access your role-specific dashboard with end-to-end encryption, automated case telemetry, and forensic audit logs.
             </p>
 
-            <!-- Dynamic Role Showcase Box -->
+            <!-- Dynamic Role Showcase Box (White Theme) -->
             <div class="role-showcase-box" id="roleShowcaseBox">
               <div class="role-showcase-header">
-                <div class="role-showcase-icon" id="roleShowcaseIcon" style="background: rgba(99, 102, 241, 0.2); color: var(--primary-light);">
+                <div class="role-showcase-icon" id="roleShowcaseIcon">
                   <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
                   <div class="role-showcase-title" id="roleShowcaseTitle">Citizen Portal</div>
-                  <div style="font-size: 0.72rem; color: var(--emerald); font-weight: 700;">
-                    <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> System Online
+                  <div class="role-showcase-status">
+                    <i class="fa-solid fa-circle" style="font-size: 0.5rem; margin-right: 3px;"></i> System Online
                   </div>
                 </div>
               </div>
@@ -711,6 +742,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const showcaseDesc = document.getElementById('roleShowcaseDesc');
       const bottomRegisterBox = document.getElementById('bottomRegisterLinkBox');
 
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
       if (role === 'citizen') {
         labelId.innerText = 'Citizen Email Address';
         inputId.placeholder = 'rahul@gmail.com';
@@ -718,8 +751,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         btnLabel.innerText = 'Sign In to Citizen Dashboard';
         btnSubmit.style.background = 'linear-gradient(135deg, #4f46e5, #3730a3)';
         targetBadge.innerHTML = 'Target: <strong class="text-primary">Citizen Dashboard</strong>';
-        showcaseIcon.style.background = 'rgba(99, 102, 241, 0.2)';
-        showcaseIcon.style.color = '#818cf8';
+        showcaseIcon.style.background = isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(79, 70, 229, 0.1)';
+        showcaseIcon.style.color = isDark ? '#818cf8' : '#4f46e5';
+        showcaseIcon.style.border = isDark ? 'none' : '1px solid rgba(79, 70, 229, 0.2)';
         showcaseIcon.innerHTML = '<i class="fa-solid fa-user-shield"></i>';
         showcaseTitle.innerText = 'Citizen Portal';
         showcaseDesc.innerText = 'Direct access to lodged complaints, real-time status tracker, whistleblower message inbox, and verified legal protection dossier.';
@@ -731,8 +765,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         btnLabel.innerText = 'Authenticate & Open Officer Command';
         btnSubmit.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
         targetBadge.innerHTML = 'Target: <strong class="text-info">Officer Panel</strong>';
-        showcaseIcon.style.background = 'rgba(2, 132, 199, 0.2)';
-        showcaseIcon.style.color = '#38bdf8';
+        showcaseIcon.style.background = isDark ? 'rgba(2, 132, 199, 0.2)' : 'rgba(2, 132, 199, 0.1)';
+        showcaseIcon.style.color = isDark ? '#38bdf8' : '#0284c7';
+        showcaseIcon.style.border = isDark ? 'none' : '1px solid rgba(2, 132, 199, 0.2)';
         showcaseIcon.innerHTML = '<i class="fa-solid fa-user-tie"></i>';
         showcaseTitle.innerText = 'Investigator Command Center';
         showcaseDesc.innerText = 'Forensic investigation workspace with assigned case dockets, evidence vault, evidentiary hearing logs, and suspect interview records.';
@@ -744,8 +779,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         btnLabel.innerText = 'Grant Access to Central Command';
         btnSubmit.style.background = 'linear-gradient(135deg, #e11d48, #be123c)';
         targetBadge.innerHTML = 'Target: <strong class="text-danger">Super Admin Panel</strong>';
-        showcaseIcon.style.background = 'rgba(225, 29, 72, 0.2)';
-        showcaseIcon.style.color = '#fb7185';
+        showcaseIcon.style.background = isDark ? 'rgba(225, 29, 72, 0.2)' : 'rgba(225, 29, 72, 0.1)';
+        showcaseIcon.style.color = isDark ? '#fb7185' : '#e11d48';
+        showcaseIcon.style.border = isDark ? 'none' : '1px solid rgba(225, 29, 72, 0.2)';
         showcaseIcon.innerHTML = '<i class="fa-solid fa-crown"></i>';
         showcaseTitle.innerText = 'Central Oversight Authority';
         showcaseDesc.innerText = 'Executive administration hub with national complaint assignment, officer management, department compliance KPIs, and audit reporting.';
@@ -866,21 +902,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-bs-theme', theme);
       localStorage.setItem('ccms_theme', theme);
       if (themeIcon) {
         themeIcon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
       }
+      const roleInput = document.getElementById('roleInput');
+      const activeRole = roleInput ? roleInput.value : 'citizen';
+      setLoginRole(activeRole);
     }
 
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
         applyTheme(current === 'dark' ? 'light' : 'dark');
       });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('ccms_theme') || 'dark';
+      const savedTheme = localStorage.getItem('ccms_theme') || 'light';
       applyTheme(savedTheme);
 
       const params = new URLSearchParams(window.location.search);

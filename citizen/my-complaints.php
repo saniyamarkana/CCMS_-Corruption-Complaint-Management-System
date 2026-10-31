@@ -85,7 +85,7 @@ $active_probes = count(array_filter($complaints, fn($c) => $c['status'] === 'Und
 $resolved_cases = count(array_filter($complaints, fn($c) => in_array($c['status'], ['Investigation Completed', 'Closed'])));
 ?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1918,10 +1918,10 @@
             <div class="nav-actions">
                 <!-- Theme Switcher -->
                 <div class="theme-switcher" role="group" aria-label="Theme selector">
-                    <button class="theme-btn active" data-set-theme="dark"    title="Midnight Cyber">
+                    <button class="theme-btn"        data-set-theme="dark"    title="Midnight Cyber">
                         <i class="fa-solid fa-moon"></i>
                     </button>
-                    <button class="theme-btn"        data-set-theme="light"   title="Executive Light">
+                    <button class="theme-btn active" data-set-theme="light"   title="Executive Light">
                         <i class="fa-solid fa-sun"></i>
                     </button>
                     <button class="theme-btn"        data-set-theme="emerald" title="Emerald Guard">
@@ -2630,7 +2630,7 @@
         /* ═══ Theme Switching ═══ */
         const themeButtons = document.querySelectorAll('[data-set-theme]');
         const htmlEl = document.documentElement;
-        const savedTheme = localStorage.getItem('ccms_theme') || 'dark';
+        const savedTheme = localStorage.getItem('ccms_theme') || 'light';
         setTheme(savedTheme);
 
         themeButtons.forEach(btn => {

@@ -10,7 +10,7 @@ $officer_desig = htmlspecialchars($_SESSION['designation'] ?? 'Anti-Corruption I
 $initials = strtoupper(substr($officer_name, 0, 2));
 ?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,6 +100,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   <style>
     :root {
+      --bg-base: #edf2f9;
+      --bg-surface: #ffffff;
+      --bg-surface-2: #f4f7fc;
+      --bg-glass: rgba(255, 255, 255, 0.94);
+      --border: rgba(99, 102, 241, 0.14);
+      --border-glow: rgba(99, 102, 241, 0.3);
+
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-dark: #3730a3;
+      --primary-glow: rgba(79, 70, 229, 0.18);
+
+      --cyan: #0891b2;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --sky: #0284c7;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #94a3b8;
+
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --card-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.14);
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
       --bg-base: #050711;
       --bg-surface: #0a0f20;
       --bg-surface-2: #0f1730;
@@ -122,31 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       --text-muted: #94a3b8;
       --text-subtle: #64748b;
 
-      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-heading: 'Space Grotesk', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-
       --card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8);
-      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    [data-theme="light"] {
-      --bg-base: #edf2f9;
-      --bg-surface: #ffffff;
-      --bg-surface-2: #f4f7fc;
-      --bg-glass: rgba(255, 255, 255, 0.92);
-      --border: rgba(99, 102, 241, 0.14);
-      --border-glow: rgba(99, 102, 241, 0.3);
-
-      --primary: #4f46e5;
-      --primary-light: #6366f1;
-      --primary-dark: #3730a3;
-      --primary-glow: rgba(79, 70, 229, 0.18);
-
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --text-subtle: #94a3b8;
-      --card-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.14);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -186,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     .orb-3 {
       width: 450px; height: 450px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 70%);
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.18), transparent 70%);
       top: 35%; left: 30%;
     }
 
@@ -230,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #10b981, #06b6d4, #6366f1, #10b981);
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #4f46e5, #818cf8, #6366f1);
       background-size: 300% 100%;
       animation: gradientShift 6s linear infinite;
     }
@@ -241,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* Left Hero Side */
     .hero-side-panel {
-      background: linear-gradient(145deg, rgba(14, 22, 48, 0.65), rgba(8, 12, 28, 0.85));
+      background: linear-gradient(145deg, #f0f4ff, #e6edfd);
       border-right: 1px solid var(--border);
       padding: 3rem 2.25rem;
       display: flex;
@@ -249,8 +256,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       justify-content: space-between;
       position: relative;
     }
-    [data-theme="light"] .hero-side-panel {
-      background: linear-gradient(145deg, #f0f4ff, #e6edfd);
+    [data-theme="dark"] .hero-side-panel {
+      background: linear-gradient(145deg, rgba(14, 22, 48, 0.65), rgba(8, 12, 28, 0.85));
     }
 
     .brand-header-box {
@@ -263,13 +270,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     .brand-logo-icon {
       width: 48px; height: 48px;
       border-radius: 16px;
-      background: linear-gradient(135deg, var(--emerald), var(--cyan));
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-size: 1.35rem;
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 0 25px var(--primary-glow);
     }
     .brand-logo-text {
       font-family: var(--font-heading);
@@ -286,23 +293,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       color: var(--cyan);
     }
 
-    /* Live Interactive ID Badge Card Preview */
+    /* Live Interactive ID Badge Card Preview - White Theme */
     .live-badge-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95));
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      background: #ffffff;
+      border: 1.5px solid rgba(99, 102, 241, 0.25);
       border-radius: 20px;
       padding: 1.5rem;
       margin: 2rem 0;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 15px 35px -10px rgba(99, 102, 241, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
       transition: var(--transition);
+    }
+    [data-theme="dark"] .live-badge-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
     }
     .live-badge-card::before {
       content: '';
       position: absolute;
       top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
       pointer-events: none;
     }
     .badge-chip-bar {
@@ -323,9 +335,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       font-family: var(--font-mono);
       padding: 0.25rem 0.6rem;
       border-radius: 99px;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--emerald);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(79, 70, 229, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(79, 70, 229, 0.28);
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
@@ -336,6 +348,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       font-family: var(--font-heading);
       letter-spacing: -0.01em;
       margin-bottom: 0.2rem;
+      color: var(--text-main);
+    }
+    [data-theme="dark"] .badge-name-display {
       color: #fff;
     }
     .badge-role-display {
@@ -349,7 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       grid-template-columns: 1fr 1fr;
       gap: 0.5rem;
       font-size: 0.72rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(99, 102, 241, 0.12);
       padding-top: 0.75rem;
     }
     .badge-detail-label { color: var(--text-subtle); text-transform: uppercase; font-size: 0.65rem; }
@@ -370,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       margin-bottom: 0.65rem;
     }
     .security-specs-list li i {
-      color: var(--emerald);
+      color: var(--primary);
       font-size: 0.9rem;
     }
 
@@ -385,9 +400,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       gap: 0.5rem;
       padding: 0.35rem 0.85rem;
       border-radius: 99px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: var(--emerald);
+      background: rgba(79, 70, 229, 0.10);
+      border: 1px solid rgba(79, 70, 229, 0.22);
+      color: var(--primary);
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -425,22 +440,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     .form-input-ccms {
       width: 100%;
       background: var(--bg-surface-2);
-      border: 1px solid var(--border);
+      border: 1.5px solid rgba(99, 102, 241, 0.15);
       color: var(--text-main);
       font-size: 0.9rem;
       font-family: var(--font-body);
-      padding: 0.75rem 1rem 0.75rem 2.65rem;
-      border-radius: 12px;
+      padding: 0.82rem 1rem 0.82rem 2.75rem;
+      border-radius: 14px;
       outline: none;
       transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), inset 0 1px 2px rgba(0,0,0,0.02);
+      font-weight: 500;
+    }
+    .form-input-ccms:hover:not(:focus) {
+      border-color: rgba(99, 102, 241, 0.3);
     }
     .form-input-ccms:focus {
-      border-color: var(--emerald);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15), 0 2px 8px rgba(15, 23, 42, 0.04);
       background: var(--bg-surface);
     }
+    .form-input-ccms:focus ~ .input-ico,
     .form-input-ccms:focus + .input-ico {
-      color: var(--emerald);
+      color: var(--primary);
     }
 
     .btn-pwd-eye {
@@ -476,12 +497,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     .btn-register-submit {
       width: 100%;
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       border: none;
       color: #fff;
       font-weight: 700;
       font-size: 0.95rem;
-      padding: 0.85rem;
+      padding: 0.9rem;
       border-radius: 14px;
       cursor: pointer;
       display: flex;
@@ -489,11 +510,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       justify-content: center;
       gap: 0.6rem;
       transition: var(--transition);
-      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.35);
+      letter-spacing: 0.02em;
     }
     .btn-register-submit:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 15px 35px rgba(79, 70, 229, 0.48);
     }
 
     .auth-bottom-switch {
@@ -522,6 +544,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       display: flex;
       align-items: flex-start;
       gap: 0.6rem;
+    }
+
+    /* Section Dividers */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.4rem 0 1rem;
+    }
+    .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
+    }
+    .section-divider-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      opacity: 0.7;
+      white-space: nowrap;
+    }
+
+    /* Enhanced field label */
+    .field-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      color: var(--text-main);
+      letter-spacing: 0.01em;
+    }
+    .field-label i {
+      color: var(--primary);
+      margin-right: 0.3rem;
+      font-size: 0.75rem;
     }
 
     @media (max-width: 991px) {
@@ -568,7 +627,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <h3 style="font-size: 1.35rem; font-weight: 800; line-height: 1.3; margin-bottom: 0.4rem;">
-              Empower Citizens, <br><span style="color: var(--emerald);">Expose Corruption</span>
+              Empower Citizens, <br><span style="color: var(--primary);">Expose Corruption</span>
             </h3>
             <p style="font-size: 0.85rem; color: var(--text-muted);">
               Every registered citizen receives an official record in the database for tracking complaints and maintaining secure whistleblower protection.
@@ -629,7 +688,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Full Name -->
             <div class="field-group">
               <label class="field-label" for="inputName">
-                <span>Full Name</span> <span class="req">*</span>
+                <i class="fa-solid fa-user"></i>Full Name <span class="req">*</span>
               </label>
               <div class="input-box">
                 <input type="text" class="form-input-ccms" id="inputName" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" placeholder="e.g. Rahul Sharma" oninput="updateLiveBadge()">
@@ -637,17 +696,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               </div>
             </div>
 
+            <!-- Contact Info -->
+            <div class="section-divider">
+              <div class="section-divider-line"></div>
+              <span class="section-divider-label"><i class="fa-solid fa-address-card me-1"></i>Contact</span>
+              <div class="section-divider-line"></div>
+            </div>
+
             <!-- Email & Phone -->
             <div class="row g-3">
               <div class="col-md-6 field-group">
-                <label class="field-label" for="inputEmail">Email Address <span class="req">*</span></label>
+                <label class="field-label" for="inputEmail"><i class="fa-solid fa-envelope"></i>Email Address <span class="req">*</span></label>
                 <div class="input-box">
                   <input type="email" class="form-input-ccms" id="inputEmail" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" placeholder="rahul@gmail.com">
                   <i class="fa-solid fa-envelope input-ico"></i>
                 </div>
               </div>
               <div class="col-md-6 field-group">
-                <label class="field-label" for="inputPhone">Phone Number <span class="req">*</span></label>
+                <label class="field-label" for="inputPhone"><i class="fa-solid fa-phone"></i>Phone Number <span class="req">*</span></label>
                 <div class="input-box">
                   <input type="tel" class="form-input-ccms" id="inputPhone" name="phone" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" placeholder="9876543210" maxlength="15">
                   <i class="fa-solid fa-phone input-ico"></i>
@@ -658,7 +724,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Address Field (Added as requested) -->
             <div class="field-group">
               <label class="field-label" for="inputAddress">
-                <span>Residential Address / City</span> <span class="req">*</span>
+                <i class="fa-solid fa-location-dot"></i>Residential Address / City <span class="req">*</span>
               </label>
               <div class="input-box">
                 <input type="text" class="form-input-ccms" id="inputAddress" name="address" value="<?= htmlspecialchars($_POST['address'] ?? '') ?>" placeholder="e.g. Ahmedabad, Surat, Rajkot" oninput="updateLiveBadge()">
@@ -666,10 +732,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               </div>
             </div>
 
+            <!-- Security Section -->
+            <div class="section-divider">
+              <div class="section-divider-line"></div>
+              <span class="section-divider-label"><i class="fa-solid fa-lock me-1"></i>Security</span>
+              <div class="section-divider-line"></div>
+            </div>
+
             <!-- Password & Confirm Password -->
             <div class="row g-3">
               <div class="col-md-6 field-group">
-                <label class="field-label" for="inputPassword">Secure Password <span class="req">*</span></label>
+                <label class="field-label" for="inputPassword"><i class="fa-solid fa-lock"></i>Secure Password <span class="req">*</span></label>
                 <div class="input-box">
                   <input type="password" class="form-input-ccms" id="inputPassword" name="password" placeholder="Min. 6 characters" oninput="checkStrength(this.value)">
                   <i class="fa-solid fa-lock input-ico"></i>
@@ -679,7 +752,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
               </div>
               <div class="col-md-6 field-group">
-                <label class="field-label" for="inputConfirmPassword">Confirm Password <span class="req">*</span></label>
+                <label class="field-label" for="inputConfirmPassword"><i class="fa-solid fa-shield-halved"></i>Confirm Password <span class="req">*</span></label>
                 <div class="input-box">
                   <input type="password" class="form-input-ccms" id="inputConfirmPassword" name="confirm_password" placeholder="Confirm password">
                   <i class="fa-solid fa-shield-halved input-ico"></i>
@@ -794,9 +867,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         label.innerText = 'Good';
         label.style.color = '#06b6d4';
       } else {
-        fill.style.background = '#10b981';
+        fill.style.background = '#4f46e5';
         label.innerText = 'Strong';
-        label.style.color = '#10b981';
+        label.style.color = '#4f46e5';
       }
     }
 
@@ -901,6 +974,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-bs-theme', theme);
       localStorage.setItem('ccms_theme', theme);
       if (themeIcon) {
         themeIcon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
@@ -909,13 +983,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
         applyTheme(current === 'dark' ? 'light' : 'dark');
       });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('ccms_theme') || 'dark';
+      const savedTheme = localStorage.getItem('ccms_theme') || 'light';
       applyTheme(savedTheme);
       updateLiveBadge();
     });
@@ -929,7 +1003,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         icon: 'error',
         title: 'Registration Error',
         text: <?= json_encode($error_msg) ?>,
-        confirmButtonColor: '#10b981'
+        confirmButtonColor: '#4f46e5'
       });
     });
   </script>
